@@ -1,0 +1,79 @@
+wandb_version: 1
+
+_content:
+  desc: null
+  value:
+    dataset: '{''name'': ''cpunish'', ''funct'': ''cpunishDataset.cpunish_data'',
+      ''batch_size'': 14}'
+    model: '{''hidden_nodes'': 10}'
+    optimizer: '{''name'': ''adam'', ''funct'': ''torch.optim.Adam'', ''lr'': 0.001,
+      ''beta_1'': 0.5, ''beta_2'': 0.999}'
+    train: '{''n_epochs'': 1000, ''initialize_generator'': True, ''warmUp_discriminator'':
+      True, ''cuda'': False}'
+_flags_cache:
+  desc: null
+  value:
+    allow_objects: null
+    readonly: null
+    struct: true
+_metadata:
+  desc: null
+  value: 'ContainerMetadata(ref_type=typing.Any, object_type=None, optional=True,
+    key=None, flags={''struct'': True}, flags_root=False, resolver_cache=defaultdict(<class
+    ''dict''>, {''now'': {(''%Y-%m-%d'',): ''2021-06-22'', (''%H-%M-%S'',): ''18-17-36''}}),
+    key_type=typing.Any, element_type=typing.Any)'
+_parent:
+  desc: null
+  value: null
+_wandb:
+  desc: null
+  value:
+    cli_version: 0.10.32
+    framework: torch
+    is_jupyter_run: true
+    is_kaggle_kernel: false
+    python_version: 3.7.10
+    t:
+      1:
+      - 1
+      - 5
+      2:
+      - 1
+      - 5
+      3:
+      - 1
+      4: 3.7.10
+      5: 0.10.32
+      8:
+      - 1
+      - 5
+    visualize:
+      Scatter Plot:
+        panel_config:
+          fieldSettings:
+            x: Real
+            y: Generated
+          panelDefId: wandb/scatter/v0
+          stringSettings:
+            title: null
+          transform:
+            name: tableWithLeafColNames
+          userQuery:
+            queryFields:
+            - args:
+              - name: runSets
+                value: ${runSets}
+              fields:
+              - fields: []
+                name: id
+              - fields: []
+                name: name
+              - fields: []
+                name: _defaultColorIndex
+              - args:
+                - name: tableKey
+                  value: Scatter Plot_table
+                fields: []
+                name: summaryTable
+              name: runSets
+        panel_type: Vega2

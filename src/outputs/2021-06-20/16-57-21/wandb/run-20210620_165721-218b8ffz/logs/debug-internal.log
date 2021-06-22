@@ -1,0 +1,123 @@
+2021-06-20 16:57:22,521 INFO    MainThread:550 [internal.py:wandb_internal():91] W&B internal server running at pid: 550, started at: 2021-06-20 16:57:22.519304
+2021-06-20 16:57:22,527 DEBUG   HandlerThread:550 [handler.py:handle_request():124] handle_request: check_version
+2021-06-20 16:57:22,527 INFO    WriterThread:550 [datastore.py:open_for_write():80] open: /content/drive/My Drive/ABC_GAN_Code/outputs/2021-06-20/16-57-21/wandb/run-20210620_165721-218b8ffz/run-218b8ffz.wandb
+2021-06-20 16:57:22,531 DEBUG   SenderThread:550 [sender.py:send():179] send: header
+2021-06-20 16:57:22,532 DEBUG   SenderThread:550 [sender.py:send_request():193] send_request: check_version
+2021-06-20 16:57:22,585 DEBUG   SenderThread:550 [sender.py:send():179] send: run
+2021-06-20 16:57:22,600 DEBUG   SenderThread:550 [git.py:repo():33] git repository is invalid
+2021-06-20 16:57:22,705 DEBUG   HandlerThread:550 [handler.py:handle_request():124] handle_request: run_start
+2021-06-20 16:57:22,714 INFO    SenderThread:550 [dir_watcher.py:__init__():168] watching files in: /content/drive/My Drive/ABC_GAN_Code/outputs/2021-06-20/16-57-21/wandb/run-20210620_165721-218b8ffz/files
+2021-06-20 16:57:22,715 INFO    SenderThread:550 [sender.py:_start_run_threads():707] run started: 218b8ffz with start time 1624208241
+2021-06-20 16:57:22,715 DEBUG   SenderThread:550 [sender.py:send():179] send: summary
+2021-06-20 16:57:22,721 INFO    SenderThread:550 [sender.py:_save_file():829] saving file wandb-summary.json with policy end
+2021-06-20 16:57:23,720 INFO    Thread-8  :550 [dir_watcher.py:_on_file_created():216] file/dir created: /content/drive/My Drive/ABC_GAN_Code/outputs/2021-06-20/16-57-21/wandb/run-20210620_165721-218b8ffz/files/wandb-summary.json
+2021-06-20 16:57:24,522 DEBUG   HandlerThread:550 [meta.py:__init__():39] meta init
+2021-06-20 16:57:24,523 DEBUG   HandlerThread:550 [meta.py:__init__():53] meta init done
+2021-06-20 16:57:24,523 DEBUG   HandlerThread:550 [meta.py:probe():210] probe
+2021-06-20 16:57:24,534 DEBUG   HandlerThread:550 [git.py:repo():33] git repository is invalid
+2021-06-20 16:57:24,535 DEBUG   HandlerThread:550 [meta.py:_save_pip():57] save pip
+2021-06-20 16:57:24,539 DEBUG   HandlerThread:550 [meta.py:_save_pip():71] save pip done
+2021-06-20 16:57:24,540 DEBUG   HandlerThread:550 [meta.py:probe():252] probe done
+2021-06-20 16:57:24,547 DEBUG   SenderThread:550 [sender.py:send():179] send: files
+2021-06-20 16:57:24,548 INFO    SenderThread:550 [sender.py:_save_file():829] saving file wandb-metadata.json with policy now
+2021-06-20 16:57:24,572 DEBUG   HandlerThread:550 [handler.py:handle_request():124] handle_request: stop_status
+2021-06-20 16:57:24,573 DEBUG   SenderThread:550 [sender.py:send_request():193] send_request: stop_status
+2021-06-20 16:57:24,722 INFO    Thread-8  :550 [dir_watcher.py:_on_file_created():216] file/dir created: /content/drive/My Drive/ABC_GAN_Code/outputs/2021-06-20/16-57-21/wandb/run-20210620_165721-218b8ffz/files/wandb-metadata.json
+2021-06-20 16:57:24,723 INFO    Thread-8  :550 [dir_watcher.py:_on_file_created():216] file/dir created: /content/drive/My Drive/ABC_GAN_Code/outputs/2021-06-20/16-57-21/wandb/run-20210620_165721-218b8ffz/files/output.log
+2021-06-20 16:57:24,728 INFO    Thread-8  :550 [dir_watcher.py:_on_file_created():216] file/dir created: /content/drive/My Drive/ABC_GAN_Code/outputs/2021-06-20/16-57-21/wandb/run-20210620_165721-218b8ffz/files/requirements.txt
+2021-06-20 16:57:24,862 INFO    Thread-11 :550 [upload_job.py:push():133] Uploaded file /tmp/tmpgr12ysi7wandb/r58xyoxe-wandb-metadata.json
+2021-06-20 16:57:25,071 DEBUG   SenderThread:550 [sender.py:send():179] send: telemetry
+2021-06-20 16:57:25,072 DEBUG   SenderThread:550 [sender.py:send():179] send: exit
+2021-06-20 16:57:25,072 INFO    SenderThread:550 [sender.py:send_exit():287] handling exit code: 1
+2021-06-20 16:57:25,072 INFO    SenderThread:550 [sender.py:send_exit():295] send defer
+2021-06-20 16:57:25,072 DEBUG   HandlerThread:550 [handler.py:handle_request():124] handle_request: poll_exit
+2021-06-20 16:57:25,073 DEBUG   HandlerThread:550 [handler.py:handle_request():124] handle_request: defer
+2021-06-20 16:57:25,073 INFO    HandlerThread:550 [handler.py:handle_request_defer():141] handle defer: 0
+2021-06-20 16:57:25,073 DEBUG   SenderThread:550 [sender.py:send_request():193] send_request: poll_exit
+2021-06-20 16:57:25,073 DEBUG   SenderThread:550 [sender.py:send_request():193] send_request: defer
+2021-06-20 16:57:25,074 INFO    SenderThread:550 [sender.py:send_request_defer():304] handle sender defer: 0
+2021-06-20 16:57:25,074 INFO    SenderThread:550 [sender.py:send_request_defer():342] send defer: 1
+2021-06-20 16:57:25,074 DEBUG   HandlerThread:550 [handler.py:handle_request():124] handle_request: defer
+2021-06-20 16:57:25,075 INFO    HandlerThread:550 [handler.py:handle_request_defer():141] handle defer: 1
+2021-06-20 16:57:25,128 DEBUG   SenderThread:550 [sender.py:send_request():193] send_request: defer
+2021-06-20 16:57:25,128 INFO    SenderThread:550 [sender.py:send_request_defer():304] handle sender defer: 1
+2021-06-20 16:57:25,128 INFO    SenderThread:550 [sender.py:send_request_defer():342] send defer: 2
+2021-06-20 16:57:25,129 DEBUG   SenderThread:550 [sender.py:send():179] send: stats
+2021-06-20 16:57:25,129 DEBUG   HandlerThread:550 [handler.py:handle_request():124] handle_request: defer
+2021-06-20 16:57:25,130 INFO    HandlerThread:550 [handler.py:handle_request_defer():141] handle defer: 2
+2021-06-20 16:57:25,130 DEBUG   SenderThread:550 [sender.py:send_request():193] send_request: defer
+2021-06-20 16:57:25,130 INFO    SenderThread:550 [sender.py:send_request_defer():304] handle sender defer: 2
+2021-06-20 16:57:25,130 INFO    SenderThread:550 [sender.py:send_request_defer():342] send defer: 3
+2021-06-20 16:57:25,130 DEBUG   HandlerThread:550 [handler.py:handle_request():124] handle_request: defer
+2021-06-20 16:57:25,131 INFO    HandlerThread:550 [handler.py:handle_request_defer():141] handle defer: 3
+2021-06-20 16:57:25,131 DEBUG   SenderThread:550 [sender.py:send():179] send: summary
+2021-06-20 16:57:25,135 INFO    SenderThread:550 [sender.py:_save_file():829] saving file wandb-summary.json with policy end
+2021-06-20 16:57:25,137 DEBUG   SenderThread:550 [sender.py:send_request():193] send_request: defer
+2021-06-20 16:57:25,137 INFO    SenderThread:550 [sender.py:send_request_defer():304] handle sender defer: 3
+2021-06-20 16:57:25,137 INFO    SenderThread:550 [sender.py:send_request_defer():342] send defer: 4
+2021-06-20 16:57:25,138 DEBUG   HandlerThread:550 [handler.py:handle_request():124] handle_request: defer
+2021-06-20 16:57:25,138 INFO    HandlerThread:550 [handler.py:handle_request_defer():141] handle defer: 4
+2021-06-20 16:57:25,138 DEBUG   SenderThread:550 [sender.py:send_request():193] send_request: defer
+2021-06-20 16:57:25,138 INFO    SenderThread:550 [sender.py:send_request_defer():304] handle sender defer: 4
+2021-06-20 16:57:25,178 DEBUG   HandlerThread:550 [handler.py:handle_request():124] handle_request: poll_exit
+2021-06-20 16:57:25,238 INFO    SenderThread:550 [sender.py:send_request_defer():342] send defer: 5
+2021-06-20 16:57:25,239 DEBUG   SenderThread:550 [sender.py:send_request():193] send_request: poll_exit
+2021-06-20 16:57:25,239 DEBUG   HandlerThread:550 [handler.py:handle_request():124] handle_request: defer
+2021-06-20 16:57:25,240 INFO    HandlerThread:550 [handler.py:handle_request_defer():141] handle defer: 5
+2021-06-20 16:57:25,240 DEBUG   SenderThread:550 [sender.py:send_request():193] send_request: defer
+2021-06-20 16:57:25,240 INFO    SenderThread:550 [sender.py:send_request_defer():304] handle sender defer: 5
+2021-06-20 16:57:25,241 INFO    SenderThread:550 [dir_watcher.py:finish():282] shutting down directory watcher
+2021-06-20 16:57:25,341 DEBUG   HandlerThread:550 [handler.py:handle_request():124] handle_request: poll_exit
+2021-06-20 16:57:25,726 INFO    Thread-8  :550 [dir_watcher.py:_on_file_modified():229] file/dir modified: /content/drive/My Drive/ABC_GAN_Code/outputs/2021-06-20/16-57-21/wandb/run-20210620_165721-218b8ffz/files/config.yaml
+2021-06-20 16:57:25,730 INFO    SenderThread:550 [dir_watcher.py:_on_file_modified():229] file/dir modified: /content/drive/My Drive/ABC_GAN_Code/outputs/2021-06-20/16-57-21/wandb/run-20210620_165721-218b8ffz/files/output.log
+2021-06-20 16:57:25,730 INFO    SenderThread:550 [dir_watcher.py:_on_file_modified():229] file/dir modified: /content/drive/My Drive/ABC_GAN_Code/outputs/2021-06-20/16-57-21/wandb/run-20210620_165721-218b8ffz/files/wandb-summary.json
+2021-06-20 16:57:25,731 INFO    SenderThread:550 [dir_watcher.py:finish():312] scan: /content/drive/My Drive/ABC_GAN_Code/outputs/2021-06-20/16-57-21/wandb/run-20210620_165721-218b8ffz/files
+2021-06-20 16:57:25,732 INFO    SenderThread:550 [dir_watcher.py:finish():318] scan save: /content/drive/My Drive/ABC_GAN_Code/outputs/2021-06-20/16-57-21/wandb/run-20210620_165721-218b8ffz/files/config.yaml config.yaml
+2021-06-20 16:57:25,734 INFO    SenderThread:550 [dir_watcher.py:finish():318] scan save: /content/drive/My Drive/ABC_GAN_Code/outputs/2021-06-20/16-57-21/wandb/run-20210620_165721-218b8ffz/files/wandb-summary.json wandb-summary.json
+2021-06-20 16:57:25,740 INFO    SenderThread:550 [dir_watcher.py:finish():318] scan save: /content/drive/My Drive/ABC_GAN_Code/outputs/2021-06-20/16-57-21/wandb/run-20210620_165721-218b8ffz/files/requirements.txt requirements.txt
+2021-06-20 16:57:25,749 INFO    SenderThread:550 [dir_watcher.py:finish():318] scan save: /content/drive/My Drive/ABC_GAN_Code/outputs/2021-06-20/16-57-21/wandb/run-20210620_165721-218b8ffz/files/wandb-metadata.json wandb-metadata.json
+2021-06-20 16:57:25,750 INFO    SenderThread:550 [dir_watcher.py:finish():318] scan save: /content/drive/My Drive/ABC_GAN_Code/outputs/2021-06-20/16-57-21/wandb/run-20210620_165721-218b8ffz/files/output.log output.log
+2021-06-20 16:57:25,756 INFO    SenderThread:550 [sender.py:send_request_defer():342] send defer: 6
+2021-06-20 16:57:25,757 DEBUG   SenderThread:550 [sender.py:send_request():193] send_request: poll_exit
+2021-06-20 16:57:25,764 DEBUG   HandlerThread:550 [handler.py:handle_request():124] handle_request: defer
+2021-06-20 16:57:25,765 INFO    HandlerThread:550 [handler.py:handle_request_defer():141] handle defer: 6
+2021-06-20 16:57:25,766 DEBUG   SenderThread:550 [sender.py:send_request():193] send_request: defer
+2021-06-20 16:57:25,766 INFO    SenderThread:550 [sender.py:send_request_defer():304] handle sender defer: 6
+2021-06-20 16:57:25,766 INFO    SenderThread:550 [file_pusher.py:finish():176] shutting down file pusher
+2021-06-20 16:57:25,766 INFO    SenderThread:550 [sender.py:send_request_defer():342] send defer: 7
+2021-06-20 16:57:25,767 DEBUG   HandlerThread:550 [handler.py:handle_request():124] handle_request: defer
+2021-06-20 16:57:25,769 INFO    HandlerThread:550 [handler.py:handle_request_defer():141] handle defer: 7
+2021-06-20 16:57:25,770 DEBUG   SenderThread:550 [sender.py:send_request():193] send_request: defer
+2021-06-20 16:57:25,770 INFO    SenderThread:550 [sender.py:send_request_defer():304] handle sender defer: 7
+2021-06-20 16:57:25,866 DEBUG   HandlerThread:550 [handler.py:handle_request():124] handle_request: poll_exit
+2021-06-20 16:57:26,003 INFO    Thread-12 :550 [upload_job.py:push():133] Uploaded file /content/drive/My Drive/ABC_GAN_Code/outputs/2021-06-20/16-57-21/wandb/run-20210620_165721-218b8ffz/files/config.yaml
+2021-06-20 16:57:26,046 INFO    Thread-15 :550 [upload_job.py:push():133] Uploaded file /content/drive/My Drive/ABC_GAN_Code/outputs/2021-06-20/16-57-21/wandb/run-20210620_165721-218b8ffz/files/output.log
+2021-06-20 16:57:26,055 INFO    Thread-14 :550 [upload_job.py:push():133] Uploaded file /content/drive/My Drive/ABC_GAN_Code/outputs/2021-06-20/16-57-21/wandb/run-20210620_165721-218b8ffz/files/requirements.txt
+2021-06-20 16:57:26,065 INFO    Thread-13 :550 [upload_job.py:push():133] Uploaded file /content/drive/My Drive/ABC_GAN_Code/outputs/2021-06-20/16-57-21/wandb/run-20210620_165721-218b8ffz/files/wandb-summary.json
+2021-06-20 16:57:26,096 INFO    SenderThread:550 [sender.py:send_request_defer():342] send defer: 8
+2021-06-20 16:57:26,097 DEBUG   SenderThread:550 [sender.py:send_request():193] send_request: poll_exit
+2021-06-20 16:57:26,098 DEBUG   HandlerThread:550 [handler.py:handle_request():124] handle_request: defer
+2021-06-20 16:57:26,098 INFO    HandlerThread:550 [handler.py:handle_request_defer():141] handle defer: 8
+2021-06-20 16:57:26,099 DEBUG   SenderThread:550 [sender.py:send_request():193] send_request: defer
+2021-06-20 16:57:26,099 INFO    SenderThread:550 [sender.py:send_request_defer():304] handle sender defer: 8
+2021-06-20 16:57:26,099 INFO    SenderThread:550 [sender.py:send_request_defer():342] send defer: 9
+2021-06-20 16:57:26,100 DEBUG   SenderThread:550 [sender.py:send():179] send: final
+2021-06-20 16:57:26,100 DEBUG   SenderThread:550 [sender.py:send():179] send: footer
+2021-06-20 16:57:26,101 DEBUG   HandlerThread:550 [handler.py:handle_request():124] handle_request: defer
+2021-06-20 16:57:26,101 INFO    HandlerThread:550 [handler.py:handle_request_defer():141] handle defer: 9
+2021-06-20 16:57:26,101 DEBUG   SenderThread:550 [sender.py:send_request():193] send_request: defer
+2021-06-20 16:57:26,101 INFO    SenderThread:550 [sender.py:send_request_defer():304] handle sender defer: 9
+2021-06-20 16:57:26,200 DEBUG   HandlerThread:550 [handler.py:handle_request():124] handle_request: poll_exit
+2021-06-20 16:57:26,202 DEBUG   SenderThread:550 [sender.py:send_request():193] send_request: poll_exit
+2021-06-20 16:57:26,305 DEBUG   HandlerThread:550 [handler.py:handle_request():124] handle_request: poll_exit
+2021-06-20 16:57:26,306 DEBUG   SenderThread:550 [sender.py:send_request():193] send_request: poll_exit
+2021-06-20 16:57:26,306 INFO    SenderThread:550 [file_pusher.py:join():181] waiting for file pusher
+2021-06-20 16:57:26,309 DEBUG   HandlerThread:550 [handler.py:handle_request():124] handle_request: get_summary
+2021-06-20 16:57:26,310 DEBUG   HandlerThread:550 [handler.py:handle_request():124] handle_request: sampled_history
+2021-06-20 16:57:26,311 DEBUG   HandlerThread:550 [handler.py:handle_request():124] handle_request: shutdown
+2021-06-20 16:57:26,311 INFO    HandlerThread:550 [handler.py:finish():638] shutting down handler
+2021-06-20 16:57:27,101 INFO    WriterThread:550 [datastore.py:close():288] close: /content/drive/My Drive/ABC_GAN_Code/outputs/2021-06-20/16-57-21/wandb/run-20210620_165721-218b8ffz/run-218b8ffz.wandb
+2021-06-20 16:57:27,307 INFO    SenderThread:550 [sender.py:finish():933] shutting down sender
+2021-06-20 16:57:27,308 INFO    SenderThread:550 [file_pusher.py:finish():176] shutting down file pusher
+2021-06-20 16:57:27,308 INFO    SenderThread:550 [file_pusher.py:join():181] waiting for file pusher
+2021-06-20 16:57:27,309 INFO    MainThread:550 [internal.py:handle_exit():78] Internal process exited

@@ -1,0 +1,15 @@
+{
+    "os": "Linux-5.4.104+-x86_64-with-Ubuntu-18.04-bionic",
+    "python": "3.7.10",
+    "heartbeatAt": "2021-06-22T18:16:11.426528",
+    "startedAt": "2021-06-22T18:16:06.512902",
+    "docker": null,
+    "cpu_count": 2,
+    "cuda": "11.0.228",
+    "args": [],
+    "state": "running",
+    "program": "<python with no main file>",
+    "host": "976c5b43d066",
+    "username": "root",
+    "executable": "/usr/bin/python3"
+}

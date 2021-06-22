@@ -1,0 +1,106 @@
+2021-06-22 18:16:06,560 INFO    MainThread:1296 [wandb_setup.py:_flush():69] setting env: {}
+2021-06-22 18:16:06,561 INFO    MainThread:1296 [wandb_setup.py:_flush():69] setting login settings: {}
+2021-06-22 18:16:06,562 INFO    MainThread:1296 [wandb_init.py:_log_setup():337] Logging user logs to /content/drive/MyDrive/ABC_GAN_Code/outputs/2021-06-22/18-16-06/wandb/run-20210622_181606-292zyt0b/logs/debug.log
+2021-06-22 18:16:06,563 INFO    MainThread:1296 [wandb_init.py:_log_setup():338] Logging internal logs to /content/drive/MyDrive/ABC_GAN_Code/outputs/2021-06-22/18-16-06/wandb/run-20210622_181606-292zyt0b/logs/debug-internal.log
+2021-06-22 18:16:06,564 INFO    MainThread:1296 [wandb_init.py:_jupyter_setup():288] configuring jupyter hooks <wandb.sdk.wandb_init._WandbInit object at 0x7f3794596fd0>
+2021-06-22 18:16:06,564 INFO    MainThread:1296 [wandb_init.py:init():370] calling init triggers
+2021-06-22 18:16:06,565 INFO    MainThread:1296 [wandb_init.py:init():377] wandb.init called with sweep_config: {}
+config: {'_metadata': ContainerMetadata(ref_type=typing.Any, object_type=None, optional=True, key=None, flags={'struct': True}, flags_root=False, resolver_cache=defaultdict(<class 'dict'>, {'now': {('%Y-%m-%d',): '2021-06-22', ('%H-%M-%S',): '18-16-06'}}), key_type=typing.Any, element_type=typing.Any), '_parent': None, '_flags_cache': {'struct': True, 'readonly': None, 'allow_objects': None}, '_content': {'dataset': {'name': 'cpunish', 'funct': 'cpunishDataset.cpunish_data', 'batch_size': 14}, 'optimizer': {'name': 'adam', 'funct': 'torch.optim.Adam', 'lr': 0.001, 'beta_1': 0.5, 'beta_2': 0.999}, 'model': {'hidden_nodes': 10}, 'train': {'n_epochs': 1000, 'initialize_generator': True, 'warmUp_discriminator': True, 'cuda': False}}}
+2021-06-22 18:16:06,565 INFO    MainThread:1296 [wandb_init.py:init():419] starting backend
+2021-06-22 18:16:06,565 INFO    MainThread:1296 [backend.py:_multiprocessing_setup():72] multiprocessing start_methods=fork,spawn,forkserver, using: spawn
+2021-06-22 18:16:06,584 INFO    MainThread:1296 [backend.py:ensure_launched():135] starting backend process...
+2021-06-22 18:16:06,595 INFO    MainThread:1296 [backend.py:ensure_launched():140] started backend process with pid: 1315
+2021-06-22 18:16:06,599 INFO    MainThread:1296 [wandb_init.py:init():424] backend started and connected
+2021-06-22 18:16:06,624 INFO    MainThread:1296 [wandb_run.py:_label_probe_notebook():845] probe notebook
+2021-06-22 18:16:06,625 INFO    MainThread:1296 [wandb_run.py:_label_probe_notebook():852] Unable to probe notebook: 'InteractiveShell' object has no attribute 'kernel'
+2021-06-22 18:16:06,625 INFO    MainThread:1296 [wandb_init.py:init():472] updated telemetry
+2021-06-22 18:16:06,625 INFO    MainThread:1296 [wandb_init.py:init():491] communicating current version
+2021-06-22 18:16:07,564 INFO    MainThread:1296 [wandb_init.py:init():496] got version response 
+2021-06-22 18:16:07,565 INFO    MainThread:1296 [wandb_init.py:init():504] communicating run to backend with 30 second timeout
+2021-06-22 18:16:09,524 INFO    MainThread:1296 [wandb_init.py:init():529] starting run threads in backend
+2021-06-22 18:16:11,464 INFO    MainThread:1296 [wandb_run.py:_console_start():1624] atexit reg
+2021-06-22 18:16:11,468 INFO    MainThread:1296 [wandb_run.py:_redirect():1498] redirect: SettingsConsole.WRAP
+2021-06-22 18:16:11,468 INFO    MainThread:1296 [wandb_run.py:_redirect():1535] Wrapping output streams.
+2021-06-22 18:16:11,472 INFO    MainThread:1296 [wandb_run.py:_redirect():1559] Redirects installed.
+2021-06-22 18:16:11,472 INFO    MainThread:1296 [wandb_init.py:init():554] run started, returning control to user process
+2021-06-22 18:16:11,479 INFO    MainThread:1296 [wandb_watch.py:watch():40] Watching
+2021-06-22 18:16:11,480 INFO    MainThread:1296 [wandb_watch.py:watch():40] Watching
+2021-06-22 18:16:14,080 INFO    MainThread:1296 [wandb_run.py:_config_callback():873] config_cb ('_wandb', 'visualize', 'Scatter Plot') {'panel_type': 'Vega2', 'panel_config': {'userQuery': {'queryFields': [{'name': 'runSets', 'args': [{'name': 'runSets', 'value': '${runSets}'}], 'fields': [{'name': 'id', 'fields': []}, {'name': 'name', 'fields': []}, {'name': '_defaultColorIndex', 'fields': []}, {'name': 'summaryTable', 'args': [{'name': 'tableKey', 'value': 'Scatter Plot_table'}], 'fields': []}]}]}, 'panelDefId': 'wandb/scatter/v0', 'transform': {'name': 'tableWithLeafColNames'}, 'fieldSettings': {'x': 'Real', 'y': 'Generated'}, 'stringSettings': {'title': None}}} None
+2021-06-22 18:16:15,725 INFO    MainThread:1296 [wandb_run.py:_atexit_cleanup():1594] got exitcode: 0
+2021-06-22 18:16:15,728 INFO    MainThread:1296 [wandb_run.py:_restore():1566] restore
+2021-06-22 18:16:16,056 INFO    MainThread:1296 [wandb_run.py:_wait_for_finish():1716] got exit ret: file_counts {
+  wandb_count: 1
+  media_count: 3
+  artifact_count: 1
+}
+pusher_stats {
+  uploaded_bytes: 3154
+  total_bytes: 3154
+}
+
+2021-06-22 18:16:16,163 INFO    MainThread:1296 [wandb_run.py:_wait_for_finish():1716] got exit ret: file_counts {
+  wandb_count: 1
+  media_count: 3
+  artifact_count: 1
+}
+pusher_stats {
+  uploaded_bytes: 3154
+  total_bytes: 3154
+}
+
+2021-06-22 18:16:16,399 INFO    MainThread:1296 [wandb_run.py:_wait_for_finish():1716] got exit ret: file_counts {
+  wandb_count: 1
+  media_count: 3
+  artifact_count: 1
+}
+pusher_stats {
+  uploaded_bytes: 3154
+  total_bytes: 3154
+}
+
+2021-06-22 18:16:16,678 INFO    MainThread:1296 [wandb_run.py:_wait_for_finish():1716] got exit ret: file_counts {
+  wandb_count: 5
+  media_count: 3
+  artifact_count: 1
+}
+pusher_stats {
+  uploaded_bytes: 3154
+  total_bytes: 63015
+}
+
+2021-06-22 18:16:16,999 INFO    MainThread:1296 [wandb_run.py:_wait_for_finish():1716] got exit ret: file_counts {
+  wandb_count: 5
+  media_count: 3
+  artifact_count: 1
+}
+pusher_stats {
+  uploaded_bytes: 63015
+  total_bytes: 63015
+}
+
+2021-06-22 18:16:17,108 INFO    MainThread:1296 [wandb_run.py:_wait_for_finish():1716] got exit ret: file_counts {
+  wandb_count: 5
+  media_count: 3
+  artifact_count: 1
+}
+pusher_stats {
+  uploaded_bytes: 63015
+  total_bytes: 63015
+}
+
+2021-06-22 18:16:17,211 INFO    MainThread:1296 [wandb_run.py:_wait_for_finish():1716] got exit ret: done: true
+exit_result {
+}
+file_counts {
+  wandb_count: 5
+  media_count: 3
+  artifact_count: 1
+}
+pusher_stats {
+  uploaded_bytes: 63015
+  total_bytes: 63015
+}
+
+2021-06-22 18:16:18,778 INFO    MainThread:1296 [wandb_run.py:_show_summary():1871] rendering summary
+2021-06-22 18:16:18,779 INFO    MainThread:1296 [wandb_run.py:_show_history():1909] rendering history
+2021-06-22 18:16:18,780 INFO    MainThread:1296 [wandb_run.py:_show_files():1938] logging synced files

@@ -1,0 +1,16 @@
+Error executing job with overrides: []
+Traceback (most recent call last):
+  File "train_test.py", line 221, in main
+    discriminator_warmup(disc,disc_opt,dataWithNoise,cfg.train.n_epochs,cfg.dataset.batch_size,criterion,device)
+  File "train_test.py", line 42, in discriminator_warmup
+    disc_loss = criterion(y_pred, y_batch)
+  File "/usr/local/lib/python3.7/dist-packages/torch/nn/modules/loss.py", line 609, in __init__
+    super(BCELoss, self).__init__(weight, size_average, reduce, reduction)
+  File "/usr/local/lib/python3.7/dist-packages/torch/nn/modules/loss.py", line 25, in __init__
+    super(_WeightedLoss, self).__init__(size_average, reduce, reduction)
+  File "/usr/local/lib/python3.7/dist-packages/torch/nn/modules/loss.py", line 18, in __init__
+    self.reduction: str = _Reduction.legacy_get_string(size_average, reduce)
+  File "/usr/local/lib/python3.7/dist-packages/torch/nn/_reduction.py", line 35, in legacy_get_string
+    if size_average and reduce:
+RuntimeError: Boolean value of Tensor with more than one value is ambiguous
+Set the environment variable HYDRA_FULL_ERROR=1 for a complete stack trace.

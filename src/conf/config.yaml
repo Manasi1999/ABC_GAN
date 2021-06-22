@@ -1,0 +1,17 @@
+defaults:
+  - dataset: cpunish 
+  - optimizer : adam 
+  - model : linear 
+
+train:
+  n_epochs: 1000
+  initialize_generator: true 
+  warmUp_discriminator: true 
+  cuda: true 
+
+abc: 
+  mean: 0 
+  variance : 1
+
+
+

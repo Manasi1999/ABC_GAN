@@ -1,0 +1,5 @@
+name: adam 
+funct : torch.optim.Adam 
+lr: 0.001
+beta_1: 0.5
+beta_2: 0.999
