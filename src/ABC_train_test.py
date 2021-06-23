@@ -32,13 +32,13 @@ def ABC_pre_generator(x_batch,coeff,variance,mean,device):
   coeff_len = len(coeff)
   if mean == 0:
     weights = np.random.normal(0,variance,size=(coeff_len,1))
-    weights = torch.from_numpy(weights).reshape(num_coeff,1)
+    weights = torch.from_numpy(weights).reshape(coeff_len,1)
   else:
     weights = []
-    for i in range(num_coeff):
+    for i in range(coeff_len):
       weights.append(np.random.normal(coeff[i],variance))
-    weights = torch.tensor(weights).reshape(num_coeff,1)
-  y_abc =  torch.matmul(x_batch,weights)
+    weights = torch.tensor(weights).reshape(coeff_len,1)
+  y_abc =  torch.matmul(x_batch,weights.float())
   gen_input = torch.cat((x_batch,y_abc),dim = 1).to(device)
   return gen_input 
 
@@ -159,7 +159,7 @@ def test_generator(gen,dataset,coeff,mean,variance,device):
   plt.xlabel("Index")
   plt.ylabel("Y values")
   plt.legend()
-  wandb.log("chart":plt)
+  wandb.log({"chart":plt})
   
   #Weights of generator after training 
   params = torch.cat([x.view(-1) for x in gen.output.parameters()]).cpu()
@@ -224,7 +224,7 @@ def main(cfg: DictConfig) -> None:
 
   #Initialize Generator and Discriminator 
   disc = Discriminator(coeff,cfg.model.hidden_nodes).to(device)
-  gen = GeneratorforABC(coeff,cfg.train.initialize_generator).to(device)
+  gen = GeneratorforABC(coeff,cfg.train.initialize_generator,cfg.abc.initialize_generator_identity).to(device)
 
   #Add optimizer to discriminator and generator 
   optimizer = load_func(cfg.optimizer.funct)
