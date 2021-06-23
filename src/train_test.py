@@ -50,7 +50,10 @@ def discriminator_warmup(disc,disc_opt,dataset,n_epochs,batch_size,criterion,dev
 
       epoch_loss += disc_loss.item()
 
-    print(f'Epoch {epoch+0:03}: | Loss: {epoch_loss/len(train_loader):.5f}')
+    wandb.log({
+      "Epoch(Discriminator Warm-up)":epoch,
+      "disc_warmup_loss":epoch_loss/len(train_loader)
+    })
 
 def training_GAN(disc, gen,disc_opt,gen_opt,dataset, batch_size, n_epochs,criterion,device): 
   discriminatorLoss = []
@@ -136,17 +139,16 @@ def test_generator(gen,dataset,device):
     generated_y = generated_y.cpu().detach()
     #Plot Real and Generated Data 
     generated_data = torch.reshape(generated_y,(-1,))
-    print(generated_data)
-    print(y_batch)
 
-  ## TODO : Plots 
-  plt.title("Comparison between Generated Data and Real Data")
-  plt.plot(generated_y,'o',color="red",label="Generated Data")
-  plt.plot(y_batch,'o',color="blue",label="Real Data")
-  plt.xlabel("Index")
-  plt.ylabel("Y values")
-  plt.legend()
-  wandb.log("chart":plt)
+  #Plot Real Vs Generated Data 
+  gen_data = generated_data.numpy().reshape(1,len(dataset)).tolist()
+  real_data = y_batch.numpy().reshape(1,len(dataset)).tolist()
+  data=[]
+  for i in range(len(dataset)):
+      data.append([i,gen_data[0][i],"Generated"])
+      data.append([i,real_data[0][i],"Real"])
+  table = wandb.Table(data=data, columns = ["Index", "Data","Label"])
+  wandb.log({"Real Data Vs Generated Data" : wandb.plot.scatter(table, "Index", "Data","Comparison")})
   
   
   #Weights of generator after training 
@@ -158,7 +160,7 @@ def test_generator(gen,dataset,device):
     weights[i] = "{:.2f}".format(weights[i])
   bias = params[len(params)-1]
   bias = "{:.2f}".format(bias)
-  print("Generator Weights after Training")
+  print("Generator Weights after Training (GAN)")
   print("Weights : ",weights)
   print("Bias : ",bias)
 
@@ -171,23 +173,30 @@ def test_discriminator(disc,gen,dataset,device):
     y_shape = list(y_batch.size())
     curr_batch_size = y_shape[0]
     y_batch = torch.reshape(y_batch,(curr_batch_size,1))
-    print("For real data points")
+    
+    #Real Data Points  
     real_data_input = torch.cat((x_batch,y_batch),dim=1).to(device)
     disc_pred = disc(real_data_input)
-    print(disc_pred)
+    disc_pred = disc_pred.detach()
+    real_out = disc_pred.numpy().reshape(1,len(dataset)).tolist()
 
-    print("For random data points")
+    #Random Data Points 
     shape_data = list(real_data_input.size())
     random_data = 10*torch.rand(shape_data[0],shape_data[1]).to(device)
     disc_pred = disc(random_data)
-    print(disc_pred) 
+    disc_pred = disc_pred.detach()
+    rand_out = disc_pred.numpy().reshape(1,len(dataset)).tolist()
 
-    print("For generated data points")
+    #Generated Data points 
     x_batch = x_batch.to(device)
     generated_out = gen(x_batch)
     generated_data = torch.cat((x_batch,generated_out),dim=1).to(device)
     disc_pred = disc(generated_data.float())
-    print(disc_pred)
+    disc_pred = disc_pred.detach()
+    gen_out = disc_pred.numpy().reshape(1,len(dataset)).tolist()
+
+    data = [[real_out[i],gen_out[i],rand_out[i]] for i in range(len(dataset))]
+    wandb.log({"a_table": wandb.Table(data=data, columns=["Real ", "Generated", "Random"])})
 
 
 @hydra.main(config_path="conf" ,config_name="config.yaml")
