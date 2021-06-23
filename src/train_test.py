@@ -140,7 +140,13 @@ def test_generator(gen,dataset,device):
     print(y_batch)
 
   ## TODO : Plots 
-  
+  plt.title("Comparison between Generated Data and Real Data")
+  plt.plot(generated_y,'o',color="red",label="Generated Data")
+  plt.plot(y_batch,'o',color="blue",label="Real Data")
+  plt.xlabel("Index")
+  plt.ylabel("Y values")
+  plt.legend()
+  wandb.log("chart":plt)
   
   
   #Weights of generator after training 

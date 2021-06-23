@@ -46,15 +46,18 @@ class Generator(nn.Module):
           nn.init.constant_(m.weight[0][i-1],coefficients[i])
         nn.init.constant_(m.bias,coefficients[0])
 
+
 class GeneratorforABC(nn.Module):
 
-  def __init__(self,coefficients,initialize):
+  def __init__(self,coefficients,initialize,identity):
     super().__init__()
     inputNodes = len(coefficients)
     #Input to Output Layer Linear Transformation
     self.output = nn.Linear(inputNodes+1,1)
     if initialize == True:
       self.initialize_weights(coefficients)
+    if identity == True: 
+       self.initialize_weights_to_identity(coefficients)
 
   def forward(self, x):
     #Pass the input tensor through the operations 
@@ -66,5 +69,15 @@ class GeneratorforABC(nn.Module):
       if isinstance(m, nn.Linear):
         for i in range(1,len(coefficients)):
           nn.init.constant_(m.weight[0][i-1],coefficients[i])
-        nn.init.constant_(m.weight[0][len(coefficients)])
+        nn.init.constant_(m.weight[0][len(coefficients)],0)
         nn.init.constant_(m.bias,coefficients[0])
+
+  def initialize_weights_to_identity(self,coefficients):
+    for m in self.modules():
+      if isinstance(m, nn.Linear):
+        for i in range(1,len(coefficients)):
+          nn.init.constant_(m.weight[0][i-1],0)
+        nn.init.constant_(m.weight[0][len(coefficients)],1)
+        nn.init.constant_(m.bias,0)
+
+
