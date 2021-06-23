@@ -12,7 +12,7 @@ from statistics import mean
 import pandas as pd
 from sklearn import preprocessing
 from dataset import CustomDataset,DataWithNoise
-from network import Generator,Discriminator 
+from network import Generator,Discriminator,GeneratorforABC 
 from statsModel import statsModel 
 import wandb
 import hydra
@@ -68,7 +68,7 @@ def discriminator_warmup(disc,disc_opt,dataset,n_epochs,batch_size,criterion,dev
 
     print(f'Epoch {epoch+0:03}: | Loss: {epoch_loss/len(train_loader):.5f}')
 
-def training_GAN(disc, gen,disc_opt,gen_opt,dataset, batch_size, n_epochs,criterion,coeff_tensor,device): 
+def training_GAN(disc, gen,disc_opt,gen_opt,dataset, batch_size, n_epochs,criterion,coeff,mean,variance,device): 
   discriminatorLoss = []
   generatorLoss = []
   train_loader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
@@ -96,8 +96,8 @@ def training_GAN(disc, gen,disc_opt,gen_opt,dataset, batch_size, n_epochs,criter
       disc_real_loss = criterion(disc_real_pred,real_labels)
 
       #Get discriminator loss for fake data
-      gen_input =  
-      generated_y = gen(x_batch)  
+      gen_input =  ABC_pre_generator(x_batch,coeff,variance,mean,device)
+      generated_y = gen(gen_input)  
       inputs_fake = torch.cat((x_batch,generated_y),dim=1).to(device) 
 
       disc_fake_pred = disc(inputs_fake) 
@@ -118,7 +118,8 @@ def training_GAN(disc, gen,disc_opt,gen_opt,dataset, batch_size, n_epochs,criter
       gen_opt.zero_grad() 
 
       #Generate input to generator using ABC pre-generator 
-      generated_y = gen(x_batch) 
+      gen_input =  ABC_pre_generator(x_batch,coeff,variance,mean,device)
+      generated_y = gen(gen_input) 
       inputs_fake = torch.cat((x_batch,generated_y),dim=1).to(device)
       disc_fake_pred = disc(inputs_fake)
 
@@ -138,19 +139,14 @@ def training_GAN(disc, gen,disc_opt,gen_opt,dataset, batch_size, n_epochs,criter
       'disc_loss': disc_loss,
       })
 
-  #Plotting the Discriminator and Generator Loss 
-  plt.plot(discriminatorLoss,color = "red",label="Discriminator Loss")
-  plt.plot(generatorLoss,color="blue",label ="Generator Loss")
-  plt.legend()
-  plt.show()
 
-def test_generator(gen,dataset,coeff_tensor,device):
+def test_generator(gen,dataset,coeff,mean,variance,device):
   test_loader = DataLoader(dataset, batch_size=len(dataset), shuffle=True)
   for x_batch, y_batch in test_loader: 
-    x_batch = x_batch.to(device)
-    generated_y = gen(x_batch)
+    #Plot Real and Generated Data
+    gen_input =  ABC_pre_generator(x_batch,coeff,variance,mean,device)
+    generated_y = gen(gen_input) 
     generated_y = generated_y.cpu().detach()
-    #Plot Real and Generated Data 
     generated_data = torch.reshape(generated_y,(-1,))
     print(generated_data)
     print(y_batch)
@@ -172,7 +168,7 @@ def test_generator(gen,dataset,coeff_tensor,device):
   print("Weights : ",weights)
   print("Bias : ",bias)
 
-def test_discriminator(disc,gen,dataset,coeff_tensor,device): 
+def test_discriminator(disc,gen,dataset,coeff,mean,variance,device): 
 
   test_loader = DataLoader(dataset, batch_size=len(dataset), shuffle=True)
 
@@ -193,9 +189,9 @@ def test_discriminator(disc,gen,dataset,coeff_tensor,device):
     print(disc_pred) 
 
     print("For generated data points")
-    x_batch = x_batch.to(device)
-    generated_out = gen(x_batch)
-    generated_data = torch.cat((x_batch,generated_out),dim=1).to(device)
+    gen_input =  ABC_pre_generator(x_batch,coeff,variance,mean,device)
+    generated_y = gen(gen_input) 
+    generated_data = torch.cat((x_batch,generated_y),dim=1).to(device)
     disc_pred = disc(generated_data.float())
     print(disc_pred)
 
@@ -212,9 +208,6 @@ def main(cfg: DictConfig) -> None:
 
   #Get stats model coefficients 
   coeff = statsModel(X,Y)
-  num_coeff = len(coeff)
-  coeff_tensor = torch.FloatTensor(coeff)
-  coeff_tensor = torch.reshape(coeff_tensor,(num_coeff,1))
 
   wandb.init(project='ABC-GAN', entity = 'abc-gan', config=cfg)
   run_id = wandb.run.id
@@ -225,7 +218,7 @@ def main(cfg: DictConfig) -> None:
 
   #Initialize Generator and Discriminator 
   disc = Discriminator(coeff,cfg.model.hidden_nodes).to(device)
-  gen = Generator(coeff,cfg.train.initialize_generator).to(device)
+  gen = GeneratorforABC(coeff,cfg.train.initialize_generator).to(device)
 
   #Add optimizer to discriminator and generator 
   optimizer = load_func(cfg.optimizer.funct)
@@ -239,11 +232,11 @@ def main(cfg: DictConfig) -> None:
     discriminator_warmup(disc,disc_opt,dataWithNoise,cfg.train.n_epochs,cfg.dataset.batch_size,criterion,device)
 
   #Train the GAN 
-  training_GAN(disc,gen,disc_opt,gen_opt,dataset,cfg.train.n_epochs,cfg.dataset.batch_size,criterion,device)
+  training_GAN(disc,gen,disc_opt,gen_opt,dataset,cfg.train.n_epochs,cfg.dataset.batch_size,criterion,coeff,cfg.abc.mean,cfg.abc.variance,device)
 
   #Testing 
-  test_generator(gen,dataset,device)
-  test_discriminator(disc,gen,dataset,device)
+  test_generator(gen,dataset,coeff,cfg.abc.mean,cfg.abc.variance,device)
+  test_discriminator(disc,gen,dataset,coeff,cfg.abc.mean,cfg.abc.variance,device)
 
 
 if __name__ == "__main__":
