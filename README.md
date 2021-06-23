@@ -1,6 +1,6 @@
 # ABC_GAN
 
-Apna time ayega!
+Apna time ayega!\n
 Apna paper publish hoga, apna thesis mast hoga
 Fir graduation hoga, fir job start hoga
 Fir job me phodenge, GRE me bhi phodenge
