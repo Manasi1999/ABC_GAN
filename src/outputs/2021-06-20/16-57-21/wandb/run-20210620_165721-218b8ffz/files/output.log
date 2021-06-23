@@ -1,8 +1,0 @@
-Error executing job with overrides: []
-Traceback (most recent call last):
-  File "train_test.py", line 220, in main
-    if(cfg.warmUp_discriminator==True):
-omegaconf.errors.ConfigAttributeError: Key 'warmUp_discriminator' is not in struct
-    full_key: warmUp_discriminator
-    object_type=dict
-Set the environment variable HYDRA_FULL_ERROR=1 for a complete stack trace.
