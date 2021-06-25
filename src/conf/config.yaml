@@ -12,7 +12,7 @@ train:
 abc: 
   mean: 0 
   variance : 1
-  initialize_generator_identity : True
+  initialize_generator_identity : true
 
 
 
