@@ -78,7 +78,7 @@ def training_GAN(disc, gen,disc_opt,gen_opt,dataset, batch_size, n_epochs,criter
   for epoch in range(n_epochs):
 
     for x_batch,y_batch in train_loader:
-
+      x_batch = x_batch.to(device)
       y_shape = list(y_batch.size()) 
       curr_batch_size = y_shape[0] 
       y_batch = torch.reshape(y_batch,(curr_batch_size,1)) 
@@ -179,7 +179,8 @@ def test_discriminator(disc,gen,dataset,coeff,mean,variance,device):
   test_loader = DataLoader(dataset, batch_size=len(dataset), shuffle=True)
 
   for x_batch,y_batch in test_loader: 
-
+    x_batch = x_batch.to(device)
+    y_batch = y_batch.to(device)
     y_shape = list(y_batch.size())
     curr_batch_size = y_shape[0]
     y_batch = torch.reshape(y_batch,(curr_batch_size,1))
