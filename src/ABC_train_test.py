@@ -78,7 +78,6 @@ def training_GAN(disc, gen,disc_opt,gen_opt,dataset, batch_size, n_epochs,criter
   for epoch in range(n_epochs):
 
     for x_batch,y_batch in train_loader:
-      x_batch,y_batch = x_batch.to(device),y_batch.to(device)
       y_shape = list(y_batch.size()) 
       curr_batch_size = y_shape[0] 
       y_batch = torch.reshape(y_batch,(curr_batch_size,1)) 
@@ -100,8 +99,9 @@ def training_GAN(disc, gen,disc_opt,gen_opt,dataset, batch_size, n_epochs,criter
       #Get discriminator loss for fake data
       gen_input =  ABC_pre_generator(x_batch,coeff,variance,mean,device)
       generated_y = gen(gen_input)  
+      x_batch = x_batch.to(device)
       inputs_fake = torch.cat((x_batch,generated_y),dim=1).to(device) 
-
+      x_batch = x_batch.detach().cpu()
       disc_fake_pred = disc(inputs_fake) 
       disc_fake_loss = criterion(disc_fake_pred,fake_labels) 
 
@@ -122,7 +122,9 @@ def training_GAN(disc, gen,disc_opt,gen_opt,dataset, batch_size, n_epochs,criter
       #Generate input to generator using ABC pre-generator 
       gen_input =  ABC_pre_generator(x_batch,coeff,variance,mean,device)
       generated_y = gen(gen_input) 
+      x_batch = x_batch.to(device)
       inputs_fake = torch.cat((x_batch,generated_y),dim=1).to(device)
+      x_batch = x_batch.detach().cpu()
       disc_fake_pred = disc(inputs_fake)
 
       gen_loss = criterion(disc_fake_pred,real_labels)
@@ -179,7 +181,7 @@ def test_discriminator(disc,gen,dataset,coeff,mean,variance,device):
   test_loader = DataLoader(dataset, batch_size=len(dataset), shuffle=True)
 
   for x_batch,y_batch in test_loader: 
-    x_batch,y_batch = x_batch.to(device),y_batch.to(device)
+    
     y_shape = list(y_batch.size())
     curr_batch_size = y_shape[0]
     y_batch = torch.reshape(y_batch,(curr_batch_size,1))
@@ -199,7 +201,8 @@ def test_discriminator(disc,gen,dataset,coeff,mean,variance,device):
     rand_out = rand_out[0]
     #Discriminator Probability for Generated Data Points
     gen_input =  ABC_pre_generator(x_batch,coeff,variance,mean,device)
-    generated_y = gen(gen_input) 
+    generated_y = gen(gen_input)
+    x_batch = x_batch.to(device) 
     generated_data = torch.cat((x_batch,generated_y),dim=1).to(device)
     disc_pred = disc(generated_data.float())
     disc_pred = disc_pred.detach().cpu()
