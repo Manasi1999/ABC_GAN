@@ -213,7 +213,7 @@ def main(cfg: DictConfig) -> None:
   #Get stats model coefficients 
   coeff = statsModel(X,Y)
 
-  wandb.init(project='ABC-GAN', entity = 'abc-gan', config=cfg)
+  wandb.init(project='GAN', entity = 'abc-gan', config=cfg)
   run_id = wandb.run.id
 
   #Get real dataset and dataset with noise 
