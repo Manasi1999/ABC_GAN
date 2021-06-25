@@ -189,14 +189,14 @@ def test_discriminator(disc,gen,dataset,coeff,mean,variance,device):
     disc_pred = disc(real_data_input)
     disc_pred = disc_pred.detach()
     real_out = disc_pred.numpy().reshape(1,len(dataset)).tolist()
-
+    real_out = real_out[0]
     #Discriminator Probability for Random Data Points 
     shape_data = list(real_data_input.size())
     random_data = 10*torch.rand(shape_data[0],shape_data[1]).to(device)
     disc_pred = disc(random_data)
     disc_pred = disc_pred.detach()
     rand_out = disc_pred.numpy().reshape(1,len(dataset)).tolist()
-
+    rand_out = rand_out[0]
     #Discriminator Probability for Generated Data Points
     gen_input =  ABC_pre_generator(x_batch,coeff,variance,mean,device)
     generated_y = gen(gen_input) 
@@ -204,7 +204,7 @@ def test_discriminator(disc,gen,dataset,coeff,mean,variance,device):
     disc_pred = disc(generated_data.float())
     disc_pred = disc_pred.detach()
     gen_out = disc_pred.numpy().reshape(1,len(dataset)).tolist()
-
+    gen_out = gen_out[0]
     data = [[real_out[i],gen_out[i],rand_out[i]] for i in range(len(dataset))]
     wandb.log({"a_table": wandb.Table(data=data, columns=["Real ", "Generated", "Random"])})
 
