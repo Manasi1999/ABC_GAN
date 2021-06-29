@@ -217,7 +217,7 @@ def main(cfg: DictConfig) -> None:
   X,Y = get_data()
 
   #Get stats model coefficients 
-  coeff,statsPred = statsModel(X,Y)
+  [coeff,statsPred] = statsModel(X,Y)
 
   wandb.init(project='GAN', entity = 'abc-gan', config=cfg)
   run_id = wandb.run.id

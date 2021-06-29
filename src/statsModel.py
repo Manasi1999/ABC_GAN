@@ -25,4 +25,4 @@ def statsModel(X,Y):
 	plt.legend()
 	plt.show()
 
-	return coefficients
+	return coefficients,ypred

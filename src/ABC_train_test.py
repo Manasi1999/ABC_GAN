@@ -230,13 +230,13 @@ def main(cfg: DictConfig) -> None:
   X,Y = get_data()
 
   #Get stats model coefficients 
-  coeff = statsModel(X,Y)
+  [coeff,statsPred] = statsModel(X,Y)
 
   wandb.init(project='ABC-GAN', entity = 'abc-gan', config=cfg)
   run_id = wandb.run.id
 
   #Mean Square Error
-  meanSquaredError = mean_squared_error(real_data,gen_data)
+  meanSquaredError = mean_squared_error(Y,statsPred)
   wandb.log({
     "mean_squared_error":meanSquaredError
   })
