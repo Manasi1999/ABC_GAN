@@ -19,6 +19,7 @@ import hydra
 from omegaconf import DictConfig
 from importlib import import_module
 import math
+from sklearn.metrics import mean_squared_error
 
 #Function to load functions mentioned in yaml files 
 def load_func(dotpath : str):
@@ -163,6 +164,12 @@ def test_generator(gen,dataset,coeff,mean,variance,device):
   table = wandb.Table(data=data, columns = ["Index", "Data","Label"])
   wandb.log({"Real Data Vs Generated Data" : wandb.plot.scatter(table, "Index", "Data","Comparison")})
   
+  #Mean Square Error
+  meanSquaredError = mean_squared_error(real_data,gen_data)
+  wandb.log({
+    "mean_squared_error":meanSquaredError
+  })
+
   #Weights of generator after training 
   params = torch.cat([x.view(-1) for x in gen.output.parameters()]).cpu()
   params = params.detach().numpy().tolist()
@@ -228,6 +235,12 @@ def main(cfg: DictConfig) -> None:
   wandb.init(project='ABC-GAN', entity = 'abc-gan', config=cfg)
   run_id = wandb.run.id
 
+  #Mean Square Error
+  meanSquaredError = mean_squared_error(real_data,gen_data)
+  wandb.log({
+    "mean_squared_error":meanSquaredError
+  })
+  
   #Get real dataset and dataset with noise 
   dataset = CustomDataset(X,Y)
   dataWithNoise = DataWithNoise(X,Y)

@@ -7,6 +7,7 @@ from sklearn.decomposition import PCA
 import pandas as pd
 import matplotlib.pyplot as plt
 
+
 def boston_data():
     #Load the dataset 
     boston_dataset = load_boston()
