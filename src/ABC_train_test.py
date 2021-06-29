@@ -238,7 +238,7 @@ def main(cfg: DictConfig) -> None:
   #Mean Square Error
   meanSquaredError = mean_squared_error(Y,statsPred)
   wandb.log({
-    "mean_squared_error":meanSquaredError
+    "mean_squared_error_for_stats_model":meanSquaredError
   })
   
   #Get real dataset and dataset with noise 
