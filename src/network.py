@@ -56,7 +56,7 @@ class GeneratorforABC(nn.Module):
     self.output = nn.Linear(inputNodes+1,1)
     if initialize == True:
       self.initialize_weights(coefficients)
-    if identity == True: 
+    if initialize == True and identity == True: 
        self.initialize_weights_to_identity(coefficients)
 
   def forward(self, x):
