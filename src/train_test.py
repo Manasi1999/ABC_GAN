@@ -34,6 +34,9 @@ def discriminator_warmup(disc,disc_opt,dataset,n_epochs,batch_size,criterion,dev
   for epoch in range(n_epochs):
     epoch_loss = 0
     for x_batch,y_batch in train_loader:
+      y_batch = y_batch + (1-2*y_batch)*val
+      if(val >0):
+        val = val - 0.05 
       x_batch, y_batch = x_batch.to(device), y_batch.to(device)
 
       disc_opt.zero_grad()

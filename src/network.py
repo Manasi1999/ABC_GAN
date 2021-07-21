@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-
 from torch import nn
 
 #coefficient = [c,w_1,w_2,...,w_n]

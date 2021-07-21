@@ -47,11 +47,20 @@ def ABC_pre_generator(x_batch,coeff,variance,mean,device):
 #Function to warmup the discriminator 
 def discriminator_warmup(disc,disc_opt,dataset,n_epochs,batch_size,criterion,device): 
   train_loader  = DataLoader(dataset, batch_size=batch_size, shuffle=True)
+  #Data contains elements like 
+  # 1. real_data_point  1 
+  # 2. fake_data_point  0
+  # Fuzzy input : labels for real : 0.5 --> 1  and labels for fake : 0.5 --> 0
+  # y_batch = y_batch + (1-2*y_batch)*val 
+  val = 0.5
   for epoch in range(n_epochs):
     epoch_loss = 0
     for x_batch,y_batch in train_loader:
+      y_batch = y_batch + (1-2*y_batch)*val
+      if(val >0):
+        val = val - 0.05 
       x_batch, y_batch = x_batch.to(device), y_batch.to(device)
-
+      
       disc_opt.zero_grad()
 
       #Train on a mixture of real and fake data 
