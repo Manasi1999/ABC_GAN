@@ -31,6 +31,7 @@ def load_func(dotpath : str):
 #Function to warmup the discriminator 
 def discriminator_warmup(disc,disc_opt,dataset,n_epochs,batch_size,criterion,device): 
   train_loader  = DataLoader(dataset, batch_size=batch_size, shuffle=True)
+  val = 0.5 
   for epoch in range(n_epochs):
     epoch_loss = 0
     for x_batch,y_batch in train_loader:
