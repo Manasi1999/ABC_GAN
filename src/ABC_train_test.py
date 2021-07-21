@@ -163,12 +163,6 @@ def test_generator(gen,dataset,coeff,mean,variance,device):
       data.append([i,real_data[0][i],"Real"])
   table = wandb.Table(data=data, columns = ["Index", "Data","Label"])
   wandb.log({"Real Data Vs Generated Data" : wandb.plot.scatter(table, "Index", "Data","Comparison")})
-  
-  #Mean Square Error
-  meanSquaredError = mean_squared_error(real_data,gen_data)
-  wandb.log({
-    "mean_squared_error":meanSquaredError
-  })
 
   #Weights of generator after training 
   params = torch.cat([x.view(-1) for x in gen.output.parameters()]).cpu()
@@ -179,9 +173,14 @@ def test_generator(gen,dataset,coeff,mean,variance,device):
     weights[i] = "{:.2f}".format(weights[i])
   bias = params[len(params)-1]
   bias = "{:.2f}".format(bias)
-  print("Generator Weights after Training (ABC GAN)")
-  print("Weights : ",weights)
-  print("Bias : ",bias)
+
+  #Mean Square Error
+  meanSquaredError = mean_squared_error(real_data,gen_data)
+  wandb.log({
+    "MSE (ABC GAN)":meanSquaredError,
+    "Weight (Gen)" : weights,
+    "Bias (Gen)" : bias
+  })
 
 def test_discriminator(disc,gen,dataset,coeff,mean,variance,device): 
 
@@ -238,7 +237,8 @@ def main(cfg: DictConfig) -> None:
   #Mean Square Error
   meanSquaredError = mean_squared_error(Y,statsPred)
   wandb.log({
-    "mean_squared_error_for_stats_model":meanSquaredError
+    "MSE(Stats Model)":meanSquaredError,
+    "Coeff (Stats Model)":coeff
   })
   
   #Get real dataset and dataset with noise 

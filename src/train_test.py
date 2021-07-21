@@ -154,7 +154,7 @@ def test_generator(gen,dataset,device):
   #Mean Square Error
   meanSquaredError = mean_squared_error(real_data,gen_data)
   wandb.log({
-    "mean_squared_error":meanSquaredError
+    "MSE (GAN)":meanSquaredError
   })
   
   #Weights of generator after training 
@@ -220,13 +220,12 @@ def main(cfg: DictConfig) -> None:
   [coeff,statsPred] = statsModel(X,Y)
 
   wandb.init(project='GAN', entity = 'abc-gan', config=cfg)
-  run_id = wandb.run.id
-
+  
   #Get MSE for stats model prediction
   #Mean Square Error
   meanSquaredError = mean_squared_error(Y,statsPred)
   wandb.log({
-    "mean_squared_error_stats_model":meanSquaredError
+    "MSE (Stats Model)":meanSquaredError
   })
   #Get real dataset and dataset with noise 
   dataset = CustomDataset(X,Y)
