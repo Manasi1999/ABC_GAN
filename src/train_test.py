@@ -138,41 +138,59 @@ def training_GAN(disc, gen,disc_opt,gen_opt,dataset, batch_size, n_epochs,criter
 
 def test_generator(gen,dataset,device):
   test_loader = DataLoader(dataset, batch_size=len(dataset), shuffle=True)
-  for x_batch, y_batch in test_loader: 
-    x_batch = x_batch.to(device)
-    generated_y = gen(x_batch)
-    generated_y = generated_y.cpu().detach()
-    #Plot Real and Generated Data 
-    generated_data = torch.reshape(generated_y,(-1,))
-
-  #Plot Real Vs Generated Data 
-  gen_data = generated_data.numpy().reshape(1,len(dataset)).tolist()
-  real_data = y_batch.numpy().reshape(1,len(dataset)).tolist()
-  data=[]
-  for i in range(len(dataset)):
-      data.append([i,gen_data[0][i],"Generated"])
-      data.append([i,real_data[0][i],"Real"])
-  table = wandb.Table(data=data, columns = ["Index", "Data","Label"])
-  wandb.log({"Real Data Vs Generated Data" : wandb.plot.scatter(table, "Index", "Data","Comparison")})
-  
-  #Mean Square Error
-  meanSquaredError = mean_squared_error(real_data,gen_data)
+  mse_sum=0
+  for epoch in range(100):
+    for x_batch, y_batch in test_loader: 
+      x_batch = x_batch.to(device)
+      generated_y = gen(x_batch)
+      generated_y = generated_y.cpu().detach()
+      generated_data = torch.reshape(generated_y,(-1,))
+    gen_data = generated_data.numpy().reshape(1,len(dataset)).tolist()
+    real_data = y_batch.numpy().reshape(1,len(dataset)).tolist()
+    meanSquaredError = mean_squared_error(real_data,gen_data)
+    mse_sum = mse_sum + meanSquaredError
+  mse_mean = mse_sum/100
   wandb.log({
-    "MSE (GAN)":meanSquaredError
+    "Mean MSE (GAN)":mse_mean
   })
+
+# def test_generator(gen,dataset,device):
+#   test_loader = DataLoader(dataset, batch_size=len(dataset), shuffle=True)
+#   for x_batch, y_batch in test_loader: 
+#     x_batch = x_batch.to(device)
+#     generated_y = gen(x_batch)
+#     generated_y = generated_y.cpu().detach()
+#     #Plot Real and Generated Data 
+#     generated_data = torch.reshape(generated_y,(-1,))
+
+#   #Plot Real Vs Generated Data 
+#   gen_data = generated_data.numpy().reshape(1,len(dataset)).tolist()
+#   real_data = y_batch.numpy().reshape(1,len(dataset)).tolist()
+#   data=[]
+#   for i in range(len(dataset)):
+#       data.append([i,gen_data[0][i],"Generated"])
+#       data.append([i,real_data[0][i],"Real"])
+#   table = wandb.Table(data=data, columns = ["Index", "Data","Label"])
+#   wandb.log({"Real Data Vs Generated Data" : wandb.plot.scatter(table, "Index", "Data","Comparison")})
   
-  #Weights of generator after training 
-  params = torch.cat([x.view(-1) for x in gen.output.parameters()]).cpu()
-  params = params.detach().numpy().tolist()
-  weights = params[:-1]
-  #Round to 2 decimal places 
-  for i in range(len(weights)):
-    weights[i] = "{:.2f}".format(weights[i])
-  bias = params[len(params)-1]
-  bias = "{:.2f}".format(bias)
-  print("Generator Weights after Training (GAN)")
-  print("Weights : ",weights)
-  print("Bias : ",bias)
+#   #Mean Square Error
+#   meanSquaredError = mean_squared_error(real_data,gen_data)
+#   wandb.log({
+#     "MSE (GAN)":meanSquaredError
+#   })
+  
+#   #Weights of generator after training 
+#   params = torch.cat([x.view(-1) for x in gen.output.parameters()]).cpu()
+#   params = params.detach().numpy().tolist()
+#   weights = params[:-1]
+#   #Round to 2 decimal places 
+#   for i in range(len(weights)):
+#     weights[i] = "{:.2f}".format(weights[i])
+#   bias = params[len(params)-1]
+#   bias = "{:.2f}".format(bias)
+#   print("Generator Weights after Training (GAN)")
+#   print("Weights : ",weights)
+#   print("Bias : ",bias)
 
 def test_discriminator(disc,gen,dataset,device): 
 
