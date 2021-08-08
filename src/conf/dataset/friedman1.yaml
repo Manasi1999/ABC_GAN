@@ -1,0 +1,3 @@
+name: friedman1
+funct : friedman1Dataset.friedman1_data
+batch_size : 50 
