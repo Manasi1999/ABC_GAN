@@ -22,8 +22,8 @@ def friedman1_data():
     #Standardization of the dataset 
     scaler = preprocessing.StandardScaler()
     df = pd.DataFrame(scaler.fit_transform(df), columns=df.columns)
-    X = df.iloc[:, 0:11]
-    Y = df.iloc[:, 11]
+    X = df.iloc[:,0:10]
+    Y = df.iloc[:,10]
 
     #Check corelation between features and perform PCA
     corr = spearmanr(X).correlation
