@@ -79,4 +79,23 @@ class GeneratorforABC(nn.Module):
         nn.init.constant_(m.weight[0][len(coefficients)],1)
         nn.init.constant_(m.bias,0)
 
+class ComplexGenerator(nn.Module):
 
+  def __init__(self,coefficients):
+    super().__init__()
+    inputNodes = len(coefficients)
+    #Input to Output Layer Linear Transformation
+    self.hidden1 = nn.Linear(inputNodes+1,100)
+    self.hidden2 = nn.Linear(100,100)
+    self.output = nn.Linear(100,1)
+    self.Relu = nn.ReLU()
+
+  def forward(self, x):
+    #Pass the input tensor through the operations 
+    x = self.hidden1(x)
+    x = self.Relu(x)
+    x = self.hidden2(x)
+    x = self.Relu(x)
+    x = self.output(x)
+    x = self.Relu(x)
+    return x 
