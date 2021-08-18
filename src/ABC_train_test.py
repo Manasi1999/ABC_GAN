@@ -145,13 +145,13 @@ def training_GAN(disc, gen,disc_opt,gen_opt,dataset, batch_size, n_epochs,criter
       #Update optimizer 
       gen_opt.step()
 
-      wandb.log({
-      'epoch':epoch,
-      'gen_loss': gen_loss,
-      'disc_real_loss': disc_real_loss,
-      'disc_fakse_loss': disc_fake_loss,
-      'disc_loss': disc_loss,
-      })
+      # wandb.log({
+      # 'epoch':epoch,
+      # 'gen_loss': gen_loss,
+      # 'disc_real_loss': disc_real_loss,
+      # 'disc_fakse_loss': disc_fake_loss,
+      # 'disc_loss': disc_loss,
+      # })
 
 
 def test_generator(gen,dataset,coeff,mean,variance,device):
@@ -168,9 +168,9 @@ def test_generator(gen,dataset,coeff,mean,variance,device):
     meanSquaredError = mean_squared_error(real_data,gen_data)
     mse_sum = mse_sum + meanSquaredError
   mse_mean = mse_sum/100
-  wandb.log({
-    "Mean MSE (ABC GAN)":mse_mean
-  })
+  # wandb.log({
+  #   "Mean MSE (ABC GAN)":mse_mean
+  # })
 
   #Plot Real Vs Generated Data 
   # gen_data = generated_data.numpy().reshape(1,len(dataset)).tolist()
