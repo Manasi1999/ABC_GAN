@@ -97,4 +97,5 @@ class ComplexGenerator(nn.Module):
     x = self.hidden2(x)
     x = self.Relu(x)
     x = self.output(x)
+    x = self.Relu(x)
     return x 
