@@ -167,8 +167,10 @@ def test_generator(gen,dataset,coeff,mean,variance,device):
     real_data = y_batch.numpy().reshape(1,len(dataset)).tolist()
     #Plot the data 
     if(epoch%20==0):
-      plt.plot(gen_data,'o',color='blue')
-      plt.plot(real_data,'o',color='red')
+      gen_data1 = generated_data.numpy().tolist()
+      real_data1 = y_batch.numpy().tolist()
+      plt.plot(gen_data1,'o',color='blue')
+      plt.plot(real_data1,'o',color='red')
       plt.show()
     meanSquaredError = mean_squared_error(real_data,gen_data)
     mse_sum = mse_sum + meanSquaredError
