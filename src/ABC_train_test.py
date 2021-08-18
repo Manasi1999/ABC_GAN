@@ -165,6 +165,11 @@ def test_generator(gen,dataset,coeff,mean,variance,device):
       generated_data = torch.reshape(generated_y,(-1,))
     gen_data = generated_data.numpy().reshape(1,len(dataset)).tolist()
     real_data = y_batch.numpy().reshape(1,len(dataset)).tolist()
+    #Plot the data 
+    if(epoch%20==0):
+      plt.plot(gen_data,'o',color='blue')
+      plt.plot(real_data,'o',color='red')
+      plt.show()
     meanSquaredError = mean_squared_error(real_data,gen_data)
     mse_sum = mse_sum + meanSquaredError
   mse_mean = mse_sum/100
@@ -193,9 +198,8 @@ def test_generator(gen,dataset,coeff,mean,variance,device):
     weights[i] = "{:.2f}".format(weights[i])
   bias = params[len(params)-1]
   bias = "{:.2f}".format(bias)
-
-  print(weights)
-  print(bias)
+  #print(weights)
+  #print(bias)
   
 def test_discriminator(disc,gen,dataset,coeff,mean,variance,device): 
 
