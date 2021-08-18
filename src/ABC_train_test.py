@@ -193,6 +193,9 @@ def test_generator(gen,dataset,coeff,mean,variance,device):
     weights[i] = "{:.2f}".format(weights[i])
   bias = params[len(params)-1]
   bias = "{:.2f}".format(bias)
+
+  print(weights)
+  print(bias)
   
 def test_discriminator(disc,gen,dataset,coeff,mean,variance,device): 
 
