@@ -4,17 +4,17 @@ from torch.utils.data import Dataset
 import numpy as np
 import torch 
 class CustomDataset(Dataset): 
-  def __init__(self,Xpc,y):
-    self.X = Xpc
+  def __init__(self,X,y):
+    self.X = X
     self.Y = y 
-    self.n = len(Xpc) #No of datapoints 
-    self.p = Xpc.shape[1] #No of features 
+    self.n = len(X) #No of datapoints 
+    self.p = X.shape[1] #No of features 
 
   def __len__(self):
     return self.n 
 
   def __getitem__(self,idx):
-    x = self.X[idx]
+    x = self.X[idx,:]
     y = self.Y[idx]
 
     x = torch.tensor(x,dtype=torch.float32)
