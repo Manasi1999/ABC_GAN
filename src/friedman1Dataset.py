@@ -26,6 +26,7 @@ def friedman1_data():
     Y = df.iloc[:,10]
 
     #Add Constant 
+    X = X.to_numpy()
     Xc = sm.add_constant(X)
     return Xc, Y 
 
