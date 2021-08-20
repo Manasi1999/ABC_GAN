@@ -14,7 +14,7 @@ class CustomDataset(Dataset):
     return self.n 
 
   def __getitem__(self,idx):
-    x = self.X[idx,:]
+    x = self.X[idx]
     y = self.Y[idx]
 
     x = torch.tensor(x,dtype=torch.float32)
