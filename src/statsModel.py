@@ -25,4 +25,8 @@ def statsModel(X,Y):
 	plt.legend()
 	plt.show()
 
+	val = Y - ypred
+	plt.plot(val,'o',color='red',label='Residual')
+	plt.show()
+
 	return coefficients,ypred
