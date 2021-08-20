@@ -85,17 +85,17 @@ class ComplexGenerator(nn.Module):
     super().__init__()
     inputNodes = len(coefficients)
     #Input to Output Layer Linear Transformation
-    self.hidden1 = nn.Linear(inputNodes+1,100)
-    self.hidden2 = nn.Linear(100,100)
-    self.output = nn.Linear(100,1)
-    self.Relu = nn.ReLU()
+    self.hidden1 = nn.Linear(inputNodes+1,50)
+    self.hidden2 = nn.Linear(50,50)
+    self.output = nn.Linear(50,1)
+    self.leakyRelu = nn.LeakyReLU()
 
   def forward(self, x):
     #Pass the input tensor through the operations 
     x = self.hidden1(x)
-    x = self.Relu(x)
+    x = self.leakyRelu(x)
     x = self.hidden2(x)
-    x = self.Relu(x)
+    x = self.leakyRelu(x)
     x = self.output(x)
-    x = self.Relu(x)
+    x = self.leakyRelu(x)
     return x 
