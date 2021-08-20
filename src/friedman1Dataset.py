@@ -25,25 +25,7 @@ def friedman1_data():
     X = df.iloc[:,0:10]
     Y = df.iloc[:,10]
 
-    #Check corelation between features and perform PCA
-    corr = spearmanr(X).correlation
-    #print(corr)
-    plt.imshow(corr)
-    plt.show()
-
-    #PCA 
-    pca = PCA(n_components=6)
-    pca.fit(X)
-    Xp = pca.transform(X)
-
-    #Correlation Matrix after PCA 
-    print("Correlation Matrix after PCA")
-    corr = spearmanr(Xp).correlation
-    #print(corr)
-    plt.imshow(corr)
-    plt.show()
-
     #Add Constant 
-    Xpc = sm.add_constant(Xp)
-    return Xpc, Y 
+    Xc = sm.add_constant(X)
+    return Xc, Y 
 
