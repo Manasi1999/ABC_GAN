@@ -156,8 +156,8 @@ def training_GAN(disc, gen,disc_opt,gen_opt,dataset, batch_size, n_epochs,criter
 
 def test_generator(gen,dataset,coeff,mean,variance,device):
   test_loader = DataLoader(dataset, batch_size=len(dataset), shuffle=True)
-  mse_sum=0
-  for epoch in range(100):
+  mse=[]
+  for epoch in range(1000):
     for x_batch, y_batch in test_loader: 
       gen_input =  ABC_pre_generator(x_batch,coeff,variance,mean,device)
       generated_y = gen(gen_input) 
@@ -166,17 +166,20 @@ def test_generator(gen,dataset,coeff,mean,variance,device):
     gen_data = generated_data.numpy().reshape(1,len(dataset)).tolist()
     real_data = y_batch.numpy().reshape(1,len(dataset)).tolist()
     #Plot the data 
-    if(epoch%20==0):
-      gen_data1 = generated_data.numpy().tolist()
-      real_data1 = y_batch.numpy().tolist()
-      plt.plot(gen_data1,'o',color='blue')
-      plt.plot(real_data1,'o',color='red')
-      plt.show()
+    # if(epoch%20==0):
+    #   gen_data1 = generated_data.numpy().tolist()
+    #   real_data1 = y_batch.numpy().tolist()
+    #   plt.plot(gen_data1,'o',color='blue')
+    #   plt.plot(real_data1,'o',color='red')
+    #   plt.show()
     meanSquaredError = mean_squared_error(real_data,gen_data)
-    mse_sum = mse_sum + meanSquaredError
-  mse_mean = mse_sum/100
-
-  print("Mean Square Error:",mse_mean)
+    mse.append(meanSquaredError)
+  
+  n,x,_=plt.hist(mse,bins=100,density=True)
+  plt.title("Distribution of Mean Square Error ")
+  sns.distplot(mse,hist=False)
+  plt.show()
+  print("Mean Square Error:",mean(mse))
   # wandb.log({
   #   "Mean MSE (ABC GAN)":mse_mean
   # })
