@@ -20,6 +20,7 @@ from omegaconf import DictConfig
 from importlib import import_module
 import math
 from sklearn.metrics import mean_squared_error
+from statistics import mean
 
 #Function to load functions mentioned in yaml files 
 def load_func(dotpath : str):
