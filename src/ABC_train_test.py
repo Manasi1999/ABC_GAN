@@ -190,7 +190,7 @@ def test_generator(gen,dataset,coeff,w,variance,device):
   plt.title("Distribution of Mean Absolute Error ")
   sns.distplot(mae,hist=False)
   plt.show()
-  print("Mean Square Error:",mean(mae))
+  print("Mean Absolute Error:",mean(mae))
 
   # wandb.log({
   #   "Mean MSE (ABC GAN)":mse_mean
