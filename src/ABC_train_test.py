@@ -19,7 +19,7 @@ import hydra
 from omegaconf import DictConfig
 from importlib import import_module
 import math
-from sklearn.metrics import mean_squared_error
+from sklearn.metrics import mean_squared_error,mean_absolute_error
 from statistics import mean
 
 #Function to load functions mentioned in yaml files 
@@ -155,12 +155,13 @@ def training_GAN(disc, gen,disc_opt,gen_opt,dataset, batch_size, n_epochs,criter
       # })
 
 
-def test_generator(gen,dataset,coeff,mean,variance,device):
+def test_generator(gen,dataset,coeff,w,variance,device):
   test_loader = DataLoader(dataset, batch_size=len(dataset), shuffle=True)
   mse=[]
+  mae=[]
   for epoch in range(1000):
     for x_batch, y_batch in test_loader: 
-      gen_input =  ABC_pre_generator(x_batch,coeff,variance,mean,device)
+      gen_input =  ABC_pre_generator(x_batch,coeff,variance,w,device)
       generated_y = gen(gen_input) 
       generated_y = generated_y.cpu().detach()
       generated_data = torch.reshape(generated_y,(-1,))
@@ -174,13 +175,23 @@ def test_generator(gen,dataset,coeff,mean,variance,device):
     #   plt.plot(real_data1,'o',color='red')
     #   plt.show()
     meanSquaredError = mean_squared_error(real_data,gen_data)
+    meanAbsoluteError = mean_absolute_error(real_data, gen_data)
     mse.append(meanSquaredError)
+    mae.append(meanAbsoluteError)
+
   
   n,x,_=plt.hist(mse,bins=100,density=True)
   plt.title("Distribution of Mean Square Error ")
   sns.distplot(mse,hist=False)
   plt.show()
   print("Mean Square Error:",mean(mse))
+
+  n,x,_=plt.hist(mae,bins=100,density=True)
+  plt.title("Distribution of Mean Absolute Error ")
+  sns.distplot(mae,hist=False)
+  plt.show()
+  print("Mean Square Error:",mean(mae))
+
   # wandb.log({
   #   "Mean MSE (ABC GAN)":mse_mean
   # })
