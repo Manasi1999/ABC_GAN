@@ -168,10 +168,10 @@ def test_generator(gen,dataset,coeff,w,variance,device):
     gen_data = generated_data.numpy().reshape(1,len(dataset)).tolist()
     real_data = y_batch.numpy().reshape(1,len(dataset)).tolist()
     #Plot the data 
-    if(epoch%20==0):
+    if(epoch%200==0):
       gen_data1 = generated_data.numpy().tolist()
       real_data1 = y_batch.numpy().tolist()
-      plt.hexbin(real_data1,gen_data1,gridsize=(150,150))
+      plt.hexbin(real_data1,gen_data1,gridsize=(50,50))
       plt.show()
     meanSquaredError = mean_squared_error(real_data,gen_data)
     meanAbsoluteError = mean_absolute_error(real_data, gen_data)
