@@ -159,6 +159,7 @@ def test_generator(gen,dataset,coeff,w,variance,device):
   test_loader = DataLoader(dataset, batch_size=len(dataset), shuffle=True)
   mse=[]
   mae=[]
+  y_pred = []
   for epoch in range(1000):
     for x_batch, y_batch in test_loader: 
       gen_input =  ABC_pre_generator(x_batch,coeff,variance,w,device)
@@ -166,6 +167,7 @@ def test_generator(gen,dataset,coeff,w,variance,device):
       generated_y = generated_y.cpu().detach()
       generated_data = torch.reshape(generated_y,(-1,))
     gen_data = generated_data.numpy().reshape(1,len(dataset)).tolist()
+    y_pred.append(gen_data)
     real_data = y_batch.numpy().reshape(1,len(dataset)).tolist()
     #Plot the data 
     if(epoch%200==0):
@@ -177,6 +179,8 @@ def test_generator(gen,dataset,coeff,w,variance,device):
     meanAbsoluteError = mean_absolute_error(real_data, gen_data)
     mse.append(meanSquaredError)
     mae.append(meanAbsoluteError)
+  
+  return y_pred
 
   
   n,x,_=plt.hist(mse,bins=100,density=True)
