@@ -250,7 +250,7 @@ def test_discriminator(disc,gen,dataset,coeff,mean,variance,device):
     generated_data = torch.cat((x_batch,generated_y),dim=1).to(device)
     disc_pred = disc(generated_data.float())
     disc_pred = disc_pred.detach().cpu()
-    disc_out = disc_pred.numpy().reshape(1,len(dataset)).tolist()
+    disc_out = disc_pred.numpy().tolist()
   print("No of times loop ran :",count)
   return disc_out 
     
