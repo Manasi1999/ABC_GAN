@@ -222,26 +222,27 @@ def test_generator(gen,dataset,coeff,w,variance,device):
 def test_discriminator(disc,gen,dataset,coeff,mean,variance,device): 
 
   test_loader = DataLoader(dataset, batch_size=len(dataset), shuffle=True)
-
+  count = 0
   for x_batch,y_batch in test_loader: 
-    
+    count = count + 1
     y_shape = list(y_batch.size())
     curr_batch_size = y_shape[0]
     y_batch = torch.reshape(y_batch,(curr_batch_size,1))
 
     #Discriminator Probability for Real Data points 
-    real_data_input = torch.cat((x_batch,y_batch),dim=1).to(device)
-    disc_pred = disc(real_data_input)
-    disc_pred = disc_pred.detach().cpu()
-    real_out = disc_pred.numpy().reshape(1,len(dataset)).tolist()
-    real_out = real_out[0]
+    # real_data_input = torch.cat((x_batch,y_batch),dim=1).to(device)
+    # disc_pred = disc(real_data_input)
+    # disc_pred = disc_pred.detach().cpu()
+    # real_out = disc_pred.numpy().reshape(1,len(dataset)).tolist()
+    # real_out = real_out[0]
     #Discriminator Probability for Random Data Points 
-    shape_data = list(real_data_input.size())
-    random_data = 10*torch.rand(shape_data[0],shape_data[1]).to(device)
-    disc_pred = disc(random_data)
-    disc_pred = disc_pred.detach().cpu()
-    rand_out = disc_pred.numpy().reshape(1,len(dataset)).tolist()
-    rand_out = rand_out[0]
+    # shape_data = list(real_data_input.size())
+    # random_data = 10*torch.rand(shape_data[0],shape_data[1]).to(device)
+    # disc_pred = disc(random_data)
+    # disc_pred = disc_pred.detach().cpu()
+    # rand_out = disc_pred.numpy().reshape(1,len(dataset)).tolist()
+    # rand_out = rand_out[0]
+
     #Discriminator Probability for Generated Data Points
     gen_input =  ABC_pre_generator(x_batch,coeff,variance,mean,device)
     generated_y = gen(gen_input)
@@ -249,10 +250,10 @@ def test_discriminator(disc,gen,dataset,coeff,mean,variance,device):
     generated_data = torch.cat((x_batch,generated_y),dim=1).to(device)
     disc_pred = disc(generated_data.float())
     disc_pred = disc_pred.detach().cpu()
-    gen_out = disc_pred.numpy().reshape(1,len(dataset)).tolist()
-    gen_out = gen_out[0]
-    data = [[real_out[i],gen_out[i],rand_out[i]] for i in range(len(dataset))]
-    wandb.log({"a_table": wandb.Table(data=data, columns=["Real ", "Generated", "Random"])})
+    disc_out = disc_pred.numpy().reshape(1,len(dataset)).tolist()
+  print("No of times loop ran :",count)
+  return disc_out 
+    
 
 @hydra.main(config_path="conf" ,config_name="config.yaml")
 def main(cfg: DictConfig) -> None:
