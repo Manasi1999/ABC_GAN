@@ -180,9 +180,6 @@ def test_generator(gen,dataset,coeff,w,variance,device):
     mse.append(meanSquaredError)
     mae.append(meanAbsoluteError)
   
-  return y_pred
-
-  
   n,x,_=plt.hist(mse,bins=100,density=True)
   plt.title("Distribution of Mean Square Error ")
   sns.distplot(mse,hist=False)
@@ -220,6 +217,7 @@ def test_generator(gen,dataset,coeff,w,variance,device):
   bias = "{:.2f}".format(bias)
   #print(weights)
   #print(bias)
+  return y_pred
   
 def test_discriminator(disc,gen,dataset,coeff,mean,variance,device): 
 
