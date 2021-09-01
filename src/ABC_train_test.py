@@ -187,10 +187,10 @@ def test_generator(gen,dataset,coeff,w,variance,device):
     meanAbsoluteError = mean_absolute_error(real_data, gen_data)
     mse.append(meanSquaredError)
     mae.append(meanAbsoluteError)
-    dist1 = minkowski_distance(real_data,gen_data, 1)
-    dist2 = minkowski_distance(real_data,gen_data, 2)
+    dist1 = minkowski_distance(np.array(real_data),np.array(gen_data), 1)
+    dist2 = minkowski_distance(np.array(real_data),np.array(gen_data), 2)
     distp1.append(dist1)
-    distp2.append(distp2)
+    distp2.append(dist2)
   
   n,x,_=plt.hist(mse,bins=100,density=True)
   plt.title("Distribution of Mean Square Error ")
