@@ -173,7 +173,9 @@ def test_generator(gen,dataset,coeff,w,variance,device):
     if(epoch%200==0):
       gen_data1 = generated_data.numpy().tolist()
       real_data1 = y_batch.numpy().tolist()
-      plt.hexbin(real_data1,gen_data1,gridsize=(50,50))
+      plt.hexbin(real_data1,gen_data1,gridsize=(15,15))
+      plt.xlabel("Y")
+      plt.ylabel("Y_Pred")
       plt.show()
     meanSquaredError = mean_squared_error(real_data,gen_data)
     meanAbsoluteError = mean_absolute_error(real_data, gen_data)
@@ -222,9 +224,7 @@ def test_generator(gen,dataset,coeff,w,variance,device):
 def test_discriminator(disc,gen,dataset,coeff,mean,variance,device): 
 
   test_loader = DataLoader(dataset, batch_size=len(dataset), shuffle=True)
-  count = 0
   for x_batch,y_batch in test_loader: 
-    count = count + 1
     y_shape = list(y_batch.size())
     curr_batch_size = y_shape[0]
     y_batch = torch.reshape(y_batch,(curr_batch_size,1))
@@ -251,7 +251,6 @@ def test_discriminator(disc,gen,dataset,coeff,mean,variance,device):
     disc_pred = disc(generated_data.float())
     disc_pred = disc_pred.detach().cpu()
     disc_out = disc_pred.numpy().tolist()
-  print("No of times loop ran :",count)
   return disc_out 
     
 
