@@ -166,6 +166,12 @@ def test_generator(gen,dataset,coeff,w,variance,device):
   y_pred = []
   distp1 = []
   distp2 = []
+  x6 = []
+  x7 = []
+  x8 = []
+  x9 = []
+  x10 = []
+  x11 = []
   for epoch in range(1000):
     for x_batch, y_batch in test_loader: 
       gen_input =  ABC_pre_generator(x_batch,coeff,variance,w,device)
@@ -191,6 +197,22 @@ def test_generator(gen,dataset,coeff,w,variance,device):
     dist2 = minkowski_distance(np.array(real_data)[0],np.array(gen_data)[0], 2)
     distp1.append(dist1)
     distp2.append(dist2)
+
+    features = x_batch.numpy()
+    slope, intercept = np.polyfit(features[:,6], gen_data, 1)
+    x6.append(slope)
+    slope, intercept = np.polyfit(features[:,7], gen_data, 1)
+    x7.append(slope)
+    slope, intercept = np.polyfit(features[:,8], gen_data, 1)
+    x8.append(slope)
+    slope, intercept = np.polyfit(features[:,9], gen_data, 1)
+    x9.append(slope)
+    slope, intercept = np.polyfit(features[:,10], gen_data, 1)
+    x10.append(slope)
+    slope, intercept = np.polyfit(features[:,11], gen_data, 1)
+    x11.append(slope)
+
+
   
 
   n,x,_=plt.hist(mse,bins=100,density=True)
@@ -215,7 +237,36 @@ def test_generator(gen,dataset,coeff,w,variance,device):
   sns.distplot(distp2,hist=False)
   plt.show()
   
+  #Historgram for sensitivity analysis 
+  n,x,_=plt.hist(x6,bins=100,density=True)
+  plt.title("Gradient for feature x5")
+  sns.distplot(x6,hist=False)
+  plt.show()
 
+  n,x,_=plt.hist(x7,bins=100,density=True)
+  plt.title("Gradient for feature x6")
+  sns.distplot(x7,hist=False)
+  plt.show()
+
+  n,x,_=plt.hist(x8,bins=100,density=True)
+  plt.title("Gradient for feature x7")
+  sns.distplot(x8,hist=False)
+  plt.show()
+
+  n,x,_=plt.hist(x9,bins=100,density=True)
+  plt.title("Gradient for feature x8")
+  sns.distplot(x9,hist=False)
+  plt.show()
+
+  n,x,_=plt.hist(x10,bins=100,density=True)
+  plt.title("Gradient for feature x9")
+  sns.distplot(x10,hist=False)
+  plt.show()
+
+  n,x,_=plt.hist(x11,bins=100,density=True)
+  plt.title("Gradient for feature x10")
+  sns.distplot(x11,hist=False)
+  plt.show()
 
   # wandb.log({
   #   "Mean MSE (ABC GAN)":mse_mean
