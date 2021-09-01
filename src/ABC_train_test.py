@@ -199,17 +199,17 @@ def test_generator(gen,dataset,coeff,w,variance,device):
     distp2.append(dist2)
 
     features = x_batch.numpy()
-    slope, intercept = np.polyfit(features[:,6].reshape(1,len(dataset)), gen_data, 1)
+    slope, intercept = np.polyfit(features[:,6], gen_data.flatten(), 1)
     x6.append(slope)
-    slope, intercept = np.polyfit(features[:,7].reshape(1,len(dataset)), gen_data, 1)
+    slope, intercept = np.polyfit(features[:,7], gen_data.flatten(), 1)
     x7.append(slope)
-    slope, intercept = np.polyfit(features[:,8].reshape(1,len(dataset)), gen_data, 1)
+    slope, intercept = np.polyfit(features[:,8], gen_data.flatten(), 1)
     x8.append(slope)
-    slope, intercept = np.polyfit(features[:,9].reshape(1,len(dataset)), gen_data, 1)
+    slope, intercept = np.polyfit(features[:,9], gen_data.flatten(), 1)
     x9.append(slope)
-    slope, intercept = np.polyfit(features[:,10].reshape(1,len(dataset)), gen_data, 1)
+    slope, intercept = np.polyfit(features[:,10], gen_data.flatten(), 1)
     x10.append(slope)
-    slope, intercept = np.polyfit(features[:,11].reshape(1,len(dataset)), gen_data, 1)
+    slope, intercept = np.polyfit(features[:,11], gen_data.flatten(), 1)
     x11.append(slope)
 
 
