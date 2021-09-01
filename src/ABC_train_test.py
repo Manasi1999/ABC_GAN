@@ -187,11 +187,12 @@ def test_generator(gen,dataset,coeff,w,variance,device):
     meanAbsoluteError = mean_absolute_error(real_data, gen_data)
     mse.append(meanSquaredError)
     mae.append(meanAbsoluteError)
-    dist1 = minkowski_distance(np.array(real_data),np.array(gen_data), 1)
-    dist2 = minkowski_distance(np.array(real_data),np.array(gen_data), 2)
+    dist1 = minkowski_distance(np.array(real_data)[0],np.array(gen_data)[0], 1)
+    dist2 = minkowski_distance(np.array(real_data)[0],np.array(gen_data)[0], 2)
     distp1.append(dist1)
     distp2.append(dist2)
   
+
   n,x,_=plt.hist(mse,bins=100,density=True)
   plt.title("Distribution of Mean Square Error ")
   sns.distplot(mse,hist=False)
@@ -230,18 +231,18 @@ def test_generator(gen,dataset,coeff,w,variance,device):
   # table = wandb.Table(data=data, columns = ["Index", "Data","Label"])
   # wandb.log({"Real Data Vs Generated Data" : wandb.plot.scatter(table, "Index", "Data","Comparison")})
 
-    #Weights of generator after training 
-  params = torch.cat([x.view(-1) for x in gen.output.parameters()]).cpu()
-  params = params.detach().numpy().tolist()
-  weights = params[:-1]
-  #Round to 2 decimal places 
-  for i in range(len(weights)):
-    weights[i] = "{:.2f}".format(weights[i])
-  bias = params[len(params)-1]
-  bias = "{:.2f}".format(bias)
+  #Weights of generator after training 
+  # params = torch.cat([x.view(-1) for x in gen.output.parameters()]).cpu()
+  # params = params.detach().numpy().tolist()
+  # weights = params[:-1]
+  # #Round to 2 decimal places 
+  # for i in range(len(weights)):
+  #   weights[i] = "{:.2f}".format(weights[i])
+  # bias = params[len(params)-1]
+  # bias = "{:.2f}".format(bias)
   #print(weights)
   #print(bias)
-  return y_pred
+  # return y_pred
   
 def test_discriminator(disc,gen,dataset,coeff,mean,variance,device): 
 
