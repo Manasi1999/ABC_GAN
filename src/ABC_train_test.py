@@ -210,8 +210,6 @@ def test_generator(gen,dataset,coeff,w,variance,device):
     x9.append(slope)
     slope, intercept = np.polyfit(features[:,10], gen_data_temp.flatten(), 1)
     x10.append(slope)
-    slope, intercept = np.polyfit(features[:,11], gen_data_temp.flatten(), 1)
-    x11.append(slope)
 
 
   
@@ -264,10 +262,6 @@ def test_generator(gen,dataset,coeff,w,variance,device):
   sns.distplot(x10,hist=False)
   plt.show()
 
-  n,x,_=plt.hist(x11,bins=100,density=True)
-  plt.title("Gradient for feature x10")
-  sns.distplot(x11,hist=False)
-  plt.show()
 
   # wandb.log({
   #   "Mean MSE (ABC GAN)":mse_mean
