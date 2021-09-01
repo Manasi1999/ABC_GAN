@@ -179,6 +179,7 @@ def test_generator(gen,dataset,coeff,w,variance,device):
       generated_y = generated_y.cpu().detach()
       generated_data = torch.reshape(generated_y,(-1,))
     gen_data = generated_data.numpy().reshape(1,len(dataset)).tolist()
+    gen_data_temp = generated_data.numpy().reshape(1,len(dataset))
     y_pred.append(gen_data)
     real_data = y_batch.numpy().reshape(1,len(dataset)).tolist()
     #Plot the data 
@@ -199,17 +200,17 @@ def test_generator(gen,dataset,coeff,w,variance,device):
     distp2.append(dist2)
 
     features = x_batch.numpy()
-    slope, intercept = np.polyfit(features[:,6], gen_data.flatten(), 1)
+    slope, intercept = np.polyfit(features[:,6], gen_data_temp.flatten(), 1)
     x6.append(slope)
-    slope, intercept = np.polyfit(features[:,7], gen_data.flatten(), 1)
+    slope, intercept = np.polyfit(features[:,7], gen_data_temp.flatten(), 1)
     x7.append(slope)
-    slope, intercept = np.polyfit(features[:,8], gen_data.flatten(), 1)
+    slope, intercept = np.polyfit(features[:,8], gen_data_temp.flatten(), 1)
     x8.append(slope)
-    slope, intercept = np.polyfit(features[:,9], gen_data.flatten(), 1)
+    slope, intercept = np.polyfit(features[:,9], gen_data_temp.flatten(), 1)
     x9.append(slope)
-    slope, intercept = np.polyfit(features[:,10], gen_data.flatten(), 1)
+    slope, intercept = np.polyfit(features[:,10], gen_data_temp.flatten(), 1)
     x10.append(slope)
-    slope, intercept = np.polyfit(features[:,11], gen_data.flatten(), 1)
+    slope, intercept = np.polyfit(features[:,11], gen_data_temp.flatten(), 1)
     x11.append(slope)
 
 
