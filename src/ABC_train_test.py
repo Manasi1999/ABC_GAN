@@ -22,6 +22,10 @@ import math
 from sklearn.metrics import mean_squared_error,mean_absolute_error
 from statistics import mean
 
+#Distance - Minkowski Function 
+def minkowski_distance(a, b, p):
+	return sum(abs(e1-e2)**p for e1, e2 in zip(a,b))**(1/p)
+
 #Function to load functions mentioned in yaml files 
 def load_func(dotpath : str):
     """ load function in module.  function is right-most segment """
@@ -160,6 +164,8 @@ def test_generator(gen,dataset,coeff,w,variance,device):
   mse=[]
   mae=[]
   y_pred = []
+  distp1 = []
+  distp2 = []
   for epoch in range(1000):
     for x_batch, y_batch in test_loader: 
       gen_input =  ABC_pre_generator(x_batch,coeff,variance,w,device)
@@ -181,6 +187,10 @@ def test_generator(gen,dataset,coeff,w,variance,device):
     meanAbsoluteError = mean_absolute_error(real_data, gen_data)
     mse.append(meanSquaredError)
     mae.append(meanAbsoluteError)
+    dist1 = minkowski_distance(real_data,gen_data, 1)
+    dist2 = minkowski_distance(real_data,gen_data, 2)
+    distp1.append(dist1)
+    distp2.append(distp2)
   
   n,x,_=plt.hist(mse,bins=100,density=True)
   plt.title("Distribution of Mean Square Error ")
@@ -193,6 +203,18 @@ def test_generator(gen,dataset,coeff,w,variance,device):
   sns.distplot(mae,hist=False)
   plt.show()
   print("Mean Absolute Error:",mean(mae))
+
+  n,x,_=plt.hist(distp1,bins=100,density=True)
+  plt.title("First Order Minkowski Distance")
+  sns.distplot(distp1,hist=False)
+  plt.show()
+
+  n,x,_=plt.hist(distp2,bins=100,density=True)
+  plt.title("Second Order Minkowski Distance")
+  sns.distplot(distp2,hist=False)
+  plt.show()
+  
+
 
   # wandb.log({
   #   "Mean MSE (ABC GAN)":mse_mean
