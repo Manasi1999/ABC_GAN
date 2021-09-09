@@ -21,6 +21,7 @@ from importlib import import_module
 import math
 from sklearn.metrics import mean_squared_error,mean_absolute_error
 from statistics import mean
+from torch.utils.tensorboard import SummaryWriter
 
 #Distance - Minkowski Function 
 def minkowski_distance(a, b, p):
@@ -84,7 +85,7 @@ def discriminator_warmup(disc,disc_opt,dataset,n_epochs,batch_size,criterion,dev
       "disc_warmup_loss":epoch_loss/len(train_loader)
     })
 
-def training_GAN(disc, gen,disc_opt,gen_opt,dataset, batch_size, n_epochs,criterion,coeff,mean,variance,device): 
+def training_GAN(disc, gen,disc_opt,gen_opt,dataset, batch_size, n_epochs,criterion,coeff,mean,variance,tb,device): 
   discriminatorLoss = []
   generatorLoss = []
   train_loader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
@@ -156,6 +157,10 @@ def training_GAN(disc, gen,disc_opt,gen_opt,dataset, batch_size, n_epochs,criter
       # 'disc_fakse_loss': disc_fake_loss,
       # 'disc_loss': disc_loss,
       # })
+    for name, weight in gen.named_parameters():
+      tb.add_histogram(name,weight,epoch)
+      tb.add_histogram(f'{name}.grad',weight.grad,epoch)
+  tb.close()
 
 def test_generator(gen,dataset,coeff,w,variance,device):
   test_loader = DataLoader(dataset, batch_size=len(dataset), shuffle=True)
@@ -286,7 +291,41 @@ def test_discriminator_1(disc,gen,dataset,coeff,mean,variance,threshold,n_iterat
       plt.ylabel("Y Values")
       plt.show()
   
-   
+def test_discriminator_2(disc,gen,dataset,coeff,mean,variance,threshold,device):
+  test_loader = DataLoader(dataset, batch_size=len(dataset), shuffle=True)
+  for x_batch,y_batch in test_loader: 
+    y_real = y_batch.detach().cpu().numpy().tolist()
+    #Generate y
+    gen_input =  ABC_pre_generator(x_batch,coeff,variance,mean,device)
+    generated_y = gen(gen_input) 
+    #Get discriminator probability 
+    x_batch = x_batch.to(device) 
+    generated_data = torch.cat((x_batch,generated_y),dim=1).to(device)
+    disc_pred = disc(generated_data.float())
+    #Scatter plot 
+    disc_pred = disc_pred.detach().cpu().numpy().tolist()
+    generated_y = generated_y.detach().cpu().numpy().tolist()
+
+    predTrue = []
+    predFalse = []
+    for i in range(len(dataset)):
+      if disc_pred[i][0] >=threshold:
+        predTrue.append([y_real[i],generated_y[i][0]])
+      else:
+        predFalse.append([y_real[i],generated_y[i][0]])
+    predTrue = np.array(predTrue)
+    predFalse = np.array(predFalse)
+    plt.figure(figsize=(14,6))
+    plt.subplot(121)
+    plt.plot(predTrue[:,0],predTrue[:,1],'o',color='g')
+    plt.xlabel("Y real")
+    plt.ylabel("Y generated")
+    plt.title("Y vs Y* for datapoints predicted to be real")
+    plt.subplot(122)
+    plt.plot(predFalse[:,0],predFalse[:,1],'o',color='r')
+    plt.xlabel("Y real")
+    plt.ylabel("Y generated")
+    plt.title("Y vs Y* for datapoints predicted to be fake") 
 
 @hydra.main(config_path="conf" ,config_name="config.yaml")
 def main(cfg: DictConfig) -> None:
