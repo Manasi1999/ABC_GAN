@@ -246,10 +246,10 @@ def test_generator(gen,dataset,coeff,w,variance,device):
   #print(bias)
   # return y_pred
   
-def test_discriminator(disc,gen,dataset,coeff,mean,variance,device): 
+def test_discriminator_1(disc,gen,dataset,coeff,mean,variance,threshold,n_iterations,device): 
   test_loader = DataLoader(dataset, batch_size=len(dataset), shuffle=False)
-  output = [[] for i in range(1000)]
-  for i in range(100):
+  output = [[] for i in range(len(dataset))]
+  for j in range(n_iterations):
     for x_batch,y_batch in test_loader: 
       #Generate y
       gen_input = ABC_pre_generator(x_batch,coeff,variance,mean,device)
@@ -261,12 +261,12 @@ def test_discriminator(disc,gen,dataset,coeff,mean,variance,device):
       #Edits for plotting 
       disc_pred = disc_pred.detach().cpu().numpy().tolist()
       generated_y = generated_y.detach().cpu().numpy().tolist()
-      for i in range(1000): 
+      for i in range(len(dataset)): 
         generated = generated_y[i][0]
         discVal = disc_pred[i][0]
         prob = 0
         #Predicted True
-        if disc_pred[i][0] >=-0.1:
+        if disc_pred[i][0] >=threshold:
           prob = 1
         output[i].append([generated,discVal,prob])
   
