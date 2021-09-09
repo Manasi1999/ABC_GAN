@@ -1,9 +1,6 @@
 #!/usr/bin/env python3
 from torch import nn
 
-#coefficient = [c,w_1,w_2,...,w_n]
-#y = w_1*x_1 + w_2*x_2 + ... w_n*x_n + c 
-
 class Discriminator(nn.Module):
 
   def __init__(self,coefficients,hiddenNodes):
@@ -21,7 +18,6 @@ class Discriminator(nn.Module):
     x = self.relu(x)
     x = self.output(x)
     return x 
-
 
 class Generator(nn.Module):
 
@@ -44,7 +40,6 @@ class Generator(nn.Module):
         for i in range(1,len(coefficients)):
           nn.init.constant_(m.weight[0][i-1],coefficients[i])
         nn.init.constant_(m.bias,coefficients[0])
-
 
 class GeneratorforABC(nn.Module):
 

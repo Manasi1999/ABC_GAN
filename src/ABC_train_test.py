@@ -48,7 +48,6 @@ def ABC_pre_generator(x_batch,coeff,variance,mean,device):
   gen_input = torch.cat((x_batch,y_abc),dim = 1).to(device)
   return gen_input 
 
-
 #Function to warmup the discriminator 
 def discriminator_warmup(disc,disc_opt,dataset,n_epochs,batch_size,criterion,device): 
   train_loader  = DataLoader(dataset, batch_size=batch_size, shuffle=True)
@@ -158,7 +157,6 @@ def training_GAN(disc, gen,disc_opt,gen_opt,dataset, batch_size, n_epochs,criter
       # 'disc_loss': disc_loss,
       # })
 
-
 def test_generator(gen,dataset,coeff,w,variance,device):
   test_loader = DataLoader(dataset, batch_size=len(dataset), shuffle=True)
   mse=[]
@@ -166,12 +164,6 @@ def test_generator(gen,dataset,coeff,w,variance,device):
   y_pred = []
   distp1 = []
   distp2 = []
-  x6 = []
-  x7 = []
-  x8 = []
-  x9 = []
-  x10 = []
-  x11 = []
   for epoch in range(1000):
     for x_batch, y_batch in test_loader: 
       gen_input =  ABC_pre_generator(x_batch,coeff,variance,w,device)
@@ -199,69 +191,33 @@ def test_generator(gen,dataset,coeff,w,variance,device):
     distp1.append(dist1)
     distp2.append(dist2)
 
-    features = x_batch.numpy()
-    slope, intercept = np.polyfit(features[:,6], gen_data_temp.flatten(), 1)
-    x6.append(slope)
-    slope, intercept = np.polyfit(features[:,7], gen_data_temp.flatten(), 1)
-    x7.append(slope)
-    slope, intercept = np.polyfit(features[:,8], gen_data_temp.flatten(), 1)
-    x8.append(slope)
-    slope, intercept = np.polyfit(features[:,9], gen_data_temp.flatten(), 1)
-    x9.append(slope)
-    slope, intercept = np.polyfit(features[:,10], gen_data_temp.flatten(), 1)
-    x10.append(slope)
+  #Distribution of Metrics 
 
-
-  
-
+  #Mean Squared Error 
   n,x,_=plt.hist(mse,bins=100,density=True)
   plt.title("Distribution of Mean Square Error ")
   sns.distplot(mse,hist=False)
   plt.show()
   print("Mean Square Error:",mean(mse))
 
+  #Mean Absolute Error 
   n,x,_=plt.hist(mae,bins=100,density=True)
   plt.title("Distribution of Mean Absolute Error ")
   sns.distplot(mae,hist=False)
   plt.show()
   print("Mean Absolute Error:",mean(mae))
 
+  #Minkowski Distance 1st Order 
   n,x,_=plt.hist(distp1,bins=100,density=True)
   plt.title("First Order Minkowski Distance")
   sns.distplot(distp1,hist=False)
   plt.show()
 
+  #Minkowski Distance 2nd Order 
   n,x,_=plt.hist(distp2,bins=100,density=True)
   plt.title("Second Order Minkowski Distance")
   sns.distplot(distp2,hist=False)
   plt.show()
-  
-  #Historgram for sensitivity analysis 
-  n,x,_=plt.hist(x6,bins=100,density=True)
-  plt.title("Gradient for feature x5")
-  sns.distplot(x6,hist=False)
-  plt.show()
-
-  n,x,_=plt.hist(x7,bins=100,density=True)
-  plt.title("Gradient for feature x6")
-  sns.distplot(x7,hist=False)
-  plt.show()
-
-  n,x,_=plt.hist(x8,bins=100,density=True)
-  plt.title("Gradient for feature x7")
-  sns.distplot(x8,hist=False)
-  plt.show()
-
-  n,x,_=plt.hist(x9,bins=100,density=True)
-  plt.title("Gradient for feature x8")
-  sns.distplot(x9,hist=False)
-  plt.show()
-
-  n,x,_=plt.hist(x10,bins=100,density=True)
-  plt.title("Gradient for feature x9")
-  sns.distplot(x10,hist=False)
-  plt.show()
-
 
   # wandb.log({
   #   "Mean MSE (ABC GAN)":mse_mean
@@ -291,37 +247,46 @@ def test_generator(gen,dataset,coeff,w,variance,device):
   # return y_pred
   
 def test_discriminator(disc,gen,dataset,coeff,mean,variance,device): 
-
-  test_loader = DataLoader(dataset, batch_size=len(dataset), shuffle=True)
-  for x_batch,y_batch in test_loader: 
-    y_shape = list(y_batch.size())
-    curr_batch_size = y_shape[0]
-    y_batch = torch.reshape(y_batch,(curr_batch_size,1))
-
-    #Discriminator Probability for Real Data points 
-    # real_data_input = torch.cat((x_batch,y_batch),dim=1).to(device)
-    # disc_pred = disc(real_data_input)
-    # disc_pred = disc_pred.detach().cpu()
-    # real_out = disc_pred.numpy().reshape(1,len(dataset)).tolist()
-    # real_out = real_out[0]
-    #Discriminator Probability for Random Data Points 
-    # shape_data = list(real_data_input.size())
-    # random_data = 10*torch.rand(shape_data[0],shape_data[1]).to(device)
-    # disc_pred = disc(random_data)
-    # disc_pred = disc_pred.detach().cpu()
-    # rand_out = disc_pred.numpy().reshape(1,len(dataset)).tolist()
-    # rand_out = rand_out[0]
-
-    #Discriminator Probability for Generated Data Points
-    gen_input =  ABC_pre_generator(x_batch,coeff,variance,mean,device)
-    generated_y = gen(gen_input)
-    x_batch = x_batch.to(device) 
-    generated_data = torch.cat((x_batch,generated_y),dim=1).to(device)
-    disc_pred = disc(generated_data.float())
-    disc_pred = disc_pred.detach().cpu()
-    disc_out = disc_pred.numpy().tolist()
-  return disc_out 
-    
+  test_loader = DataLoader(dataset, batch_size=len(dataset), shuffle=False)
+  output = [[] for i in range(1000)]
+  for i in range(100):
+    for x_batch,y_batch in test_loader: 
+      #Generate y
+      gen_input = ABC_pre_generator(x_batch,coeff,variance,mean,device)
+      generated_y = gen(gen_input) 
+      #Get discriminator probability 
+      x_batch = x_batch.to(device) 
+      generated_data = torch.cat((x_batch,generated_y),dim=1).to(device)
+      disc_pred = disc(generated_data.float())
+      #Edits for plotting 
+      disc_pred = disc_pred.detach().cpu().numpy().tolist()
+      generated_y = generated_y.detach().cpu().numpy().tolist()
+      for i in range(1000): 
+        generated = generated_y[i][0]
+        discVal = disc_pred[i][0]
+        prob = 0
+        #Predicted True
+        if disc_pred[i][0] >=-0.1:
+          prob = 1
+        output[i].append([generated,discVal,prob])
+  
+  #Plot the values
+  colors = np.array(["red","green"])
+  y_real = y_batch.detach().cpu().numpy().tolist()
+  np_out = np.array(output) 
+  for i in range(1000):
+    if i%10 == 0:
+      z = [int(x) for x in np_out[i][:,2]]
+      plt.scatter(np_out[i][:,1],np_out[i][:,0],c=colors[z],alpha=0.2)
+      plt.plot(np_out[i][:,1],np.full((100), y_real[i]),color = "k")
+      plt.plot(np_out[i][:,1],np.full((100), y_real[i]+0.5))
+      plt.plot(np_out[i][:,1],np.full((100), y_real[i]-0.5))
+      plt.title("For datapoint "+str(i+1))
+      plt.xlabel("Discriminator Output")
+      plt.ylabel("Y Values")
+      plt.show()
+  
+   
 
 @hydra.main(config_path="conf" ,config_name="config.yaml")
 def main(cfg: DictConfig) -> None:
@@ -372,7 +337,6 @@ def main(cfg: DictConfig) -> None:
   #Testing 
   test_generator(gen,dataset,coeff,cfg.abc.mean,cfg.abc.variance,device)
   test_discriminator(disc,gen,dataset,coeff,cfg.abc.mean,cfg.abc.variance,device)
-
 
 if __name__ == "__main__":
 	main()
