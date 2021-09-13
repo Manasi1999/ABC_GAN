@@ -160,7 +160,7 @@ def training_GAN(disc, gen,disc_opt,gen_opt,dataset, batch_size, n_epochs,criter
     for name, weight in gen.named_parameters():
       tb.add_histogram(name,weight,epoch)
       tb.add_histogram(f'{name}.grad',weight.grad,epoch)
-  return tb
+  
 
 def test_generator(gen,dataset,coeff,w,variance,device):
   test_loader = DataLoader(dataset, batch_size=len(dataset), shuffle=True)
