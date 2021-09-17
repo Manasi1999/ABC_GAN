@@ -157,11 +157,7 @@ def training_GAN(disc, gen,disc_opt,gen_opt,dataset, batch_size, n_epochs,criter
       # 'disc_fakse_loss': disc_fake_loss,
       # 'disc_loss': disc_loss,
       # })
-    for name, weight in gen.named_parameters():
-      tb.add_histogram(name,weight,epoch)
-      tb.add_histogram(f'{name}.grad',weight.grad,epoch)
-  
-
+    
 def test_generator(gen,dataset,coeff,w,variance,device):
   test_loader = DataLoader(dataset, batch_size=len(dataset), shuffle=True)
   mse=[]
@@ -317,12 +313,12 @@ def test_discriminator_2(disc,gen,dataset,coeff,mean,variance,threshold,device):
     predFalse = np.array(predFalse)
     plt.figure(figsize=(14,6))
     plt.subplot(121)
-    plt.plot(predTrue[:,0],predTrue[:,1],'o',color='g')
+    plt.hexbin(predTrue[:,0],predTrue[:,1])
     plt.xlabel("Y real")
     plt.ylabel("Y generated")
     plt.title("Y vs Y* for datapoints predicted to be real")
     plt.subplot(122)
-    plt.plot(predFalse[:,0],predFalse[:,1],'o',color='r')
+    plt.hexbin(predFalse[:,0],predFalse[:,1])
     plt.xlabel("Y real")
     plt.ylabel("Y generated")
     plt.title("Y vs Y* for datapoints predicted to be fake") 
