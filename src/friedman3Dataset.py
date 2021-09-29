@@ -14,7 +14,7 @@ def friedman3_data():
     #Creating Pandas Dataframe 
     Y = Y.reshape((Y.size,1))
     data = np.concatenate((X,Y),axis=1)
-    df = pd.DataFrame(data, columns = ['X1','X2','X3','X4','X4','Y'])
+    df = pd.DataFrame(data, columns = ['X1','X2','X3','X4','Y'])
     df.head()
 
     #Standardization of the dataset 
