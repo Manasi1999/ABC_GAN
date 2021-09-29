@@ -14,14 +14,14 @@ def friedman3_data():
     #Creating Pandas Dataframe 
     Y = Y.reshape((Y.size,1))
     data = np.concatenate((X,Y),axis=1)
-    df = pd.DataFrame(data, columns = ['X0','X1','X2','X3','X4','X5','X6','X7','X8','X9','Y'])
+    df = pd.DataFrame(data, columns = ['X1','X2','X3','X4','X4','Y'])
     df.head()
 
     #Standardization of the dataset 
     scaler = preprocessing.StandardScaler()
     df = pd.DataFrame(scaler.fit_transform(df), columns=df.columns)
-    X = df.iloc[:,0:10]
-    Y = df.iloc[:,10]
+    X = df.iloc[:,0:4]
+    Y = df.iloc[:,4]
 
     #Add Constant 
     X = X.to_numpy()
