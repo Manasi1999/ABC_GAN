@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from sklearn.datasets import make_friedman1
+from sklearn.datasets import make_friedman3
 import statsmodels.api as sm
 from sklearn import preprocessing
 import pandas as pd
@@ -7,9 +7,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
-def friedman1_data():
+def friedman3_data():
     #Load the dataset 
-    X, Y = make_friedman1(n_samples=1000, n_features=10, noise=0.1, random_state=None)
+    X, Y = make_friedman3(n_samples=1000, noise=0.1, random_state=None)
 
     #Creating Pandas Dataframe 
     Y = Y.reshape((Y.size,1))
