@@ -7,21 +7,22 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
-def friedman1_data():
+def friedman1_data(n_samples,n_features):
     #Load the dataset 
-    X, Y = make_friedman1(n_samples=1000, n_features=10, noise=0.1, random_state=None)
+    X, Y = make_friedman1(n_samples=n_samples, n_features=n_features, noise=0.1, random_state=None)
 
     #Creating Pandas Dataframe 
     Y = Y.reshape((Y.size,1))
     data = np.concatenate((X,Y),axis=1)
-    df = pd.DataFrame(data, columns = ['X0','X1','X2','X3','X4','X5','X6','X7','X8','X9','Y'])
-    df.head()
+    cols = ['X'+str(i) for i in range(n_features)]
+    df = pd.DataFrame(data, columns = cols)
+    print(df.head())
 
     #Standardization of the dataset 
     scaler = preprocessing.StandardScaler()
     df = pd.DataFrame(scaler.fit_transform(df), columns=df.columns)
-    X = df.iloc[:,0:10]
-    Y = df.iloc[:,10]
+    X = df.iloc[:,0:n_features]
+    Y = df.iloc[:,n_features]
 
     #Add Constant 
     X = X.to_numpy()

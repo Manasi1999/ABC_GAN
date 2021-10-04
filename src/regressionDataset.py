@@ -1,34 +1,31 @@
 from sklearn.datasets import make_regression
 import statsmodels.api as sm
-from sklearn import preprocessing
-from scipy.stats import spearmanr
-from sklearn.decomposition import PCA
 import pandas as pd
-import matplotlib.pyplot as plt
+import numpy as np
+from sklearn import preprocessing
 
 
-def regression_data():
+def regression_data(n,m):
     #Load the dataset 
-    X, Y = make_regression(n_samples=100, n_features=10, noise=0.1, random_state=None)
+    X, Y = make_regression(n_samples=n, n_features=m, noise=0.1, random_state=None)
+ 
+    #Creating Pandas Dataframe 
+    Y = Y.reshape((Y.size,1))
+    data = np.concatenate((X,Y),axis=1)
 
-    #Check corelation between features and perform PCA
-    corr = spearmanr(X).correlation
-    print(corr)
-    plt.imshow(corr)
-    plt.show()
+    #Create Columns 
+    columns = ['X'+str(i+1) for i in range(m)]
+    columns.append('Y')
+    df = pd.DataFrame(data, columns = columns)
+    print(df.head())
 
-    #PCA 
-    pca = PCA(n_components=6)
-    pca.fit(X)
-    Xp = pca.transform(X)
-
-    #Correlation Matrix after PCA 
-    corr = spearmanr(Xp).correlation
-    print(corr)
-    plt.imshow(corr)
-    plt.show()
+    #Standardization of the dataset 
+    scaler = preprocessing.StandardScaler()
+    df = pd.DataFrame(scaler.fit_transform(df), columns=df.columns)
+    X = df.iloc[:,0:m]
+    Y = df.iloc[:,m]
 
     #Add Constant 
-    Xpc = sm.add_constant(Xp)
-
-    return Xpc, Y 
+    X = X.to_numpy()
+    Xc = sm.add_constant(X)
+    return Xc, Y 

@@ -7,15 +7,15 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
-def friedman3_data():
+def friedman3_data(n_samples):
     #Load the dataset 
-    X, Y = make_friedman3(n_samples=1000, noise=0.1, random_state=None)
+    X, Y = make_friedman3(n_samples=n_samples, noise=0.1, random_state=None)
 
     #Creating Pandas Dataframe 
     Y = Y.reshape((Y.size,1))
     data = np.concatenate((X,Y),axis=1)
     df = pd.DataFrame(data, columns = ['X1','X2','X3','X4','Y'])
-    df.head()
+    print(df.head())
 
     #Standardization of the dataset 
     scaler = preprocessing.StandardScaler()

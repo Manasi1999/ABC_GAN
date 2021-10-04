@@ -1,38 +1,17 @@
 #!/usr/bin/env python3
-import statsmodels.api as sm
-import argparse
-from pathlib import Path
 import torch
 from torch import nn
-from torch.utils.data import Dataset , DataLoader 
+from torch.utils.data import DataLoader 
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns 
 from statistics import mean
-import pandas as pd
-from sklearn import preprocessing
-from dataset import CustomDataset,DataWithNoise
-from network import Generator,Discriminator,GeneratorforABC 
-from statsModel import statsModel 
-import wandb
-import hydra
-from omegaconf import DictConfig
-from importlib import import_module
-import math
 from sklearn.metrics import mean_squared_error,mean_absolute_error
 from statistics import mean
-from torch.utils.tensorboard import SummaryWriter
 
 #Distance - Minkowski Function 
 def minkowski_distance(a, b, p):
 	return sum(abs(e1-e2)**p for e1, e2 in zip(a,b))**(1/p)
-
-#Function to load functions mentioned in yaml files 
-def load_func(dotpath : str):
-    """ load function in module.  function is right-most segment """
-    module_, func = dotpath.rsplit(".", maxsplit=1)
-    m = import_module(module_)
-    return getattr(m, func)
 
 #Function for ABC Pregenerator
 def ABC_pre_generator(x_batch,coeff,variance,mean,device):
@@ -80,10 +59,6 @@ def discriminator_warmup(disc,disc_opt,dataset,n_epochs,batch_size,criterion,dev
       disc_opt.step()
 
       epoch_loss += disc_loss.item()
-    wandb.log({
-      "Epoch(Discriminator Warm-up)":epoch,
-      "disc_warmup_loss":epoch_loss/len(train_loader)
-    })
 
 def training_GAN(disc, gen,disc_opt,gen_opt,dataset, batch_size, n_epochs,criterion,coeff,mean,variance,device): 
   discriminatorLoss = []
@@ -150,19 +125,18 @@ def training_GAN(disc, gen,disc_opt,gen_opt,dataset, batch_size, n_epochs,criter
       #Update optimizer 
       gen_opt.step()
 
-      # wandb.log({
-      # 'epoch':epoch,
-      # 'gen_loss': gen_loss,
-      # 'disc_real_loss': disc_real_loss,
-      # 'disc_fakse_loss': disc_fake_loss,
-      # 'disc_loss': disc_loss,
-      # })
+  #Plotting the Discriminator and Generator Loss 
+  plt.plot(discriminatorLoss,color = "red",label="Discriminator Loss")
+  plt.plot(generatorLoss,color="blue",label ="Generator Loss")
+  plt.xlabel("Epoch")
+  plt.ylabel("Loss")
+  plt.legend()
+  plt.show()
     
 def test_generator(gen,dataset,coeff,w,variance,device):
-  test_loader = DataLoader(dataset, batch_size=len(dataset), shuffle=True)
+  test_loader = DataLoader(dataset, batch_size=len(dataset), shuffle=False)
   mse=[]
   mae=[]
-  y_pred = []
   distp1 = []
   distp2 = []
   for epoch in range(1000):
@@ -172,8 +146,6 @@ def test_generator(gen,dataset,coeff,w,variance,device):
       generated_y = generated_y.cpu().detach()
       generated_data = torch.reshape(generated_y,(-1,))
     gen_data = generated_data.numpy().reshape(1,len(dataset)).tolist()
-    gen_data_temp = generated_data.numpy().reshape(1,len(dataset))
-    y_pred.append(gen_data)
     real_data = y_batch.numpy().reshape(1,len(dataset)).tolist()
     #Plot the data 
     if(epoch%200==0):
@@ -193,7 +165,6 @@ def test_generator(gen,dataset,coeff,w,variance,device):
     distp2.append(dist2)
 
   #Distribution of Metrics 
-
   #Mean Squared Error 
   n,x,_=plt.hist(mse,bins=100,density=True)
   plt.title("Distribution of Mean Square Error ")
@@ -219,33 +190,6 @@ def test_generator(gen,dataset,coeff,w,variance,device):
   plt.title("Second Order Minkowski Distance")
   sns.distplot(distp2,hist=False)
   plt.show()
-
-  # wandb.log({
-  #   "Mean MSE (ABC GAN)":mse_mean
-  # })
-
-  #Plot Real Vs Generated Data 
-  # gen_data = generated_data.numpy().reshape(1,len(dataset)).tolist()
-  # real_data = y_batch.numpy().reshape(1,len(dataset)).tolist()
-  # data=[]
-  # for i in range(len(dataset)):
-  #     data.append([i,gen_data[0][i],"Generated"])
-  #     data.append([i,real_data[0][i],"Real"])
-  # table = wandb.Table(data=data, columns = ["Index", "Data","Label"])
-  # wandb.log({"Real Data Vs Generated Data" : wandb.plot.scatter(table, "Index", "Data","Comparison")})
-
-  #Weights of generator after training 
-  # params = torch.cat([x.view(-1) for x in gen.output.parameters()]).cpu()
-  # params = params.detach().numpy().tolist()
-  # weights = params[:-1]
-  # #Round to 2 decimal places 
-  # for i in range(len(weights)):
-  #   weights[i] = "{:.2f}".format(weights[i])
-  # bias = params[len(params)-1]
-  # bias = "{:.2f}".format(bias)
-  #print(weights)
-  #print(bias)
-  # return y_pred
   
 def test_discriminator_1(disc,gen,dataset,coeff,mean,variance,threshold,n_iterations,device): 
   test_loader = DataLoader(dataset, batch_size=len(dataset), shuffle=False)
@@ -313,65 +257,12 @@ def test_discriminator_2(disc,gen,dataset,coeff,mean,variance,threshold,device):
     predFalse = np.array(predFalse)
     plt.figure(figsize=(14,6))
     plt.subplot(121)
-    plt.hexbin(predTrue[:,0],predTrue[:,1])
+    plt.hexbin(predTrue[:,0],predTrue[:,1],gridsize=(15,15))
     plt.xlabel("Y real")
     plt.ylabel("Y generated")
     plt.title("Y vs Y* for datapoints predicted to be real")
     plt.subplot(122)
-    plt.hexbin(predFalse[:,0],predFalse[:,1])
+    plt.hexbin(predFalse[:,0],predFalse[:,1],gridsize=(15,15))
     plt.xlabel("Y real")
     plt.ylabel("Y generated")
     plt.title("Y vs Y* for datapoints predicted to be fake") 
-
-@hydra.main(config_path="conf" ,config_name="config.yaml")
-def main(cfg: DictConfig) -> None:
-
-  #Select the device 
-  cfg.train.cuda = cfg.train.cuda and torch.cuda.is_available()
-  device = torch.device('cuda:0' if cfg.train.cuda else 'cpu')
-
-  #Get the data 
-  get_data = load_func(cfg.dataset.funct)
-  X,Y = get_data()
-
-  #Get stats model coefficients 
-  [coeff,statsPred] = statsModel(X,Y)
-
-  wandb.init(project='ABC-GAN', entity = 'abc-gan', config=cfg)
-  run_id = wandb.run.id
-
-  #Mean Square Error
-  meanSquaredError = mean_squared_error(Y,statsPred)
-  wandb.log({
-    "MSE(Stats Model)":meanSquaredError,
-    "Coeff (Stats Model)":coeff
-  })
-  
-  #Get real dataset and dataset with noise 
-  dataset = CustomDataset(X,Y)
-  dataWithNoise = DataWithNoise(X,Y)
-
-  #Initialize Generator and Discriminator 
-  disc = Discriminator(coeff,cfg.model.hidden_nodes).to(device)
-  gen = GeneratorforABC(coeff,cfg.train.initialize_generator,cfg.abc.initialize_generator_identity).to(device)
-
-  #Add optimizer to discriminator and generator 
-  optimizer = load_func(cfg.optimizer.funct)
-  criterion = nn.BCEWithLogitsLoss()
-  gen_opt = optimizer(gen.parameters(), lr=cfg.optimizer.lr, betas=(cfg.optimizer.beta_1,cfg.optimizer.beta_2))
-  disc_opt = optimizer(disc.parameters(), lr=cfg.optimizer.lr, betas=(cfg.optimizer.beta_1,cfg.optimizer.beta_2))
-
-  wandb.watch(disc, criterion, log="all", log_freq=10)
-  wandb.watch(gen,criterion, log="all", log_freq=10)
-  if(cfg.train.warmUp_discriminator==True):
-    discriminator_warmup(disc,disc_opt,dataWithNoise,cfg.train.n_epochs,cfg.dataset.batch_size,criterion,device)
-
-  #Train the GAN 
-  training_GAN(disc,gen,disc_opt,gen_opt,dataset,cfg.train.n_epochs,cfg.dataset.batch_size,criterion,coeff,cfg.abc.mean,cfg.abc.variance,device)
-
-  #Testing 
-  test_generator(gen,dataset,coeff,cfg.abc.mean,cfg.abc.variance,device)
-  test_discriminator(disc,gen,dataset,coeff,cfg.abc.mean,cfg.abc.variance,device)
-
-if __name__ == "__main__":
-	main()

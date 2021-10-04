@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-
+from performanceMetrics import performance_metric
 import statsmodels.api as sm
 import matplotlib.pyplot as plt 
 
@@ -17,14 +17,16 @@ def statsModel(X,Y):
 
 	#Prediction using stats Model 
 	ypred = res.predict(X)
-
 	
-	plt.plot(Y,'o',color='red',label = 'Real')
-	plt.plot(ypred,'o',color='blue',label = 'Predicted')
-	plt.title("Y predicted and Y real")
+	plt.hexbin(Y,ypred,gridsize=(15,15))
+	plt.title("Y_real vs Y_predicted")
+	plt.xlabel("y_real")
+	plt.ylabel("y_predicted")
 	plt.legend()
 	plt.show()
 	
+	performance_metric(Y,ypred)
+
 	return coefficients,ypred
 
 
