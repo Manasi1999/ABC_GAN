@@ -4,7 +4,6 @@ import statsmodels.api as sm
 import matplotlib.pyplot as plt 
 
 def statsModel(X,Y):
- 
 	model = sm.OLS(Y,X)
 
 	res = model.fit()

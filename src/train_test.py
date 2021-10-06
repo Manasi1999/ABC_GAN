@@ -41,74 +41,75 @@ def discriminator_warmup(disc,disc_opt,dataset,n_epochs,batch_size,criterion,dev
 
 #Train the GAN 
 def training_GAN(disc, gen,disc_opt,gen_opt,dataset, batch_size, n_epochs,criterion,device): 
-  discriminatorLoss = []
-  generatorLoss = []
-  train_loader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
+    discriminatorLoss = []
+    generatorLoss = []
+    train_loader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
+    for epoch in range(n_epochs):
+        for x_batch,y_batch in train_loader:
+            y_shape = list(y_batch.size()) 
+            curr_batch_size = y_shape[0] 
+            y_batch = torch.reshape(y_batch,(curr_batch_size,1)) 
 
-  for epoch in range(n_epochs):
+            #Create the labels  
+            real_labels = torch.ones(curr_batch_size,1).to(device)
+            fake_labels = torch.zeros(curr_batch_size,1).to(device)
 
-    for x_batch,y_batch in train_loader:
+            #------------------------
+            #Update the discriminator
+            #------------------------
+            disc_opt.zero_grad() 
 
-      y_shape = list(y_batch.size()) 
-      curr_batch_size = y_shape[0] 
-      y_batch = torch.reshape(y_batch,(curr_batch_size,1)) 
+            #Get discriminator loss for real data 
+            inputs_real = torch.cat((x_batch,y_batch),dim=1).to(device)
+            disc_real_pred = disc(inputs_real)
+            disc_real_loss = criterion(disc_real_pred,real_labels)
 
-      #Create the labels  
-      real_labels = torch.ones(curr_batch_size,1).to(device)
-      fake_labels = torch.zeros(curr_batch_size,1).to(device)
+            #Get discriminator loss for fake data
+            z= np.random.normal(0,1,size=(curr_batch_size,1))
+            z = torch.from_numpy(z)
+            gen_input = torch.cat((x_batch,z),dim=1).to(device) 
+            generated_y = gen(gen_input.float())  
+            inputs_fake = torch.cat((x_batch,generated_y),dim=1).to(device) 
 
-      #------------------------
-      #Update the discriminator
-      #------------------------
-      disc_opt.zero_grad() 
+            disc_fake_pred = disc(inputs_fake) 
+            disc_fake_loss = criterion(disc_fake_pred,fake_labels) 
 
-      #Get discriminator loss for real data 
-      inputs_real = torch.cat((x_batch,y_batch),dim=1).to(device) 
-      disc_real_pred = disc(inputs_real)
-      disc_real_loss = criterion(disc_real_pred,real_labels)
+            #Get the discriminator loss 
+            disc_loss = (disc_fake_loss + disc_real_loss) / 2
+            discriminatorLoss.append(disc_loss.item())
 
-      #Get discriminator loss for fake data
-      x_batch = x_batch.to(device) 
-      generated_y = gen(x_batch)  
-      inputs_fake = torch.cat((x_batch,generated_y),dim=1).to(device) 
+            # Update gradients
+            disc_loss.backward(retain_graph=True)
+            # Update optimizer
+            disc_opt.step()
 
-      disc_fake_pred = disc(inputs_fake) 
-      disc_fake_loss = criterion(disc_fake_pred,fake_labels) 
+            #------------------------
+            #Update the Generator 
+            #------------------------
+            gen_opt.zero_grad() 
+            z= np.random.normal(0,1,size=(curr_batch_size,1))
+            z = torch.from_numpy(z)
+            gen_input = torch.cat((x_batch,z),dim=1).to(device) 
+            #Generate input to generator using ABC pre-generator 
+            generated_y = gen(gen_input.float()) 
+            inputs_fake = torch.cat((x_batch,generated_y),dim=1).to(device)
+            disc_fake_pred = disc(inputs_fake)
 
-      #Get the discriminator loss 
-      disc_loss = (disc_fake_loss + disc_real_loss) / 2
-      discriminatorLoss.append(disc_loss.item())
+            gen_loss = criterion(disc_fake_pred,real_labels)
+            generatorLoss.append(gen_loss.item())
 
-      # Update gradients
-      disc_loss.backward(retain_graph=True)
-      # Update optimizer
-      disc_opt.step()
+            #Update gradients 
+            gen_loss.backward()
+            #Update optimizer 
+            gen_opt.step()
 
-      #------------------------
-      #Update the Generator 
-      #------------------------
-      gen_opt.zero_grad() 
-
-      #Generate input to generator using ABC pre-generator 
-      generated_y = gen(x_batch) 
-      inputs_fake = torch.cat((x_batch,generated_y),dim=1).to(device)
-      disc_fake_pred = disc(inputs_fake)
-
-      gen_loss = criterion(disc_fake_pred,real_labels)
-      generatorLoss.append(gen_loss.item())
-
-      #Update gradients 
-      gen_loss.backward()
-      #Update optimizer 
-      gen_opt.step()
-
-  #Plotting the Discriminator and Generator Loss 
-  plt.plot(discriminatorLoss,color = "red",label="Discriminator Loss")
-  plt.plot(generatorLoss,color="blue",label ="Generator Loss")
-  plt.xlabel("Epoch")
-  plt.ylabel("Loss")
-  plt.legend()
-  plt.show()
+    #Plotting the Discriminator and Generator Loss 
+    plt.plot(discriminatorLoss,color = "red",label="Discriminator Loss")
+    plt.plot(generatorLoss,color="blue",label ="Generator Loss")
+    plt.xlabel("Epoch")
+    plt.ylabel("Loss")
+    plt.legend()
+    plt.show()
 
 def test_generator(gen,dataset,device):
   test_loader = DataLoader(dataset, batch_size=len(dataset), shuffle=False)
@@ -118,8 +119,10 @@ def test_generator(gen,dataset,device):
   distp2 = []
   for epoch in range(1000):
     for x_batch, y_batch in test_loader: 
-      x_batch = x_batch.to(device)
-      generated_y = gen(x_batch)
+      z= np.random.normal(0,1,size=(len(dataset),1))
+      z = torch.from_numpy(z)
+      gen_input = torch.cat((x_batch,z),dim=1).to(device) 
+      generated_y = gen(gen_input.float()) 
       generated_y = generated_y.cpu().detach()
       generated_data = torch.reshape(generated_y,(-1,))
 
@@ -156,12 +159,15 @@ def test_generator(gen,dataset,device):
   plt.title("Manhattan Distance")
   sns.distplot(distp1,hist=False)
   plt.show()
+  print("Mean Manhattan Distance:",mean(distp1))
+  
 
   #Minkowski Distance 2nd Order 
   n,x,_=plt.hist(distp2,bins=100,density=True)
   plt.title("Euclidean Distance")
   sns.distplot(distp2,hist=False)
   plt.show()
+  print("Mean Euclidean Distance:",mean(distp1))
   
 def test_discriminator(disc,gen,dataset,device): 
 

@@ -15,7 +15,7 @@ def boston_data():
     #Create Pandas Dataframe 
     boston = pd.DataFrame(boston_dataset.data, columns=boston_dataset.feature_names)
     boston['TARGET'] = boston_dataset.target
-
+    print(boston.head())
 
     #Normalizing the dataset
     scaler = preprocessing.StandardScaler()
@@ -23,25 +23,28 @@ def boston_data():
     X = boston.iloc[:, 0:13]
     y = boston.iloc[:, 13]
 
-    #Check corelation between features and perform PCA
-    corr = spearmanr(X).correlation
-    print(corr)
-    plt.imshow(corr)
-    plt.show()
+    # print("Preprocessing:")
 
-    #PCA 
-    pca = PCA(n_components=6)
-    pca.fit(X)
-    Xp = pca.transform(X)
+    # #Check corelation between features and perform PCA
+    # print("Correlation Matrix before PCA")
+    # corr = spearmanr(X).correlation
+    # plt.imshow(corr)
+    # plt.show()
 
-    #Correlation Matrix after PCA 
-    corr = spearmanr(Xp).correlation
-    print(corr)
-    plt.imshow(corr)
-    plt.show()
+    # #PCA 
+    # print("Correlation Matrix after PCA")
+    # pca = PCA(n_components=6)
+    # pca.fit(X)
+    # Xp = pca.transform(X)
 
-    #Add Constant 
-    Xpc = sm.add_constant(Xp)
+    # #Correlation Matrix after PCA 
+    # corr = spearmanr(Xp).correlation
+    # plt.imshow(corr)
+    # plt.show()
+
+    #Add Constant
+    X = X.to_numpy() 
+    Xpc = sm.add_constant(X)
 
     return Xpc, y 
 

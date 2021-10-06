@@ -181,14 +181,16 @@ def test_generator(gen,dataset,coeff,w,variance,device):
 
   #Minkowski Distance 1st Order 
   n,x,_=plt.hist(distp1,bins=100,density=True)
-  plt.title("First Order Minkowski Distance")
+  plt.title("Manhattan Distance")
   sns.distplot(distp1,hist=False)
+  print("Mean Manhattan Distance:",mean(distp1))
   plt.show()
-
+  
   #Minkowski Distance 2nd Order 
   n,x,_=plt.hist(distp2,bins=100,density=True)
-  plt.title("Second Order Minkowski Distance")
+  plt.title("Euclidean Distance")
   sns.distplot(distp2,hist=False)
+  print("Mean Euclidean Distance:",mean(distp2))
   plt.show()
   
 def test_discriminator_1(disc,gen,dataset,coeff,mean,variance,threshold,n_iterations,device): 
