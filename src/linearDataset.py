@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 
 #Function to generate dummy real data 
 def generate_real_data(n):
-    X = np.random.uniform(-0.5,0.5,size = n)
+    X = 10*np.random.uniform(-0.5,0.5,size = n)
     m = 1
     c = 0.5
     Y = m*X + c + np.random.normal(0,1,size=n)
