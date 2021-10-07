@@ -7,7 +7,6 @@ import matplotlib.pyplot as plt
 import seaborn as sns 
 from statistics import mean
 from sklearn.metrics import mean_squared_error,mean_absolute_error
-from statistics import mean
 
 #Distance - Minkowski Function 
 def minkowski_distance(a, b, p):
