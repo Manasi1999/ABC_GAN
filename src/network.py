@@ -80,8 +80,8 @@ class ComplexGenerator(nn.Module):
     super().__init__()
     inputNodes = len(coefficients)
     #Input to Output Layer Linear Transformation
-    self.hidden1 = nn.Linear(inputNodes+1,50)
-    self.hidden2 = nn.Linear(50,50)
+    self.hidden1 = nn.Linear(inputNodes+1,25)
+    self.hidden2 = nn.Linear(25,50)
     self.output = nn.Linear(50,1)
     self.leakyRelu = nn.LeakyReLU()
 

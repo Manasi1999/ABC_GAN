@@ -15,6 +15,7 @@ def friedman1_data(n_samples,n_features):
     Y = Y.reshape((Y.size,1))
     data = np.concatenate((X,Y),axis=1)
     cols = ['X'+str(i) for i in range(n_features)]
+    cols.append('Y')
     df = pd.DataFrame(data, columns = cols)
     print(df.head())
 
