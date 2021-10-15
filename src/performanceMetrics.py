@@ -1,4 +1,5 @@
 from sklearn.metrics import mean_squared_error,mean_absolute_error
+import scrapbook as sb 
 from math import sqrt
  
 # calculate minkowski distance
@@ -17,3 +18,8 @@ def performance_metric(Y,Ypred):
     print("Mean Absolute Error:",meanAbsoluteError)
     print("Manhattan distance:",dist1)
     print("Euclidean distance:",dist2)
+
+    sb.glue("Stats Model MSE",meanSquaredError)
+    sb.glue("Stats Model MAE",meanAbsoluteError)
+    sb.glue("Manhattan Distance",dist1)
+    sb.glue("Euclidean distance",dist2)

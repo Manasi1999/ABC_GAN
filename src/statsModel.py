@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 from performanceMetrics import performance_metric
 import statsmodels.api as sm
-import matplotlib.pyplot as plt 
+import matplotlib.pyplot as plt
+import scrapbook as sb 
 
 def statsModel(X,Y):
 	model = sm.OLS(Y,X)

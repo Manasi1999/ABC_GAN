@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns 
 from statistics import mean
 import pandas as pd
+import scrapbook as sb 
 from sklearn.metrics import mean_squared_error,mean_absolute_error
 
 #Distance - Minkowski Function 
@@ -167,7 +168,12 @@ def test_generator(gen,dataset,device):
   plt.title("Euclidean Distance")
   sns.distplot(distp2,hist=False)
   plt.show()
-  print("Mean Euclidean Distance:",mean(distp1))
+  print("Mean Euclidean Distance:",mean(distp2))
+
+  sb.glue(mean(mse))
+  sb.glue(mean(mae))
+  sb.glue(mean(distp1))
+  sb.glue(mean(distp2))
   
 def test_discriminator(disc,gen,dataset,device): 
 
