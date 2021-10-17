@@ -133,6 +133,92 @@ def training_GAN(disc, gen,disc_opt,gen_opt,dataset, batch_size, n_epochs,criter
   plt.legend()
   plt.show()
     
+def training_GAN_2(disc, gen,disc_opt,gen_opt,dataset, batch_size, error,criterion,coeff,mean,variance,device): 
+  discriminatorLoss = []
+  generatorLoss = []
+  train_loader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
+  test_loader = DataLoader(dataset, batch_size=len(dataset), shuffle=False)
+  curr_error = 10
+  n_epochs = 0
+  while curr_error < error:
+    n_epochs = n_epochs + 1
+    for x_batch,y_batch in train_loader:
+      y_shape = list(y_batch.size()) 
+      curr_batch_size = y_shape[0] 
+      y_batch = torch.reshape(y_batch,(curr_batch_size,1)) 
+
+      #Create the labels  
+      real_labels = torch.ones(curr_batch_size,1).to(device)
+      fake_labels = torch.zeros(curr_batch_size,1).to(device)
+
+      #------------------------
+      #Update the discriminator
+      #------------------------
+      disc_opt.zero_grad() 
+
+      #Get discriminator loss for real data 
+      inputs_real = torch.cat((x_batch,y_batch),dim=1).to(device) 
+      disc_real_pred = disc(inputs_real)
+      disc_real_loss = criterion(disc_real_pred,real_labels)
+
+      #Get discriminator loss for fake data
+      gen_input =  ABC_pre_generator(x_batch,coeff,variance,mean,device)
+      generated_y = gen(gen_input)  
+      x_batch = x_batch.to(device)
+      inputs_fake = torch.cat((x_batch,generated_y),dim=1).to(device) 
+      x_batch = x_batch.detach().cpu()
+      disc_fake_pred = disc(inputs_fake) 
+      disc_fake_loss = criterion(disc_fake_pred,fake_labels) 
+
+      #Get the discriminator loss 
+      disc_loss = (disc_fake_loss + disc_real_loss) / 2
+      discriminatorLoss.append(disc_loss.item())
+
+      # Update gradients
+      disc_loss.backward(retain_graph=True)
+      # Update optimizer
+      disc_opt.step()
+
+      #------------------------
+      #Update the Generator 
+      #------------------------
+      gen_opt.zero_grad() 
+
+      #Generate input to generator using ABC pre-generator 
+      gen_input =  ABC_pre_generator(x_batch,coeff,variance,mean,device)
+      generated_y = gen(gen_input) 
+      x_batch = x_batch.to(device)
+      inputs_fake = torch.cat((x_batch,generated_y),dim=1).to(device)
+      x_batch = x_batch.detach().cpu()
+      disc_fake_pred = disc(inputs_fake)
+
+      gen_loss = criterion(disc_fake_pred,real_labels)
+      generatorLoss.append(gen_loss.item())
+
+      #Update gradients 
+      gen_loss.backward()
+      #Update optimizer 
+      gen_opt.step()
+
+    #After every epoch check for error
+    for x_batch, y_batch in test_loader: 
+      gen_input =  ABC_pre_generator(x_batch,coeff,variance,w,device)
+      generated_y = gen(gen_input) 
+      generated_y = generated_y.cpu().detach()
+      generated_data = torch.reshape(generated_y,(-1,))
+    gen_data = generated_data.numpy().reshape(1,len(dataset)).tolist()
+    real_data = y_batch.numpy().reshape(1,len(dataset)).tolist()
+    curr_error = mean_squared_error(real_data,gen_data)
+  #Plotting the Discriminator and Generator Loss 
+  print("Number of epochs",n_epochs)
+  plt.plot(discriminatorLoss,color = "red",label="Discriminator Loss")
+  plt.plot(generatorLoss,color="blue",label ="Generator Loss")
+  plt.xlabel("Epoch")
+  plt.ylabel("Loss")
+  plt.legend()
+  plt.show()
+  
+
 def test_generator(gen,dataset,coeff,w,variance,device):
   test_loader = DataLoader(dataset, batch_size=len(dataset), shuffle=False)
   mse=[]
@@ -193,10 +279,10 @@ def test_generator(gen,dataset,coeff,w,variance,device):
   print("Mean Euclidean Distance:",mean(distp2))
   plt.show()
 
-  sb.glue(mean(mse))
-  sb.glue(mean(mae))
-  sb.glue(mean(distp1))
-  sb.glue(mean(distp2))
+  sb.glue("ABC-GAN Model MSE",mean(mse))
+  sb.glue("ABC-GAN Model MAE",mean(mae))
+  sb.glue("ABC-GAN Model Manhattan Distance",mean(distp1))
+  sb.glue("ABC-GAN Model Euclidean distance",mean(distp2))
   
 def test_discriminator_1(disc,gen,dataset,coeff,mean,variance,threshold,n_iterations,device): 
   test_loader = DataLoader(dataset, batch_size=len(dataset), shuffle=False)
