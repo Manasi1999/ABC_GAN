@@ -140,7 +140,7 @@ def training_GAN_2(disc, gen,disc_opt,gen_opt,dataset, batch_size, error,criteri
   test_loader = DataLoader(dataset, batch_size=len(dataset), shuffle=False)
   curr_error = 10
   n_epochs = 0
-  while curr_error >= error:
+  while curr_error > error and n_epochs < 30000:
     n_epochs = n_epochs + 1
     for x_batch,y_batch in train_loader:
       y_shape = list(y_batch.size()) 
@@ -202,10 +202,11 @@ def training_GAN_2(disc, gen,disc_opt,gen_opt,dataset, batch_size, error,criteri
 
     #After every epoch check for error
     for x_batch, y_batch in test_loader: 
-      gen_input =  ABC_pre_generator(x_batch,coeff,variance,w,device)
+      gen_input =  ABC_pre_generator(x_batch,coeff,variance,mean,device)
       generated_y = gen(gen_input) 
       generated_y = generated_y.cpu().detach()
       generated_data = torch.reshape(generated_y,(-1,))
+      
     gen_data = generated_data.numpy().reshape(1,len(dataset)).tolist()
     real_data = y_batch.numpy().reshape(1,len(dataset)).tolist()
     curr_error = mean_squared_error(real_data,gen_data)

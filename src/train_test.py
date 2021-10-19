@@ -119,7 +119,7 @@ def training_GAN_2(disc,gen,disc_opt,gen_opt,dataset,batch_size,error,criterion,
   test_loader = DataLoader(dataset, batch_size=len(dataset), shuffle=False)
   curr_error = 10
   n_epochs = 0
-  while curr_error >= error:
+  while curr_error > error and n_epochs < 30000:
       n_epochs = n_epochs + 1 
       for x_batch,y_batch in train_loader:
         y_shape = list(y_batch.size()) 
