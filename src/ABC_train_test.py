@@ -60,6 +60,7 @@ def discriminator_warmup(disc,disc_opt,dataset,n_epochs,batch_size,criterion,dev
 
       epoch_loss += disc_loss.item()
 
+#Training GAN 1 - This function trains the nexwork(ABC-GAN)for n_epochs 
 def training_GAN(disc, gen,disc_opt,gen_opt,dataset, batch_size, n_epochs,criterion,coeff,mean,variance,device): 
   discriminatorLoss = []
   generatorLoss = []
@@ -133,6 +134,7 @@ def training_GAN(disc, gen,disc_opt,gen_opt,dataset, batch_size, n_epochs,criter
   plt.legend()
   plt.show()
     
+#Training GAN 2 - This function trains the nexwork(ABC-GAN) until the mse < error or 30,000 epochs have passed
 def training_GAN_2(disc, gen,disc_opt,gen_opt,dataset, batch_size, error,criterion,coeff,mean,variance,device): 
   discriminatorLoss = []
   generatorLoss = []
@@ -219,7 +221,6 @@ def training_GAN_2(disc, gen,disc_opt,gen_opt,dataset, batch_size, error,criteri
   plt.legend()
   plt.show()
   
-
 def test_generator(gen,dataset,coeff,w,variance,device):
   test_loader = DataLoader(dataset, batch_size=len(dataset), shuffle=False)
   mse=[]
@@ -284,7 +285,72 @@ def test_generator(gen,dataset,coeff,w,variance,device):
   sb.glue("ABC-GAN Model MAE",mean(mae))
   sb.glue("ABC-GAN Model Manhattan Distance",mean(distp1))
   sb.glue("ABC-GAN Model Euclidean distance",mean(distp2))
+
+def test_generator_2(gen,dataset,coeff,w,variance,device):
+  test_loader = DataLoader(dataset, batch_size=len(dataset), shuffle=False)
+  mse=[]
+  mae=[]
+  distp1 = []
+  distp2 = []
+  for epoch in range(1000):
+    for x_batch, y_batch in test_loader: 
+      gen_input =  ABC_pre_generator(x_batch,coeff,variance,w,device)
+      generated_y = gen(gen_input) 
+      generated_y = generated_y.cpu().detach()
+      generated_data = torch.reshape(generated_y,(-1,))
+    gen_data = generated_data.numpy().reshape(1,len(dataset)).tolist()
+    real_data = y_batch.numpy().reshape(1,len(dataset)).tolist()
+    #Plot the data 
+    if(epoch%200==0):
+      gen_data1 = generated_data.numpy().tolist()
+      real_data1 = y_batch.numpy().tolist()
+      plt.hexbin(real_data1,gen_data1,gridsize=(15,15))
+      plt.xlabel("Y")
+      plt.ylabel("Y_Pred")
+      plt.show()
+    meanSquaredError = mean_squared_error(real_data,gen_data)
+    meanAbsoluteError = mean_absolute_error(real_data, gen_data)
+    mse.append(meanSquaredError)
+    mae.append(meanAbsoluteError)
+    dist1 = minkowski_distance(np.array(real_data)[0],np.array(gen_data)[0], 1)
+    dist2 = minkowski_distance(np.array(real_data)[0],np.array(gen_data)[0], 2)
+    distp1.append(dist1)
+    distp2.append(dist2)
+
+  #Distribution of Metrics 
+  #Mean Squared Error 
+  n,x,_=plt.hist(mse,bins=100,density=True)
+  plt.title("Distribution of Mean Square Error ")
+  sns.distplot(mse,hist=False)
+  plt.show()
+  print("Mean Square Error:",mean(mse))
+
+  #Mean Absolute Error 
+  n,x,_=plt.hist(mae,bins=100,density=True)
+  plt.title("Distribution of Mean Absolute Error ")
+  sns.distplot(mae,hist=False)
+  plt.show()
+  print("Mean Absolute Error:",mean(mae))
+
+  #Minkowski Distance 1st Order 
+  n,x,_=plt.hist(distp1,bins=100,density=True)
+  plt.title("Manhattan Distance")
+  sns.distplot(distp1,hist=False)
+  print("Mean Manhattan Distance:",mean(distp1))
+  plt.show()
   
+  #Minkowski Distance 2nd Order 
+  n,x,_=plt.hist(distp2,bins=100,density=True)
+  plt.title("Euclidean Distance")
+  sns.distplot(distp2,hist=False)
+  print("Mean Euclidean Distance:",mean(distp2))
+  plt.show()
+
+  sb.glue("ABC-GAN Model MSE",mean(mse))
+  sb.glue("ABC-GAN Model MAE",mean(mae))
+  sb.glue("ABC-GAN Model Manhattan Distance",mean(distp1))
+  sb.glue("ABC-GAN Model Euclidean distance",mean(distp2))
+    
 def test_discriminator_1(disc,gen,dataset,coeff,mean,variance,threshold,n_iterations,device): 
   test_loader = DataLoader(dataset, batch_size=len(dataset), shuffle=False)
   output = [[] for i in range(len(dataset))]
