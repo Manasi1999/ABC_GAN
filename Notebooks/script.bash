@@ -17,25 +17,25 @@
 # done
 
 #Diabetes Dataset 
-i=0
-for M in 1 0
-do 
-    for V in 1 0.1 0.01 
-    do 
-        papermill Dataset2-Diabetes.ipynb ../Diabetes_Output/Dataset2-Diabetes_output_${i}.ipynb -p mean ${M} -p variance ${V} -k papermill-tutorial
-        jupyter nbconvert ../Diabetes_Output/Dataset2-Diabetes_output_${i}.ipynb --to pdf
-        ((i=i+1))
-    done 
-done
-
-#Boston Housing 
 # i=0
 # for M in 1 0
 # do 
 #     for V in 1 0.1 0.01 
 #     do 
-#         papermill Dataset3-Boston.ipynb ../Boston_Output/Dataset3-Boston_output_${i}.ipynb -p mean ${M} -p variance ${V} -k papermill-tutorial
-#         jupyter nbconvert ../Boston_Output/Dataset3-Boston_output_${i}.ipynb --to pdf
+#         papermill Dataset2-Diabetes.ipynb ../Diabetes_Output/Dataset2-Diabetes_output_${i}.ipynb -p mean ${M} -p variance ${V} -k papermill-tutorial
+#         jupyter nbconvert ../Diabetes_Output/Dataset2-Diabetes_output_${i}.ipynb --to pdf
 #         ((i=i+1))
 #     done 
 # done
+
+#Boston Housing 
+i=0
+for M in 1 0
+do 
+    for V in 1 0.1 0.01 
+    do 
+        papermill Dataset3-Boston.ipynb ../Boston_Output/Dataset3-Boston_output_${i}.ipynb -p mean ${M} -p variance ${V} -k papermill-tutorial
+        jupyter nbconvert ../Boston_Output/Dataset3-Boston_output_${i}.ipynb --to pdf
+        ((i=i+1))
+    done 
+done
