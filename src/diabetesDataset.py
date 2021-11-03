@@ -1,18 +1,15 @@
-#!/usr/bin/env python3
-from sklearn.datasets import load_boston
-import statsmodels.api as sm
+from sklearn.datasets import load_diabetes
 from sklearn import preprocessing
-import numpy as np 
+import statsmodels.api as sm
 import pandas as pd
-import matplotlib.pyplot as plt
+import numpy as np
 
-
-def boston_data():
+def diabetes_data():
     #Number of features 
-    n_features = 13 
+    n_features = 10 
 
     #Load the dataset 
-    X,Y = load_boston(return_X_y=True)
+    X,Y = load_diabetes(return_X_y=True)
  
     #Creating Pandas Dataframe 
     Y = Y.reshape((Y.size,1))
@@ -33,6 +30,4 @@ def boston_data():
     #Add Constant 
     X = X.to_numpy()
     Xc = sm.add_constant(X)
-
     return Xc, Y 
-
