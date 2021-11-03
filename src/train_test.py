@@ -40,7 +40,7 @@ def discriminator_warmup(disc,disc_opt,dataset,n_epochs,batch_size,criterion,dev
 
       epoch_loss += disc_loss.item()
 
-#Train the GAN 
+#Training GAN 1 - This function trains the nexwork(GAN)for n_epochs
 def training_GAN(disc, gen,disc_opt,gen_opt,dataset, batch_size, n_epochs,criterion,device): 
     discriminatorLoss = []
     generatorLoss = []
@@ -112,6 +112,7 @@ def training_GAN(disc, gen,disc_opt,gen_opt,dataset, batch_size, n_epochs,criter
     plt.legend()
     plt.show()
 
+#Training GAN 2 - This function trains the nexwork(GAN) until the mse < error or 30,000 epochs have passed
 def training_GAN_2(disc,gen,disc_opt,gen_opt,dataset,batch_size,error,criterion,device):
   discriminatorLoss = []
   generatorLoss = []
@@ -193,6 +194,7 @@ def training_GAN_2(disc,gen,disc_opt,gen_opt,dataset,batch_size,error,criterion,
       curr_error = mean_squared_error(real_data,gen_data)
 
   print("Number of epochs needed",n_epochs)
+  sb.glue("GAN Model n_epochs",n_epochs)
   #Plotting the Discriminator and Generator Loss 
   plt.plot(discriminatorLoss,color = "red",label="Discriminator Loss")
   plt.plot(generatorLoss,color="blue",label ="Generator Loss")
@@ -201,6 +203,7 @@ def training_GAN_2(disc,gen,disc_opt,gen_opt,dataset,batch_size,error,criterion,
   plt.legend()
   plt.show()
 
+#Testing the Generator - After 1st training 
 def test_generator(gen,dataset,device):
   test_loader = DataLoader(dataset, batch_size=len(dataset), shuffle=False)
   mse=[]
@@ -231,39 +234,106 @@ def test_generator(gen,dataset,device):
     
   #Distribution of Metrics 
   #Mean Squared Error 
-  n,x,_=plt.hist(mse,bins=100,density=True)
-  plt.title("Distribution of Mean Square Error ")
-  sns.distplot(mse,hist=False)
-  plt.show()
-  print("Mean Square Error:",mean(mse))
+  # n,x,_=plt.hist(mse,bins=100,density=True)
+  # plt.title("Distribution of Mean Square Error ")
+  # sns.distplot(mse,hist=False)
+  # plt.show()
+  # print("Mean Square Error:",mean(mse))
 
-  #Mean Absolute Error 
-  n,x,_=plt.hist(mae,bins=100,density=True)
-  plt.title("Distribution of Mean Absolute Error ")
-  sns.distplot(mae,hist=False)
-  plt.show()
-  print("Mean Absolute Error:",mean(mae))
+  # #Mean Absolute Error 
+  # n,x,_=plt.hist(mae,bins=100,density=True)
+  # plt.title("Distribution of Mean Absolute Error ")
+  # sns.distplot(mae,hist=False)
+  # plt.show()
+  # print("Mean Absolute Error:",mean(mae))
 
-  #Minkowski Distance 1st Order 
-  n,x,_=plt.hist(distp1,bins=100,density=True)
-  plt.title("Manhattan Distance")
-  sns.distplot(distp1,hist=False)
-  plt.show()
-  print("Mean Manhattan Distance:",mean(distp1))
+  # #Minkowski Distance 1st Order 
+  # n,x,_=plt.hist(distp1,bins=100,density=True)
+  # plt.title("Manhattan Distance")
+  # sns.distplot(distp1,hist=False)
+  # plt.show()
+  # print("Mean Manhattan Distance:",mean(distp1))
   
 
-  #Minkowski Distance 2nd Order 
-  n,x,_=plt.hist(distp2,bins=100,density=True)
-  plt.title("Euclidean Distance")
-  sns.distplot(distp2,hist=False)
-  plt.show()
-  print("Mean Euclidean Distance:",mean(distp2))
+  # #Minkowski Distance 2nd Order 
+  # n,x,_=plt.hist(distp2,bins=100,density=True)
+  # plt.title("Euclidean Distance")
+  # sns.distplot(distp2,hist=False)
+  # plt.show()
+  # print("Mean Euclidean Distance:",mean(distp2))
 
   sb.glue("GAN Model MSE",mean(mse))
   sb.glue("GAN Model MAE",mean(mae))
   sb.glue("GAN Model Manhattan Distance",mean(distp1))
   sb.glue("GAN Model Euclidean distance",mean(distp2))
+  performanceMetrics = [mse,mae,distp1,distp2]
+  return performanceMetrics
+
+#Testing the Generator - After 2nd training 
+def test_generator_2(gen,dataset,device):
+  test_loader = DataLoader(dataset, batch_size=len(dataset), shuffle=False)
+  mse=[]
+  mae=[]
+  distp1 = []
+  distp2 = []
+  for epoch in range(1000):
+    for x_batch, y_batch in test_loader: 
+      z= np.random.normal(0,1,size=(len(dataset),1))
+      z = torch.from_numpy(z)
+      gen_input = torch.cat((x_batch,z),dim=1).to(device) 
+      generated_y = gen(gen_input.float()) 
+      generated_y = generated_y.cpu().detach()
+      generated_data = torch.reshape(generated_y,(-1,))
+
+    gen_data = generated_data.numpy().reshape(1,len(dataset)).tolist()
+    real_data = y_batch.numpy().reshape(1,len(dataset)).tolist()
+
+    #Performance Metrics 
+    meanSquaredError = mean_squared_error(real_data,gen_data)
+    meanAbsoluteError = mean_absolute_error(real_data, gen_data)
+    dist1 = minkowski_distance(np.array(real_data)[0],np.array(gen_data)[0], 1)
+    dist2 = minkowski_distance(np.array(real_data)[0],np.array(gen_data)[0], 2)
+    mse.append(meanSquaredError)
+    mae.append(meanAbsoluteError)
+    distp1.append(dist1)
+    distp2.append(dist2)
     
+  #Distribution of Metrics 
+  #Mean Squared Error 
+  # n,x,_=plt.hist(mse,bins=100,density=True)
+  # plt.title("Distribution of Mean Square Error ")
+  # sns.distplot(mse,hist=False)
+  # plt.show()
+  # print("Mean Square Error:",mean(mse))
+
+  # #Mean Absolute Error 
+  # n,x,_=plt.hist(mae,bins=100,density=True)
+  # plt.title("Distribution of Mean Absolute Error ")
+  # sns.distplot(mae,hist=False)
+  # plt.show()
+  # print("Mean Absolute Error:",mean(mae))
+
+  # #Minkowski Distance 1st Order 
+  # n,x,_=plt.hist(distp1,bins=100,density=True)
+  # plt.title("Manhattan Distance")
+  # sns.distplot(distp1,hist=False)
+  # plt.show()
+  # print("Mean Manhattan Distance:",mean(distp1))
+  
+  # #Minkowski Distance 2nd Order 
+  # n,x,_=plt.hist(distp2,bins=100,density=True)
+  # plt.title("Euclidean Distance")
+  # sns.distplot(distp2,hist=False)
+  # plt.show()
+  # print("Mean Euclidean Distance:",mean(distp2))
+
+  sb.glue("GAN Model 2 MSE",mean(mse))
+  sb.glue("GAN Model 2 MAE",mean(mae))
+  sb.glue("GAN Model 2 Manhattan Distance",mean(distp1))
+  sb.glue("GAN Model 2 Euclidean distance",mean(distp2))
+  performanceMetrics = [mse,mae,distp1,distp2]
+  return performanceMetrics
+   
 def test_discriminator(disc,gen,dataset,device): 
 
   test_loader = DataLoader(dataset, batch_size=len(dataset), shuffle=True)
