@@ -194,8 +194,7 @@ def training_GAN_3(disc,gen,disc_opt,gen_opt,dataset,batch_size,t_loss,criterion
   discriminatorLoss = []
   generatorLoss = []
   train_loader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
-  test_loader = DataLoader(dataset, batch_size=len(dataset), shuffle=False)
-  curr_error = 10
+  curr_loss = t_loss*2
   n_epochs = 0
   while curr_loss > t_loss and n_epochs < 5000:
       n_epochs = n_epochs + 1 
@@ -257,18 +256,6 @@ def training_GAN_3(disc,gen,disc_opt,gen_opt,dataset,batch_size,t_loss,criterion
         gen_loss.backward()
         #Update optimizer 
         gen_opt.step()
-        
-      #After every epoch check the error 
-      for x_batch, y_batch in test_loader: 
-        z= np.random.normal(0,1,size=(len(dataset),1))
-        z = torch.from_numpy(z)
-        gen_input = torch.cat((x_batch,z),dim=1).to(device) 
-        generated_y = gen(gen_input.float()) 
-        generated_y = generated_y.cpu().detach()
-        generated_data = torch.reshape(generated_y,(-1,))
-
-      gen_data = generated_data.numpy().reshape(1,len(dataset)).tolist()
-      real_data = y_batch.numpy().reshape(1,len(dataset)).tolist()
     
 
   print("Number of epochs needed",n_epochs)

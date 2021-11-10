@@ -213,6 +213,79 @@ def training_GAN_2(disc, gen,disc_opt,gen_opt,dataset, batch_size, error,criteri
 
   return discriminatorLoss,generatorLoss
 
+def training_GAN_3(disc, gen,disc_opt,gen_opt,dataset, batch_size,t_loss,criterion,coeff,mean,variance,device): 
+  discriminatorLoss = []
+  generatorLoss = []
+  train_loader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
+  curr_loss = t_loss*2
+  n_epochs = 0
+  while curr_loss > t_loss and n_epochs < 5000:
+    n_epochs = n_epochs + 1
+    for x_batch,y_batch in train_loader:
+      y_shape = list(y_batch.size()) 
+      curr_batch_size = y_shape[0] 
+      y_batch = torch.reshape(y_batch,(curr_batch_size,1)) 
+
+      #Create the labels  
+      real_labels = torch.ones(curr_batch_size,1).to(device)
+      fake_labels = torch.zeros(curr_batch_size,1).to(device)
+
+      #------------------------
+      #Update the discriminator
+      #------------------------
+      disc_opt.zero_grad() 
+
+      #Get discriminator loss for real data 
+      inputs_real = torch.cat((x_batch,y_batch),dim=1).to(device) 
+      disc_real_pred = disc(inputs_real)
+      disc_real_loss = criterion(disc_real_pred,real_labels)
+
+      #Get discriminator loss for fake data
+      gen_input =  ABC_pre_generator(x_batch,coeff,variance,mean,device)
+      generated_y = gen(gen_input)  
+      x_batch = x_batch.to(device)
+      inputs_fake = torch.cat((x_batch,generated_y),dim=1).to(device) 
+      x_batch = x_batch.detach().cpu()
+      disc_fake_pred = disc(inputs_fake) 
+      disc_fake_loss = criterion(disc_fake_pred,fake_labels) 
+
+      #Get the discriminator loss 
+      disc_loss = (disc_fake_loss + disc_real_loss) / 2
+      curr_loss = disc_loss
+      discriminatorLoss.append(disc_loss.item())
+
+      # Update gradients
+      disc_loss.backward(retain_graph=True)
+      # Update optimizer
+      disc_opt.step()
+
+      #------------------------
+      #Update the Generator 
+      #------------------------
+      gen_opt.zero_grad() 
+
+      #Generate input to generator using ABC pre-generator 
+      gen_input =  ABC_pre_generator(x_batch,coeff,variance,mean,device)
+      generated_y = gen(gen_input) 
+      x_batch = x_batch.to(device)
+      inputs_fake = torch.cat((x_batch,generated_y),dim=1).to(device)
+      x_batch = x_batch.detach().cpu()
+      disc_fake_pred = disc(inputs_fake)
+
+      gen_loss = criterion(disc_fake_pred,real_labels)
+      generatorLoss.append(gen_loss.item())
+
+      #Update gradients 
+      gen_loss.backward()
+      #Update optimizer 
+      gen_opt.step()
+
+  print("Number of epochs",n_epochs)
+  #Store the parameters as scraps 
+  sb.glue("ABC-GAN Model n_epochs",n_epochs)
+
+  return discriminatorLoss,generatorLoss
+
 #Testing the Generator - After 1st training   
 def test_generator(gen,dataset,coeff,w,variance,device):
   test_loader = DataLoader(dataset, batch_size=len(dataset), shuffle=False)
