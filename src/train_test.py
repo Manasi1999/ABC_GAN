@@ -190,6 +190,93 @@ def training_GAN_2(disc,gen,disc_opt,gen_opt,dataset,batch_size,error,criterion,
   
   return discriminatorLoss,generatorLoss
 
+def training_GAN_3(disc,gen,disc_opt,gen_opt,dataset,batch_size,t_loss,criterion,device):
+  discriminatorLoss = []
+  generatorLoss = []
+  train_loader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
+  test_loader = DataLoader(dataset, batch_size=len(dataset), shuffle=False)
+  curr_error = 10
+  n_epochs = 0
+  while curr_loss > t_loss and n_epochs < 5000:
+      n_epochs = n_epochs + 1 
+      for x_batch,y_batch in train_loader:
+        y_shape = list(y_batch.size()) 
+        curr_batch_size = y_shape[0] 
+        y_batch = torch.reshape(y_batch,(curr_batch_size,1)) 
+
+        #Create the labels  
+        real_labels = torch.ones(curr_batch_size,1).to(device)
+        fake_labels = torch.zeros(curr_batch_size,1).to(device)
+
+        #------------------------
+        #Update the discriminator
+        #------------------------
+        disc_opt.zero_grad() 
+
+        #Get discriminator loss for real data 
+        inputs_real = torch.cat((x_batch,y_batch),dim=1).to(device)
+        disc_real_pred = disc(inputs_real)
+        disc_real_loss = criterion(disc_real_pred,real_labels)
+
+        #Get discriminator loss for fake data
+        z= np.random.normal(0,1,size=(curr_batch_size,1))
+        z = torch.from_numpy(z)
+        gen_input = torch.cat((x_batch,z),dim=1).to(device) 
+        generated_y = gen(gen_input.float())  
+        inputs_fake = torch.cat((x_batch,generated_y),dim=1).to(device) 
+
+        disc_fake_pred = disc(inputs_fake) 
+        disc_fake_loss = criterion(disc_fake_pred,fake_labels) 
+
+        #Get the discriminator loss 
+        disc_loss = (disc_fake_loss + disc_real_loss) / 2
+        curr_loss = disc_loss
+        discriminatorLoss.append(disc_loss.item())
+
+        # Update gradients
+        disc_loss.backward(retain_graph=True)
+        # Update optimizer
+        disc_opt.step()
+
+        #------------------------
+        #Update the Generator 
+        #------------------------
+        gen_opt.zero_grad() 
+        z= np.random.normal(0,1,size=(curr_batch_size,1))
+        z = torch.from_numpy(z)
+        gen_input = torch.cat((x_batch,z),dim=1).to(device) 
+        #Generate input to generator using ABC pre-generator 
+        generated_y = gen(gen_input.float()) 
+        inputs_fake = torch.cat((x_batch,generated_y),dim=1).to(device)
+        disc_fake_pred = disc(inputs_fake)
+
+        gen_loss = criterion(disc_fake_pred,real_labels)
+        generatorLoss.append(gen_loss.item())
+
+        #Update gradients 
+        gen_loss.backward()
+        #Update optimizer 
+        gen_opt.step()
+        
+      #After every epoch check the error 
+      for x_batch, y_batch in test_loader: 
+        z= np.random.normal(0,1,size=(len(dataset),1))
+        z = torch.from_numpy(z)
+        gen_input = torch.cat((x_batch,z),dim=1).to(device) 
+        generated_y = gen(gen_input.float()) 
+        generated_y = generated_y.cpu().detach()
+        generated_data = torch.reshape(generated_y,(-1,))
+
+      gen_data = generated_data.numpy().reshape(1,len(dataset)).tolist()
+      real_data = y_batch.numpy().reshape(1,len(dataset)).tolist()
+    
+
+  print("Number of epochs needed",n_epochs)
+  sb.glue("GAN Model n_epochs",n_epochs)
+  
+  return discriminatorLoss,generatorLoss
+
+
 #Testing the Generator - After 1st training 
 def test_generator(gen,dataset,device):
   test_loader = DataLoader(dataset, batch_size=len(dataset), shuffle=False)
