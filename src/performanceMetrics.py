@@ -46,3 +46,26 @@ def modelAnalysis(GAN_1,ABC_GAN_1,GAN_2,ABC_GAN_2):
         axs[i,3].hist(ABC_GAN_2[i],bins=100,density=True)
         sns.distplot(ABC_GAN_2[i],hist=False,ax=axs[i,3])
         axs[i,3].set_title("ABC GAN Model 2 - "+params[i])
+
+def plotTrainingLoss(GAN_1_discLoss,GAN_1_genLoss,ABC_GAN_1_discLoss,ABC_GAN_1_genLoss,GAN_2_discLoss,GAN_2_genLoss,ABC_GAN_2_discLoss,ABC_GAN_2_genLoss):
+    #Discriminator Loss 
+    plt.plot(GAN_1_discLoss,color='red',label = "C-GAN 1")
+    plt.plot(ABC_GAN_1_discLoss,color='blue',label = "ABC-GAN 1")
+    plt.plot(GAN_2_discLoss,color='green',label = "C-GAN 2")
+    plt.plot(GAN_1_discLoss,color='orange',label = "ABC-GAN 2")
+    plt.title("Discriminator Loss")
+    plt.xlabel("Epoch")
+    plt.ylabel("Training Loss")
+    plt.legend()
+    plt.show()
+    
+    #Generator Loss
+    plt.plot(GAN_1_genLoss,color='red',label = "C-GAN 1")
+    plt.plot(ABC_GAN_1_genLoss,color='blue',label = "ABC-GAN 1")
+    plt.plot(GAN_2_genLoss,color='green',label = "C-GAN 2")
+    plt.plot(GAN_1_genLoss,color='orange',label = "ABC-GAN 2")
+    plt.title("Generator Loss")
+    plt.xlabel("Epoch")
+    plt.ylabel("Training Loss")
+    plt.legend()
+    plt.show()

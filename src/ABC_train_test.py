@@ -126,13 +126,7 @@ def training_GAN(disc, gen,disc_opt,gen_opt,dataset, batch_size, n_epochs,criter
       #Update optimizer 
       gen_opt.step()
 
-  #Plotting the Discriminator and Generator Loss 
-  plt.plot(discriminatorLoss,color = "red",label="Discriminator Loss")
-  plt.plot(generatorLoss,color="blue",label ="Generator Loss")
-  plt.xlabel("Epoch")
-  plt.ylabel("Loss")
-  plt.legend()
-  plt.show()
+  return discriminatorLoss,generatorLoss
     
 #Training GAN 2 - This function trains the nexwork(ABC-GAN) until the mse < error or 30,000 epochs have passed
 def training_GAN_2(disc, gen,disc_opt,gen_opt,dataset, batch_size, error,criterion,coeff,mean,variance,device): 
@@ -212,17 +206,12 @@ def training_GAN_2(disc, gen,disc_opt,gen_opt,dataset, batch_size, error,criteri
     gen_data = generated_data.numpy().reshape(1,len(dataset)).tolist()
     real_data = y_batch.numpy().reshape(1,len(dataset)).tolist()
     curr_error = mean_squared_error(real_data,gen_data)
-  #Plotting the Discriminator and Generator Loss 
-  print("Number of epochs",n_epochs)
-  plt.plot(discriminatorLoss,color = "red",label="Discriminator Loss")
-  plt.plot(generatorLoss,color="blue",label ="Generator Loss")
-  plt.xlabel("Epoch")
-  plt.ylabel("Loss")
-  plt.legend()
-  plt.show()
 
+  print("Number of epochs",n_epochs)
   #Store the parameters as scraps 
   sb.glue("ABC-GAN Model n_epochs",n_epochs)
+
+  return discriminatorLoss,generatorLoss
 
 #Testing the Generator - After 1st training   
 def test_generator(gen,dataset,coeff,w,variance,device):

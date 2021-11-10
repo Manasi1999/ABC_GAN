@@ -32,7 +32,6 @@ def discriminator_warmup(disc,disc_opt,dataset,n_epochs,batch_size,criterion,dev
       y_pred = disc(x_batch)
       disc_loss = criterion(y_pred, y_batch)
 
-
       # Update gradients
       disc_loss.backward(retain_graph=True)
       # Update optimizer
@@ -103,14 +102,7 @@ def training_GAN(disc, gen,disc_opt,gen_opt,dataset, batch_size, n_epochs,criter
             gen_loss.backward()
             #Update optimizer 
             gen_opt.step()
-
-    #Plotting the Discriminator and Generator Loss 
-    plt.plot(discriminatorLoss,color = "red",label="Discriminator Loss")
-    plt.plot(generatorLoss,color="blue",label ="Generator Loss")
-    plt.xlabel("Epoch")
-    plt.ylabel("Loss")
-    plt.legend()
-    plt.show()
+    return discriminatorLoss,generatorLoss
 
 #Training GAN 2 - This function trains the nexwork(GAN) until the mse < error or 30,000 epochs have passed
 def training_GAN_2(disc,gen,disc_opt,gen_opt,dataset,batch_size,error,criterion,device):
@@ -195,13 +187,8 @@ def training_GAN_2(disc,gen,disc_opt,gen_opt,dataset,batch_size,error,criterion,
 
   print("Number of epochs needed",n_epochs)
   sb.glue("GAN Model n_epochs",n_epochs)
-  #Plotting the Discriminator and Generator Loss 
-  plt.plot(discriminatorLoss,color = "red",label="Discriminator Loss")
-  plt.plot(generatorLoss,color="blue",label ="Generator Loss")
-  plt.xlabel("Epoch")
-  plt.ylabel("Loss")
-  plt.legend()
-  plt.show()
+  
+  return discriminatorLoss,generatorLoss
 
 #Testing the Generator - After 1st training 
 def test_generator(gen,dataset,device):
