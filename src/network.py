@@ -8,6 +8,7 @@ class Discriminator(nn.Module):
     self.hidden2 = nn.Linear(25,50)
     self.output = nn.Linear(50,1)
     self.relu = nn.ReLU()
+    self.sigmoid = nn.Sigmoid()
 
   def forward(self, x):
     x = self.hidden1(x)
@@ -15,6 +16,7 @@ class Discriminator(nn.Module):
     x = self.hidden2(x)
     x = self.relu(x)
     x = self.output(x)
+    x = self.sigmoid(x)
     return x 
 
 class Generator(nn.Module):
