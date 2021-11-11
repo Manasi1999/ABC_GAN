@@ -67,7 +67,7 @@ def training_GAN(disc, gen,disc_opt,gen_opt,dataset, batch_size, n_epochs,criter
 
             #Get discriminator loss for fake data
             z= np.random.normal(0,1,size=(curr_batch_size,1))
-            z = torch.from_numpy(z)
+            z = torch.from_numpy(z).to(device)
             gen_input = torch.cat((x_batch,z),dim=1).to(device) 
             generated_y = gen(gen_input.float()).to(device)  
             inputs_fake = torch.cat((x_batch,generated_y),dim=1).to(device) 
@@ -89,7 +89,7 @@ def training_GAN(disc, gen,disc_opt,gen_opt,dataset, batch_size, n_epochs,criter
             #------------------------
             gen_opt.zero_grad() 
             z= np.random.normal(0,1,size=(curr_batch_size,1))
-            z = torch.from_numpy(z)
+            z = torch.from_numpy(z).to(device)
             gen_input = torch.cat((x_batch,z),dim=1).to(device) 
             #Generate input to generator using ABC pre-generator 
             generated_y = gen(gen_input.float()).to(device) 
@@ -137,7 +137,7 @@ def training_GAN_2(disc,gen,disc_opt,gen_opt,dataset,batch_size,error,criterion,
 
         #Get discriminator loss for fake data
         z= np.random.normal(0,1,size=(curr_batch_size,1))
-        z = torch.from_numpy(z)
+        z = torch.from_numpy(z).to(device)
         gen_input = torch.cat((x_batch,z),dim=1).to(device) 
         generated_y = gen(gen_input.float()).to(device)  
         inputs_fake = torch.cat((x_batch,generated_y),dim=1).to(device) 
@@ -159,7 +159,7 @@ def training_GAN_2(disc,gen,disc_opt,gen_opt,dataset,batch_size,error,criterion,
         #------------------------
         gen_opt.zero_grad() 
         z= np.random.normal(0,1,size=(curr_batch_size,1))
-        z = torch.from_numpy(z)
+        z = torch.from_numpy(z).to(device)
         gen_input = torch.cat((x_batch,z),dim=1).to(device) 
         #Generate input to generator using ABC pre-generator 
         generated_y = gen(gen_input.float()).to(device) 
@@ -177,7 +177,7 @@ def training_GAN_2(disc,gen,disc_opt,gen_opt,dataset,batch_size,error,criterion,
       #After every epoch check the error 
       for x_batch, y_batch in test_loader: 
         z= np.random.normal(0,1,size=(len(dataset),1))
-        z = torch.from_numpy(z)
+        z = torch.from_numpy(z).to(device)
         gen_input = torch.cat((x_batch,z),dim=1).to(device) 
         generated_y = gen(gen_input.float()).to(device) 
         generated_y = generated_y.cpu().detach()
@@ -222,7 +222,7 @@ def training_GAN_3(disc,gen,disc_opt,gen_opt,dataset,batch_size,t_loss,criterion
 
         #Get discriminator loss for fake data
         z= np.random.normal(0,1,size=(curr_batch_size,1))
-        z = torch.from_numpy(z)
+        z = torch.from_numpy(z).to(device)
         gen_input = torch.cat((x_batch,z),dim=1).to(device) 
         generated_y = gen(gen_input.float()).to(device)  
         inputs_fake = torch.cat((x_batch,generated_y),dim=1).to(device) 
@@ -245,7 +245,7 @@ def training_GAN_3(disc,gen,disc_opt,gen_opt,dataset,batch_size,t_loss,criterion
         #------------------------
         gen_opt.zero_grad() 
         z= np.random.normal(0,1,size=(curr_batch_size,1))
-        z = torch.from_numpy(z)
+        z = torch.from_numpy(z).to(device)
         gen_input = torch.cat((x_batch,z),dim=1).to(device) 
         #Generate input to generator using ABC pre-generator 
         generated_y = gen(gen_input.float()).to(device) 
@@ -277,7 +277,7 @@ def test_generator(gen,dataset,device):
   for epoch in range(1000):
     for x_batch, y_batch in test_loader: 
       z= np.random.normal(0,1,size=(len(dataset),1))
-      z = torch.from_numpy(z)
+      z = torch.from_numpy(z).to(device)
       gen_input = torch.cat((x_batch,z),dim=1).to(device) 
       generated_y = gen(gen_input.float()).to(device) 
       generated_y = generated_y.cpu().detach()
@@ -343,7 +343,7 @@ def test_generator_2(gen,dataset,device):
   for epoch in range(1000):
     for x_batch, y_batch in test_loader: 
       z= np.random.normal(0,1,size=(len(dataset),1))
-      z = torch.from_numpy(z)
+      z = torch.from_numpy(z).to(device)
       gen_input = torch.cat((x_batch,z),dim=1).to(device) 
       generated_y = gen(gen_input.float()).to(device) 
       generated_y = generated_y.cpu().detach()
