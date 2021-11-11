@@ -70,7 +70,6 @@ def training_GAN(disc, gen,disc_opt,gen_opt,dataset, batch_size, n_epochs,criter
 
     for x_batch,y_batch in train_loader:
       y_shape = list(y_batch.size()) 
-      x_batch = x_batch.to(device)
       curr_batch_size = y_shape[0] 
       y_batch = torch.reshape(y_batch,(curr_batch_size,1)) 
 
