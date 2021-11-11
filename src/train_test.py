@@ -46,6 +46,7 @@ def training_GAN(disc, gen,disc_opt,gen_opt,dataset, batch_size, n_epochs,criter
     train_loader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
     for epoch in range(n_epochs):
         for x_batch,y_batch in train_loader:
+            x_batch = x_batch.to(device)
             y_shape = list(y_batch.size()) 
             curr_batch_size = y_shape[0] 
             y_batch = torch.reshape(y_batch,(curr_batch_size,1)) 
@@ -115,6 +116,7 @@ def training_GAN_2(disc,gen,disc_opt,gen_opt,dataset,batch_size,error,criterion,
   while curr_error > error and n_epochs < 5000:
       n_epochs = n_epochs + 1 
       for x_batch,y_batch in train_loader:
+        x_batch = x_batch.to(device)
         y_shape = list(y_batch.size()) 
         curr_batch_size = y_shape[0] 
         y_batch = torch.reshape(y_batch,(curr_batch_size,1)) 
@@ -199,6 +201,7 @@ def training_GAN_3(disc,gen,disc_opt,gen_opt,dataset,batch_size,t_loss,criterion
   while curr_loss > t_loss and n_epochs < 5000:
       n_epochs = n_epochs + 1 
       for x_batch,y_batch in train_loader:
+        x_batch = x_batch.to(device)
         y_shape = list(y_batch.size()) 
         curr_batch_size = y_shape[0] 
         y_batch = torch.reshape(y_batch,(curr_batch_size,1)) 
