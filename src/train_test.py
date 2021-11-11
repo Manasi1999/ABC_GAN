@@ -276,6 +276,8 @@ def test_generator(gen,dataset,device):
   distp2 = []
   for epoch in range(1000):
     for x_batch, y_batch in test_loader: 
+      x_batch = x_batch.to(device)
+      y_batch = y_batch.to(device)
       z= np.random.normal(0,1,size=(len(dataset),1))
       z = torch.from_numpy(z).to(device)
       gen_input = torch.cat((x_batch,z),dim=1).to(device) 
@@ -283,8 +285,8 @@ def test_generator(gen,dataset,device):
       generated_y = generated_y.cpu().detach()
       generated_data = torch.reshape(generated_y,(-1,))
 
-    gen_data = generated_data.numpy().reshape(1,len(dataset)).tolist()
-    real_data = y_batch.numpy().reshape(1,len(dataset)).tolist()
+    gen_data = generated_data.detach().cpu().numpy().reshape(1,len(dataset)).tolist()
+    real_data = y_batch.detach().cpu().numpy().reshape(1,len(dataset)).tolist()
 
     #Performance Metrics 
     meanSquaredError = mean_squared_error(real_data,gen_data)
@@ -342,6 +344,8 @@ def test_generator_2(gen,dataset,device):
   distp2 = []
   for epoch in range(1000):
     for x_batch, y_batch in test_loader: 
+      x_batch = x_batch.to(device)
+      y_batch = y_batch.to(device)
       z= np.random.normal(0,1,size=(len(dataset),1))
       z = torch.from_numpy(z).to(device)
       gen_input = torch.cat((x_batch,z),dim=1).to(device) 
@@ -349,8 +353,8 @@ def test_generator_2(gen,dataset,device):
       generated_y = generated_y.cpu().detach()
       generated_data = torch.reshape(generated_y,(-1,))
 
-    gen_data = generated_data.numpy().reshape(1,len(dataset)).tolist()
-    real_data = y_batch.numpy().reshape(1,len(dataset)).tolist()
+    gen_data = generated_data.detach().cpu().numpy().reshape(1,len(dataset)).tolist()
+    real_data = y_batch.detach().cpu().numpy().reshape(1,len(dataset)).tolist()
 
     #Performance Metrics 
     meanSquaredError = mean_squared_error(real_data,gen_data)
