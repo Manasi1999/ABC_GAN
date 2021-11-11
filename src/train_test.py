@@ -47,6 +47,7 @@ def training_GAN(disc, gen,disc_opt,gen_opt,dataset, batch_size, n_epochs,criter
     for epoch in range(n_epochs):
         for x_batch,y_batch in train_loader:
             x_batch = x_batch.to(device)
+            y_batch = y_batch.to(device)
             y_shape = list(y_batch.size()) 
             curr_batch_size = y_shape[0] 
             y_batch = torch.reshape(y_batch,(curr_batch_size,1)).to(device) 
@@ -116,6 +117,7 @@ def training_GAN_2(disc,gen,disc_opt,gen_opt,dataset,batch_size,error,criterion,
   while curr_error > error and n_epochs < 5000:
       n_epochs = n_epochs + 1 
       for x_batch,y_batch in train_loader:
+        x_batch = x_batch.to(device)
         x_batch = x_batch.to(device)
         y_shape = list(y_batch.size()) 
         curr_batch_size = y_shape[0] 
@@ -201,6 +203,7 @@ def training_GAN_3(disc,gen,disc_opt,gen_opt,dataset,batch_size,t_loss,criterion
   while curr_loss > t_loss and n_epochs < 5000:
       n_epochs = n_epochs + 1 
       for x_batch,y_batch in train_loader:
+        x_batch = x_batch.to(device)
         x_batch = x_batch.to(device)
         y_shape = list(y_batch.size()) 
         curr_batch_size = y_shape[0] 
@@ -427,6 +430,7 @@ def test_discriminator(disc,gen,dataset,device):
     rand_out = rand_out[0]
     #Generated Data points 
     x_batch = x_batch.to(device)
+    y_batch = y_batch.to(device)
     generated_out = gen(x_batch)
     generated_data = torch.cat((x_batch,generated_out),dim=1).to(device)
     disc_pred = disc(generated_data.float())
