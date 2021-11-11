@@ -49,7 +49,7 @@ def training_GAN(disc, gen,disc_opt,gen_opt,dataset, batch_size, n_epochs,criter
             x_batch = x_batch.to(device)
             y_shape = list(y_batch.size()) 
             curr_batch_size = y_shape[0] 
-            y_batch = torch.reshape(y_batch,(curr_batch_size,1)) 
+            y_batch = torch.reshape(y_batch,(curr_batch_size,1)).to(device) 
 
             #Create the labels  
             real_labels = torch.ones(curr_batch_size,1).to(device)
@@ -119,7 +119,7 @@ def training_GAN_2(disc,gen,disc_opt,gen_opt,dataset,batch_size,error,criterion,
         x_batch = x_batch.to(device)
         y_shape = list(y_batch.size()) 
         curr_batch_size = y_shape[0] 
-        y_batch = torch.reshape(y_batch,(curr_batch_size,1)) 
+        y_batch = torch.reshape(y_batch,(curr_batch_size,1)).to(device) 
 
         #Create the labels  
         real_labels = torch.ones(curr_batch_size,1).to(device)
@@ -204,7 +204,7 @@ def training_GAN_3(disc,gen,disc_opt,gen_opt,dataset,batch_size,t_loss,criterion
         x_batch = x_batch.to(device)
         y_shape = list(y_batch.size()) 
         curr_batch_size = y_shape[0] 
-        y_batch = torch.reshape(y_batch,(curr_batch_size,1)) 
+        y_batch = torch.reshape(y_batch,(curr_batch_size,1)).to(device) 
 
         #Create the labels  
         real_labels = torch.ones(curr_batch_size,1).to(device)
