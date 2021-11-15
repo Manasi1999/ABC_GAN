@@ -32,7 +32,6 @@ def boston_data():
 
     #Add Constant 
     X = X.to_numpy()
-    Xc = sm.add_constant(X)
 
-    return Xc, Y 
+    return X, Y 
 

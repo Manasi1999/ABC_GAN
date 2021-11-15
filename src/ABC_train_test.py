@@ -134,7 +134,7 @@ def training_GAN_2(disc, gen,disc_opt,gen_opt,dataset, batch_size, error,criteri
   generatorLoss = []
   train_loader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
   test_loader = DataLoader(dataset, batch_size=len(dataset), shuffle=False)
-  curr_error = 10
+  curr_error = error*2 
   n_epochs = 0
   while curr_error > error and n_epochs < 5000:
     n_epochs = n_epochs + 1
