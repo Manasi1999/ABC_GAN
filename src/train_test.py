@@ -177,7 +177,9 @@ def training_GAN_2(disc,gen,disc_opt,gen_opt,dataset,batch_size,error,criterion,
         gen_opt.step()
         
       #After every epoch check the error 
-      for x_batch, y_batch in test_loader: 
+      for x_batch, y_batch in test_loader:
+        x_batch = x_batch.to(device) 
+        y_batch = y_batch.to(device)
         z= np.random.normal(0,1,size=(len(dataset),1))
         z = torch.from_numpy(z).to(device)
         gen_input = torch.cat((x_batch,z),dim=1).to(device) 
@@ -185,8 +187,8 @@ def training_GAN_2(disc,gen,disc_opt,gen_opt,dataset,batch_size,error,criterion,
         generated_y = generated_y.cpu().detach()
         generated_data = torch.reshape(generated_y,(-1,))
 
-      gen_data = generated_data.numpy().reshape(1,len(dataset)).tolist()
-      real_data = y_batch.numpy().reshape(1,len(dataset)).tolist()
+      gen_data = generated_data.detach().cpu().numpy().reshape(1,len(dataset)).tolist()
+      real_data = y_batch.detach().cpu().numpy().reshape(1,len(dataset)).tolist()
       curr_error = mean_squared_error(real_data,gen_data)
 
   print("Number of epochs needed",n_epochs)
