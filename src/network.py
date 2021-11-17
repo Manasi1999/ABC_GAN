@@ -42,7 +42,7 @@ class GeneratorWithSkipConnection(nn.Module):
     self.hidden1 = nn.Linear(n_input,100)
     self.hidden2 = nn.Linear(100,100)
     self.output = nn.Linear(100,1)
-    self.skipNode = nn.Linaer(2,1,bias = False)
+    self.skipNode = nn.Linear(2,1,bias = False)
     self.relu = nn.ReLU()
 
   def forward(self, x):
