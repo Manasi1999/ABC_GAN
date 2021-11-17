@@ -47,6 +47,21 @@ def modelAnalysis(GAN_1,ABC_GAN_1,GAN_2,ABC_GAN_2):
         sns.distplot(ABC_GAN_2[i],hist=False,ax=axs[i,3])
         axs[i,3].set_title("ABC GAN Model 2 - "+params[i])
 
+# Model Analysis for 2 Models 
+def modelAnalysis2(GAN,ABC_GAN):
+    #Each parameter is a array consisting of elements [mse,mae,distp1,distp2]
+    params = ["MSE","MAE","Euclidean distance","Manhattan distance"]
+    fig,axs = plt.subplots(2,4,figsize=(50,50))
+    for i in range(4):
+        #GAN_1
+        axs[i,0].hist(GAN[i],bins=100,density=True)
+        sns.distplot(GAN[i],hist=False,ax=axs[i,0])
+        axs[i,0].set_title("GAN - "+params[i])
+        #ABC_GAN_1
+        axs[i,1].hist(ABC_GAN[i],bins=100,density=True)
+        sns.distplot(ABC_GAN[i],hist=False,ax=axs[i,1])
+        axs[i,1].set_title("ABC GAN - "+params[i])
+
 def plotTrainingLoss(GAN_1_discLoss,GAN_1_genLoss,ABC_GAN_1_discLoss,ABC_GAN_1_genLoss,GAN_2_discLoss,GAN_2_genLoss,ABC_GAN_2_discLoss,ABC_GAN_2_genLoss):
     #Discriminator Loss 
     plt.rcParams["figure.figsize"] = [14.00, 7.00]
@@ -84,4 +99,32 @@ def plotTrainingLoss(GAN_1_discLoss,GAN_1_genLoss,ABC_GAN_1_discLoss,ABC_GAN_1_g
     ax2.legend()
     ax3.legend()
     ax4.legend()
+    plt.show()
+
+#Same function as above but for 2 models only 
+def plotTrainingLoss2(GAN_discLoss,GAN_genLoss,ABC_GAN_discLoss,ABC_GAN_genLoss):
+    #Discriminator Loss 
+    plt.rcParams["figure.figsize"] = [14.00, 7.00]
+    plt.rcParams["figure.autolayout"] = True
+    fig = plt.figure()
+    fig.suptitle('Discriminator Loss', fontsize=16)
+    ax1 = fig.add_subplot(2, 1, 1)
+    ax2 = fig.add_subplot(2, 1, 2, sharex=ax1,sharey=ax1)
+    ax1.plot(GAN_discLoss,color='red',label = "C-GAN")
+    ax2.plot(ABC_GAN_discLoss,color='blue',label = "ABC-GAN")
+    ax1.legend()
+    ax2.legend()
+    plt.show()
+    
+    #Generator Loss
+    plt.rcParams["figure.figsize"] = [14.00, 7.00]
+    plt.rcParams["figure.autolayout"] = True
+    fig = plt.figure()
+    fig.suptitle('Generator Loss', fontsize=16)
+    ax1 = fig.add_subplot(2, 1, 1)
+    ax2 = fig.add_subplot(2, 1, 2, sharex=ax1,sharey=ax1)
+    ax1.plot(GAN_genLoss,color='red',label = "C-GAN")
+    ax2.plot(ABC_GAN_genLoss,color='blue',label = "ABC-GAN")
+    ax1.legend()
+    ax2.legend()
     plt.show()
