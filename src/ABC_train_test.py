@@ -129,11 +129,11 @@ def training_GAN(disc, gen,disc_opt,gen_opt,dataset, batch_size, n_epochs,criter
   return discriminatorLoss,generatorLoss
     
 #Training GAN 2 - This function trains the nexwork(ABC-GAN) until the mse < error or 30,000 epochs have passed
-def training_GAN_2(disc, gen,disc_opt,gen_opt,dataset, batch_size, error,criterion,coeff,mean,variance,device): 
+def training_GAN_2(disc, gen,disc_opt,gen_opt,train_dataset,test_dataset,batch_size, error,criterion,coeff,mean,variance,device): 
   discriminatorLoss = []
   generatorLoss = []
-  train_loader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
-  test_loader = DataLoader(dataset, batch_size=len(dataset), shuffle=False)
+  train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
+  test_loader = DataLoader(test_dataset, batch_size=len(test_dataset), shuffle=False)
   curr_error = error*2 
   n_epochs = 0
   while curr_error > error and n_epochs < 5000:
