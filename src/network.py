@@ -41,7 +41,7 @@ class GeneratorWithSkipConnection(nn.Module):
     self.hidden1 = nn.Linear(n_input,100)
     self.hidden2 = nn.Linear(100,100)
     self.output = nn.Linear(100,1)
-    # self.skipNode = nn.Linear(2,1,bias = False)
+    # self.skipNode = nn.Linaer(2,1,bias = False)
     self.relu = nn.ReLU()
 
   def forward(self, x):
@@ -52,5 +52,6 @@ class GeneratorWithSkipConnection(nn.Module):
     x = self.relu(x)
     y_gan = self.output(x)
     # out = torch.cat((y_gan , y_abc),1)
+    # 
     out = y_gan + y_abc 
     return out 
