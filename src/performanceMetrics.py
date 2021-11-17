@@ -51,7 +51,7 @@ def modelAnalysis(GAN_1,ABC_GAN_1,GAN_2,ABC_GAN_2):
 def modelAnalysis2(GAN,ABC_GAN):
     #Each parameter is a array consisting of elements [mse,mae,distp1,distp2]
     params = ["MSE","MAE","Euclidean distance","Manhattan distance"]
-    fig,axs = plt.subplots(2,4,figsize=(50,50))
+    fig,axs = plt.subplots(4,2,figsize=(50,50))
     for i in range(4):
         #GAN_1
         axs[i,0].hist(GAN[i],bins=100,density=True)
