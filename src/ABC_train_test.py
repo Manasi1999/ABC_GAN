@@ -197,6 +197,7 @@ def training_GAN_2(disc, gen,disc_opt,gen_opt,train_dataset,test_dataset,batch_s
       gen_opt.step()
 
     #After every epoch check for error
+    
     for x_batch, y_batch in test_loader: 
       gen_input =  ABC_pre_generator(x_batch,coeff,variance,mean,device)
       generated_y = gen(gen_input) 
