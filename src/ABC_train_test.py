@@ -205,9 +205,9 @@ def training_GAN_2(disc, gen,disc_opt,gen_opt,train_dataset,test_dataset,batch_s
       generated_y = generated_y.cpu().detach()
       generated_data = torch.reshape(generated_y,(-1,))
       
-    gen_data = generated_data.detach().cpu().numpy().reshape(1,len(dataset)).tolist()
-    real_data = y_batch.detach().cpu().numpy().reshape(1,len(dataset)).tolist()
-    curr_error = mean_squared_error(real_data,gen_data)
+      gen_data = generated_data.detach().cpu().numpy().reshape(1,len(test_dataset)).tolist()
+      real_data = y_batch.detach().cpu().numpy().reshape(1,len(test_dataset)).tolist()
+      curr_error = mean_squared_error(real_data,gen_data)
 
   print("Number of epochs",n_epochs)
   #Store the parameters as scraps 

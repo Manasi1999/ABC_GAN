@@ -180,16 +180,16 @@ def training_GAN_2(disc,gen,disc_opt,gen_opt,train_dataset,test_dataset,batch_si
       for x_batch, y_batch in test_loader:
         x_batch = x_batch.to(device) 
         y_batch = y_batch.to(device)
-        z= np.random.normal(0,1,size=(len(dataset),1))
+        z= np.random.normal(0,1,size=(len(test_dataset),1))
         z = torch.from_numpy(z).to(device)
         gen_input = torch.cat((x_batch,z),dim=1).to(device) 
         generated_y = gen(gen_input.float()).to(device) 
         generated_y = generated_y.cpu().detach()
         generated_data = torch.reshape(generated_y,(-1,))
 
-      gen_data = generated_data.detach().cpu().numpy().reshape(1,len(dataset)).tolist()
-      real_data = y_batch.detach().cpu().numpy().reshape(1,len(dataset)).tolist()
-      curr_error = mean_squared_error(real_data,gen_data)
+        gen_data = generated_data.detach().cpu().numpy().reshape(1,len(test_dataset)).tolist()
+        real_data = y_batch.detach().cpu().numpy().reshape(1,len(test_dataset)).tolist()
+        curr_error = mean_squared_error(real_data,gen_data)
 
   print("Number of epochs needed",n_epochs)
   sb.glue("GAN Model n_epochs",n_epochs)
