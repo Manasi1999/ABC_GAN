@@ -35,6 +35,7 @@ class Generator(nn.Module):
     x = self.output(x)
     return x 
 
+
 class GeneratorWithSkipConnection(nn.Module):
   def __init__(self,n_input):
     super().__init__()
