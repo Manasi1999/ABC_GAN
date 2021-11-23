@@ -35,8 +35,8 @@ def vanillaNeuralNetwork(train_dataset,test_dataset,batch_size,n_features,n_targ
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
-        print("epoch {} loss: {:.4f}".format(epoch + 1, loss.item()))
-    print("TRAINING COMPLETE")
+    #     print("epoch {} loss: {:.4f}".format(epoch + 1, loss.item()))
+    # print("TRAINING COMPLETE")
 
 
     #Testing 
