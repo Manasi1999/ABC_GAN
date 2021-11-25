@@ -63,6 +63,7 @@ def randomForest(X_train,y_train,X_test,y_test):
     mse = mean_squared_error(y_pred,y_test)
     print("Mean Squared error",mse)
 
+    return mse
 
 # This function will fit catboost on the dataset and return the MSE values 
 def catboost(X_train,y_train,X_test,y_test):
@@ -76,3 +77,5 @@ def catboost(X_train,y_train,X_test,y_test):
     y_pred = model_CBR.predict(X_test)
     mse = mean_squared_error(y_pred,y_test)
     print("Mean Squared error",mse)
+
+    return mse
