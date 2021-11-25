@@ -64,6 +64,7 @@ class skipConnection(nn.Module):
             print(f'Wrong Input Features. Please use tensor with {self.in_features} Input Features')
             return 0
         output = torch.Tensor(x,1)
+        device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         for i in range(x): 
           output[i] = input[i][0]*self.weight + input[i][1]*(1-self.weight)
         # weights = torch.tensor([self.weight,1-self.weight])
@@ -71,6 +72,7 @@ class skipConnection(nn.Module):
         if self.bias is not None:
             output += self.bias
         ret = output
+        ret = ret.to(device)
         return ret
     
     def extra_repr(self):
