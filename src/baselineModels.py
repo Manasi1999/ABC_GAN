@@ -69,12 +69,12 @@ def randomForest(X_train,y_train,X_test,y_test):
 def catboost(X_train,y_train,X_test,y_test):
 
     #Training
-    model_CBC = ctb.CatBoostRegressor()
-    model_CBC.fit(X_train, y_train)
+    model_CB = ctb.CatBoostRegressor()
+    model_CB.fit(X_train, y_train)
     #print(model_CBC)
 
     #Testing
-    y_pred = model_CBR.predict(X_test)
+    y_pred = model_CB.predict(X_test)
     mse = mean_squared_error(y_pred,y_test)
     print("Mean Squared error",mse)
 
