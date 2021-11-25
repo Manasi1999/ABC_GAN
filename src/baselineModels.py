@@ -52,7 +52,7 @@ def vanillaNeuralNetwork(train_dataset,test_dataset,batch_size,n_features,n_targ
 
 
 # This function will fit a Random Forest Regressor on the dataset and return the MSE values 
-def RandomForest(X_train,y_train,X_test):
+def RandomForest(X_train,y_train,X_test,y_test):
 
     #Training 
     regr = RandomForestRegressor(max_depth=4, random_state=42)
