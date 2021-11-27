@@ -4,6 +4,7 @@ from torch import nn
 from sklearn.metrics import mean_squared_error
 from sklearn.ensemble import RandomForestRegressor
 import catboost as ctb
+import scrapbook as sb 
 
 class NeuralNetwork(torch.nn.Module):
     def __init__(self,n_input,n_output):
@@ -48,6 +49,7 @@ def vanillaNeuralNetwork(train_dataset,test_dataset,batch_size,n_features,n_targ
         y_test = y_test.detach().cpu().numpy().reshape(n_target,len(test_dataset)).tolist()
         y_pred = y_pred.detach().cpu().numpy().reshape(n_target,len(test_dataset)).tolist()
         mse = mean_squared_error(y_pred,y_test)
+        sb.glue("Vanilla NN MSE", mse)
         print("Mean Squared error",mse)
 
 

@@ -29,7 +29,6 @@ def statsModel(X,Y):
 	plt.show()
 	
 	performance_metric(Y_test,ypred)
-
 	return coefficients,ypred
 
 
