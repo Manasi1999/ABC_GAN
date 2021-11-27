@@ -22,7 +22,7 @@ do
     do 
         for V in 1 0.1 0.01 
         do 
-            papermill ABC_GAN.ipynb ./Main/ABC-GAN_output_${i}.ipynb -p mean ${M} -p variance ${V} -p n_epochs 5000 -k papermill-tut
+            papermill ABC_GAN.ipynb ./Main/ABC-GAN_output_${i}.ipynb -p abc_mean ${M} -p variance ${V} -p n_epochs 5000 -k papermill-tut
             ((i=i+1))
         done 
     done
