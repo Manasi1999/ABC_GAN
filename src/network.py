@@ -80,7 +80,6 @@ class skipConnection(nn.Module):
             self.in_features, self.out_features, self.bias is not None
         )
 
-
 class GeneratorWithSkipConnection(nn.Module):
   def __init__(self,n_input):
     super().__init__()
@@ -102,3 +101,14 @@ class GeneratorWithSkipConnection(nn.Module):
     out = torch.cat((y_gan , y_abc),1)
     out = self.skipNode(out)
     return out 
+
+
+#Module to constraint weights - contraint the weights of the skip connection layer to be between 0 and 1 
+class weightConstraint(object):
+    def __init__(self):
+        pass   
+    def __call__(self,module):
+        if hasattr(module,'weight'):
+            w=module.weight.data
+            w=w.clamp(0,1)
+            module.weight.data=w
