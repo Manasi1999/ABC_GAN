@@ -7,14 +7,14 @@
 # done 
 
 #Run GAN Model 
-for runs in 1 2 3 4 5 6 7 8 9 10
-do 
-    papermill GAN.ipynb ./Main/GAN_output_${runs}.ipynb  -k papermill-tut
+# for runs in 1 2 3 4 5 6 7 8 9 10
+# do 
+#     papermill GAN.ipynb ./Main/GAN_output_${runs}.ipynb  -k papermill-tutorial
 
-done 
+# done 
 
 #Run ABC-GAN Model
-for runs in 2 3
+for runs in 1 2 3 4 
 do
      i=0
      for M in 1 0
