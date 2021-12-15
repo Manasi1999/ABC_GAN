@@ -52,7 +52,6 @@ def vanillaNeuralNetwork(train_dataset,test_dataset,batch_size,n_features,n_targ
         sb.glue("Vanilla NN MSE", mse)
         print("Mean Squared error",mse)
 
-
 # This function will fit a Random Forest Regressor on the dataset and return the MSE values 
 def randomForest(X_train,y_train,X_test,y_test):
 
