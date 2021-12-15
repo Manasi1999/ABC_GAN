@@ -179,7 +179,7 @@ def training_GAN_2(disc, gen,disc_opt,gen_opt,train_dataset,test_dataset,batch_s
       #Generate input to generator using ABC pre-generator 
       gen_input =  ABC_pre_generator(x_batch,coeff,variance,mean,device)
       generated_y = gen(gen_input)
-      inputs_fake = torch.cat((x_batch,generated_y),dim=1).to(device)
+      inputs_fake = torch.cat((x_batch_cuda,generated_y),dim=1).to(device)
       disc_fake_pred = disc(inputs_fake)
 
       gen_loss = criterion(disc_fake_pred,real_labels)
@@ -261,7 +261,7 @@ def training_GAN_3(disc, gen,disc_opt,gen_opt,dataset, batch_size,t_loss,criteri
       #Generate input to generator using ABC pre-generator 
       gen_input =  ABC_pre_generator(x_batch,coeff,variance,mean,device)
       generated_y = gen(gen_input) 
-      inputs_fake = torch.cat((x_batch,generated_y),dim=1).to(device)
+      inputs_fake = torch.cat((x_batch_cuda,generated_y),dim=1).to(device)
       disc_fake_pred = disc(inputs_fake)
 
       gen_loss = criterion(disc_fake_pred,real_labels)
