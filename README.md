@@ -11,6 +11,7 @@
     9. statistics 
     10. statsmodel 
     11. pandas 
+    12. catboost 
 2. Read the document to understand the flow of the experiment
 3. Folder structure 
     1. src : contains all the functions used in the experiment. These .py files are imported into the notebooks and the functions defined here are then called in the notebook. 
