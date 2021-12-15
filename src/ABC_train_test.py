@@ -90,9 +90,8 @@ def training_GAN(disc, gen,disc_opt,gen_opt,dataset, batch_size, n_epochs,criter
       #Get discriminator loss for fake data
       gen_input =  ABC_pre_generator(x_batch,coeff,variance,mean,device)
       generated_y = gen(gen_input)  
-      x_batch = x_batch.to(device)
-      inputs_fake = torch.cat((x_batch,generated_y),dim=1).to(device) 
-      x_batch = x_batch.detach().cpu()
+      x_batch_cuda = x_batch.to(device)
+      inputs_fake = torch.cat((x_batch_cuda,generated_y),dim=1).to(device) 
       disc_fake_pred = disc(inputs_fake) 
       disc_fake_loss = criterion(disc_fake_pred,fake_labels) 
 
@@ -113,9 +112,7 @@ def training_GAN(disc, gen,disc_opt,gen_opt,dataset, batch_size, n_epochs,criter
       #Generate input to generator using ABC pre-generator 
       gen_input =  ABC_pre_generator(x_batch,coeff,variance,mean,device)
       generated_y = gen(gen_input) 
-      x_batch = x_batch.to(device)
-      inputs_fake = torch.cat((x_batch,generated_y),dim=1).to(device)
-      x_batch = x_batch.detach().cpu()
+      inputs_fake = torch.cat((x_batch_cuda,generated_y),dim=1).to(device)
       disc_fake_pred = disc(inputs_fake)
 
       gen_loss = criterion(disc_fake_pred,real_labels)
@@ -160,9 +157,8 @@ def training_GAN_2(disc, gen,disc_opt,gen_opt,train_dataset,test_dataset,batch_s
       #Get discriminator loss for fake data
       gen_input =  ABC_pre_generator(x_batch,coeff,variance,mean,device)
       generated_y = gen(gen_input)  
-      x_batch = x_batch.to(device)
-      inputs_fake = torch.cat((x_batch,generated_y),dim=1).to(device) 
-      x_batch = x_batch.detach().cpu()
+      x_batch_cuda = x_batch.to(device)
+      inputs_fake = torch.cat((x_batch_cuda,generated_y),dim=1).to(device) 
       disc_fake_pred = disc(inputs_fake) 
       disc_fake_loss = criterion(disc_fake_pred,fake_labels) 
 
@@ -182,10 +178,8 @@ def training_GAN_2(disc, gen,disc_opt,gen_opt,train_dataset,test_dataset,batch_s
 
       #Generate input to generator using ABC pre-generator 
       gen_input =  ABC_pre_generator(x_batch,coeff,variance,mean,device)
-      generated_y = gen(gen_input) 
-      x_batch = x_batch.to(device)
-      inputs_fake = torch.cat((x_batch,generated_y),dim=1).to(device)
-      x_batch = x_batch.detach().cpu()
+      generated_y = gen(gen_input)
+      inputs_fake = torch.cat((x_batch_cuda,generated_y),dim=1).to(device)
       disc_fake_pred = disc(inputs_fake)
 
       gen_loss = criterion(disc_fake_pred,real_labels)
@@ -244,9 +238,8 @@ def training_GAN_3(disc, gen,disc_opt,gen_opt,dataset, batch_size,t_loss,criteri
       #Get discriminator loss for fake data
       gen_input =  ABC_pre_generator(x_batch,coeff,variance,mean,device)
       generated_y = gen(gen_input)  
-      x_batch = x_batch.to(device)
-      inputs_fake = torch.cat((x_batch,generated_y),dim=1).to(device) 
-      x_batch = x_batch.detach().cpu()
+      x_batch_cuda = x_batch.to(device)
+      inputs_fake = torch.cat((x_batch_cuda,generated_y),dim=1).to(device) 
       disc_fake_pred = disc(inputs_fake) 
       disc_fake_loss = criterion(disc_fake_pred,fake_labels) 
 
@@ -268,9 +261,7 @@ def training_GAN_3(disc, gen,disc_opt,gen_opt,dataset, batch_size,t_loss,criteri
       #Generate input to generator using ABC pre-generator 
       gen_input =  ABC_pre_generator(x_batch,coeff,variance,mean,device)
       generated_y = gen(gen_input) 
-      x_batch = x_batch.to(device)
-      inputs_fake = torch.cat((x_batch,generated_y),dim=1).to(device)
-      x_batch = x_batch.detach().cpu()
+      inputs_fake = torch.cat((x_batch_cuda,generated_y),dim=1).to(device)
       disc_fake_pred = disc(inputs_fake)
 
       gen_loss = criterion(disc_fake_pred,real_labels)
