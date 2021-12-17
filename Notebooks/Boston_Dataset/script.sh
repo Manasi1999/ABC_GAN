@@ -14,28 +14,28 @@
 # done 
 
 #Run ABC-GAN Model
-for runs in 1 2 3 4 
-do
-     i=0
-     for M in 1 0
-     do 
-         for V in 1 0.1 0.01 
-         do 
-             papermill ABC_GAN.ipynb ./Main/ABC-GAN_output_${i}_${runs}.ipynb -p abc_mean ${M} -p variance ${V} -p n_epochs 5000 -k papermill-tut             
-             ((i=i+1))
-         done 
-     done
-done 
+# for runs in 6 7 8 9 10
+# do
+#      i=0
+#      for M in 1 0
+#      do 
+#          for V in 1 0.1 0.01 
+#          do 
+#              papermill ABC_GAN.ipynb ./Main/ABC-GAN_output_${i}_${runs}.ipynb -p abc_mean ${M} -p variance ${V} -p n_epochs 5000 -k papermill-tutorial            
+#              ((i=i+1))
+#          done 
+#      done
+# done 
 
 #Run ABC-GAN Model
-for runs in 1 2 3 4 5 6 7 8 9 10
+for runs in 1
 do
     i=0
     for M in 1 0
     do 
         for V in 1 0.1 0.01 
         do 
-            papermill ABC_GAN.ipynb ./Main/ABC-GAN_output_${i}_${runs}.ipynb -p abc_mean ${M} -p variance ${V} -p n_epochs 5000 
+            papermill ABC_GAN-Skip_Connection.ipynb ./Main/ABC-GAN_output_${i}_${runs}.ipynb -p abc_mean ${M} -p variance ${V} -p n_epochs 5000 -k papermill-tutorial
             ((i=i+1))
         done 
     done

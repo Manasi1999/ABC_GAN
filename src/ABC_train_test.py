@@ -8,6 +8,7 @@ import seaborn as sns
 from statistics import mean
 import scrapbook as sb
 from sklearn.metrics import mean_squared_error,mean_absolute_error
+import network
 
 #Distance - Minkowski Function 
 def minkowski_distance(a, b, p):
@@ -275,6 +276,73 @@ def training_GAN_3(disc, gen,disc_opt,gen_opt,dataset, batch_size,t_loss,criteri
   print("Number of epochs",n_epochs)
   #Store the parameters as scraps 
   sb.glue("ABC-GAN Model n_epochs",n_epochs)
+
+  return discriminatorLoss,generatorLoss
+
+#Training ABC-GAN Skip Connection 
+#Here we need to constraint the skip connection weights between 0 and 1 after updating the generator weights 
+def training_GAN_skip_connection(disc,gen,disc_opt,gen_opt,dataset, batch_size, n_epochs,criterion,coeff,mean,variance,device): 
+  discriminatorLoss = []
+  generatorLoss = []
+  train_loader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
+  constraints= network.weightConstraint()
+
+  for epoch in range(n_epochs):
+    for x_batch,y_batch in train_loader:
+      y_shape = list(y_batch.size()) 
+      curr_batch_size = y_shape[0] 
+      y_batch = torch.reshape(y_batch,(curr_batch_size,1)) 
+
+      #Create the labels  
+      real_labels = torch.ones(curr_batch_size,1).to(device)
+      fake_labels = torch.zeros(curr_batch_size,1).to(device)
+
+      #------------------------
+      #Update the discriminator
+      #------------------------
+      disc_opt.zero_grad() 
+
+      #Get discriminator loss for real data 
+      inputs_real = torch.cat((x_batch,y_batch),dim=1).to(device) 
+      disc_real_pred = disc(inputs_real)
+      disc_real_loss = criterion(disc_real_pred,real_labels)
+
+      #Get discriminator loss for fake data
+      gen_input =  ABC_pre_generator(x_batch,coeff,variance,mean,device)
+      generated_y = gen(gen_input)  
+      x_batch_cuda = x_batch.to(device)
+      inputs_fake = torch.cat((x_batch_cuda,generated_y),dim=1).to(device) 
+      disc_fake_pred = disc(inputs_fake) 
+      disc_fake_loss = criterion(disc_fake_pred,fake_labels) 
+
+      #Get the discriminator loss 
+      disc_loss = (disc_fake_loss + disc_real_loss) / 2
+      discriminatorLoss.append(disc_loss.item())
+
+      # Update gradients
+      disc_loss.backward(retain_graph=True)
+      # Update optimizer
+      disc_opt.step()
+
+      #------------------------
+      #Update the Generator 
+      #------------------------
+      gen_opt.zero_grad() 
+
+      #Generate input to generator using ABC pre-generator 
+      gen_input =  ABC_pre_generator(x_batch,coeff,variance,mean,device)
+      generated_y = gen(gen_input) 
+      inputs_fake = torch.cat((x_batch_cuda,generated_y),dim=1).to(device)
+      disc_fake_pred = disc(inputs_fake)
+
+      gen_loss = criterion(disc_fake_pred,real_labels)
+      generatorLoss.append(gen_loss.item())
+
+      #Update gradients 
+      gen_loss.backward()
+      #Update optimizer 
+      gen_opt.step()
+      gen._modules['skipNode'].apply(constraints)
 
   return discriminatorLoss,generatorLoss
 
