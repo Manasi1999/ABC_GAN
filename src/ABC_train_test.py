@@ -344,8 +344,6 @@ def training_GAN_skip_connection(disc,gen,disc_opt,gen_opt,dataset, batch_size, 
 
   return discriminatorLoss,generatorLoss
 
-
-
 #Testing the Generator - After 1st training   
 def test_generator(gen,dataset,coeff,w,variance,device):
   test_loader = DataLoader(dataset, batch_size=len(dataset), shuffle=False)

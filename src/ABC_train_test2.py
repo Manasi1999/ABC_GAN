@@ -170,7 +170,7 @@ def training_GAN_2(disc, gen,disc_opt,gen_opt,train_dataset,test_dataset,batch_s
 
 #Training ABC-GAN Skip Connection 
 #Here we need to constraint the skip connection weights between 0 and 1 after updating the generator weights 
-def training_GAN_skip_connection(disc,gen,disc_opt,gen_opt,dataset, batch_size, n_epochs,criterion,prior_model,variance,device): 
+def training_GAN_skip_connection(disc,gen,disc_opt,gen_opt,dataset, batch_size,n_epochs,criterion,prior_model,variance,device): 
   discriminatorLoss = []
   generatorLoss = []
   train_loader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
@@ -231,14 +231,16 @@ def training_GAN_skip_connection(disc,gen,disc_opt,gen_opt,dataset, batch_size, 
       gen_loss.backward()
       #Update optimizer 
       gen_opt.step()
+
       gen._modules['skipNode'].apply(constraints)
+      
 
   return discriminatorLoss,generatorLoss
 
 #Testing the Model 
 def test_generator(gen,dataset,prior_model,variance,expt_no,device):
   n_samples = len(dataset)
-  test_loader = DataLoader(dataset, batch_size=n_samples, shuffle=False)
+  test_loader = DataLoader(dataset,batch_size=n_samples, shuffle=False)
   mse=[]
   mae=[]
   distp1 = []
@@ -254,7 +256,7 @@ def test_generator(gen,dataset,prior_model,variance,expt_no,device):
     real_data = y_batch.numpy().reshape(1,n_samples).tolist()
    
     meanSquaredError = mean_squared_error(real_data,gen_data)
-    meanAbsoluteError = mean_absolute_error(real_data, gen_data)
+    meanAbsoluteError = mean_absolute_error(real_data,gen_data)
     mse.append(meanSquaredError)
     mae.append(meanAbsoluteError)
     dist1 = performanceMetrics.minkowski_distance(np.array(real_data)[0],np.array(gen_data)[0], 1)
