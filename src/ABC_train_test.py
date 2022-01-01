@@ -7,12 +7,10 @@ import matplotlib.pyplot as plt
 import seaborn as sns 
 from statistics import mean
 import scrapbook as sb
+import performanceMetrics
 from sklearn.metrics import mean_squared_error,mean_absolute_error
 import network
 
-#Distance - Minkowski Function 
-def minkowski_distance(a, b, p):
-	return sum(abs(e1-e2)**p for e1, e2 in zip(a,b))**(1/p)
 
 #Function for ABC Pregenerator
 def ABC_pre_generator(x_batch,coeff,variance,mean,device):
@@ -346,6 +344,8 @@ def training_GAN_skip_connection(disc,gen,disc_opt,gen_opt,dataset, batch_size, 
 
   return discriminatorLoss,generatorLoss
 
+
+
 #Testing the Generator - After 1st training   
 def test_generator(gen,dataset,coeff,w,variance,device):
   test_loader = DataLoader(dataset, batch_size=len(dataset), shuffle=False)
@@ -373,8 +373,8 @@ def test_generator(gen,dataset,coeff,w,variance,device):
     meanAbsoluteError = mean_absolute_error(real_data, gen_data)
     mse.append(meanSquaredError)
     mae.append(meanAbsoluteError)
-    dist1 = minkowski_distance(np.array(real_data)[0],np.array(gen_data)[0], 1)
-    dist2 = minkowski_distance(np.array(real_data)[0],np.array(gen_data)[0], 2)
+    dist1 = performanceMetrics.minkowski_distance(np.array(real_data)[0],np.array(gen_data)[0], 1)
+    dist2 = performanceMetrics.minkowski_distance(np.array(real_data)[0],np.array(gen_data)[0], 2)
     distp1.append(dist1)
     distp2.append(dist2)
 
@@ -416,8 +416,8 @@ def test_generator(gen,dataset,coeff,w,variance,device):
   sb.glue("ABC-GAN Model Manhattan Distance",mean(distp1))
   sb.glue("ABC-GAN Model Euclidean distance",mean(distp2))
   
-  performanceMetrics = [mse,mae,distp1,distp2]
-  return performanceMetrics
+  performance_metrics = [mse,mae,distp1,distp2]
+  return performance_metrics
 
 #Testing the Generator - After 2nd training 
 def test_generator_2(gen,dataset,coeff,w,variance,device):
@@ -446,8 +446,8 @@ def test_generator_2(gen,dataset,coeff,w,variance,device):
     meanAbsoluteError = mean_absolute_error(real_data, gen_data)
     mse.append(meanSquaredError)
     mae.append(meanAbsoluteError)
-    dist1 = minkowski_distance(np.array(real_data)[0],np.array(gen_data)[0], 1)
-    dist2 = minkowski_distance(np.array(real_data)[0],np.array(gen_data)[0], 2)
+    dist1 = performanceMetrics.minkowski_distance(np.array(real_data)[0],np.array(gen_data)[0], 1)
+    dist2 = performanceMetrics.minkowski_distance(np.array(real_data)[0],np.array(gen_data)[0], 2)
     distp1.append(dist1)
     distp2.append(dist2)
 
@@ -485,8 +485,8 @@ def test_generator_2(gen,dataset,coeff,w,variance,device):
   sb.glue("ABC-GAN Model 2 Manhattan Distance",mean(distp1))
   sb.glue("ABC-GAN Model 2 Euclidean distance",mean(distp2))
 
-  performanceMetrics = [mse,mae,distp1,distp2]
-  return performanceMetrics
+  performance_metrics = [mse,mae,distp1,distp2]
+  return performance_metrics
     
 def test_discriminator_1(disc,gen,dataset,coeff,mean,variance,threshold,n_iterations,device): 
   test_loader = DataLoader(dataset, batch_size=len(dataset), shuffle=False)
