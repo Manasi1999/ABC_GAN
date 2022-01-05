@@ -245,7 +245,7 @@ def test_generator(gen,dataset,prior_model,variance,expt_no,device):
   mae=[]
   distp1 = []
   distp2 = []
-  for epoch in range(1000):
+  for epoch in range(100):
     for x_batch, y_batch in test_loader: 
       gen_input =  ABC(prior_model,x_batch,n_samples,variance,device)
       generated_y = gen(gen_input) 
