@@ -3,7 +3,7 @@ do
     i=0
     for V in 1 0.1 0.01 
     do 
-        papermill ABC_GAN_Model-Catboost_Pre-gen.ipynb ./ABC_GAN_Catboost_Output/ABC-GAN_output_${i}_${runs}.ipynb -p variance ${V} -k papermill-tutorial
+        papermill ABC_GAN-skip_catboost.ipynb ./ABC_GAN_Catboost_Output/ABC-GAN_skip_output_${i}_${runs}.ipynb -p variance ${V} 
         ((i=i+1))
     done 
 done
