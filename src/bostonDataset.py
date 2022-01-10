@@ -22,11 +22,11 @@ def boston_data():
     columns = ['X'+str(i+1) for i in range(n_features)]
     columns.append('Y')
     df = pd.DataFrame(data, columns = columns)
-    print(df.head())
 
     #Standardization of the dataset 
     scaler = preprocessing.StandardScaler()
     df = pd.DataFrame(scaler.fit_transform(df), columns=df.columns)
+    print(df.head())
     X = df.iloc[:,0:n_features]
     Y = df.iloc[:,n_features]
 
