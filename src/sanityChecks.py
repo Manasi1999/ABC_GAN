@@ -15,7 +15,7 @@ def discProbVsError(dataset,disc,device):
         input = torch.cat((x_batch,y_batch),1).to(device)
         disc_pred = disc(input.float())
         disc_pred = disc_pred.reshape(1,sample_size).detach().cpu().numpy().tolist()
-        plt.plot(disc_pred[0],errors,'o')
+        plt.hexbin(disc_pred[0],errors,gridsize=(15,15))
         plt.title("Discriminator Output for real data")
         plt.xlabel("Discriminator Output")
         plt.ylabel("Error (error = 0)")
@@ -37,7 +37,7 @@ def discProbVsError(dataset,disc,device):
             for j in range(sample_size):
                 err.append(errors[j][0])
                 prob.append(disc_pred[j][0])
-    plt.plot(prob,err,'o')
+    plt.hexbin(prob,err,gridsize=(15,15))
     plt.title("Discriminator Output for noisy data")
     plt.xlabel("Discriminator Output")
     plt.ylabel("Errors")

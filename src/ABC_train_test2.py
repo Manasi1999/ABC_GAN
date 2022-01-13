@@ -26,10 +26,13 @@ def ABC(prior_model,x_batch,batch_size,variance,device):
 def training_GAN(disc,gen,disc_opt,gen_opt,dataset,batch_size,n_epochs,criterion,prior_model,variance,device): 
   discriminatorLoss = []
   generatorLoss = []
-  train_loader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
 
+  train_loader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
   for epoch in range(n_epochs):
+    epoch_loss_disc = []
+    epoch_loss_gen = []
     for x_batch,y_batch in train_loader:
+
       y_shape = list(y_batch.size()) 
       curr_batch_size = y_shape[0] 
       y_batch = torch.reshape(y_batch,(curr_batch_size,1)) 
@@ -58,7 +61,7 @@ def training_GAN(disc,gen,disc_opt,gen_opt,dataset,batch_size,n_epochs,criterion
 
       #Get the discriminator loss 
       disc_loss = (disc_fake_loss + disc_real_loss) / 2
-      discriminatorLoss.append(disc_loss.item())
+      epoch_loss_disc.append(disc_loss.item())
 
       # Update gradients
       disc_loss.backward(retain_graph=True)
@@ -77,14 +80,17 @@ def training_GAN(disc,gen,disc_opt,gen_opt,dataset,batch_size,n_epochs,criterion
       disc_fake_pred = disc(inputs_fake)
 
       gen_loss = criterion(disc_fake_pred,real_labels)
-      generatorLoss.append(gen_loss.item())
+      epoch_loss_gen.append(gen_loss.item())
 
       #Update gradients 
       gen_loss.backward()
       #Update optimizer 
       gen_opt.step()
+    
+    discriminatorLoss.append(sum(epoch_loss_disc)/len(epoch_loss_disc))
+    generatorLoss.append(sum(epoch_loss_gen)/len(epoch_loss_gen))
 
-  return discriminatorLoss,generatorLoss
+  performanceMetrics.plotTrainingLoss2(discriminatorLoss,generatorLoss,np.linspace(1, n_epochs, n_epochs).astype(int))
     
 #Training ABC_GAN until the MSE < threshold or until 5000 epochs 
 def training_GAN_2(disc, gen,disc_opt,gen_opt,train_dataset,test_dataset,batch_size,error,criterion,prior_model,variance,device): 
@@ -170,14 +176,17 @@ def training_GAN_2(disc, gen,disc_opt,gen_opt,train_dataset,test_dataset,batch_s
 
 #Training ABC-GAN Skip Connection 
 #Here we need to constraint the skip connection weights between 0 and 1 after updating the generator weights 
-def training_GAN_skip_connection(disc,gen,disc_opt,gen_opt,dataset, batch_size,n_epochs,criterion,prior_model,variance,device): 
+def training_GAN_skip_connection(disc,gen,disc_opt,gen_opt,dataset,batch_size,n_epochs,criterion,prior_model,variance,device): 
   discriminatorLoss = []
   generatorLoss = []
   train_loader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
   constraints= network.weightConstraint()
 
   for epoch in range(n_epochs):
+    epoch_loss_disc = []
+    epoch_loss_gen = []
     for x_batch,y_batch in train_loader:
+
       y_shape = list(y_batch.size()) 
       curr_batch_size = y_shape[0] 
       y_batch = torch.reshape(y_batch,(curr_batch_size,1)) 
@@ -206,7 +215,7 @@ def training_GAN_skip_connection(disc,gen,disc_opt,gen_opt,dataset, batch_size,n
 
       #Get the discriminator loss 
       disc_loss = (disc_fake_loss + disc_real_loss) / 2
-      discriminatorLoss.append(disc_loss.item())
+      epoch_loss_disc.append(disc_loss.item())
 
       # Update gradients
       disc_loss.backward(retain_graph=True)
@@ -225,7 +234,7 @@ def training_GAN_skip_connection(disc,gen,disc_opt,gen_opt,dataset, batch_size,n
       disc_fake_pred = disc(inputs_fake)
 
       gen_loss = criterion(disc_fake_pred,real_labels)
-      generatorLoss.append(gen_loss.item())
+      epoch_loss_gen.append(gen_loss.item())
 
       #Update gradients 
       gen_loss.backward()
@@ -233,9 +242,11 @@ def training_GAN_skip_connection(disc,gen,disc_opt,gen_opt,dataset, batch_size,n
       gen_opt.step()
 
       gen._modules['skipNode'].apply(constraints)
-      
 
-  return discriminatorLoss,generatorLoss
+    discriminatorLoss.append(sum(epoch_loss_disc)/len(epoch_loss_disc))
+    generatorLoss.append(sum(epoch_loss_gen)/len(epoch_loss_gen))
+
+  performanceMetrics.plotTrainingLoss2(discriminatorLoss,generatorLoss,np.linspace(1, n_epochs, n_epochs).astype(int))
 
 #Testing the Model 
 def test_generator(gen,dataset,prior_model,variance,expt_no,device):

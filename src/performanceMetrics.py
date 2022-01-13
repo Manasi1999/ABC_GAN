@@ -98,16 +98,14 @@ def plotTrainingLoss(GAN_1_discLoss,GAN_1_genLoss,ABC_GAN_1_discLoss,ABC_GAN_1_g
     plt.show()
 
 #Same function as above but for 1 model only 
-def plotTrainingLoss2(Model_discLoss,Model_genLoss):
+def plotTrainingLoss2(Model_discLoss,Model_genLoss,epochs):
     #Discriminator Loss 
     plt.title("Discriminator Loss")
-    plt.plot(Model_discLoss,color='blue')
-    plt.legend()
+    plt.plot(epochs,Model_discLoss,color='blue')
     plt.show()
     
     #Generator Loss
     plt.title("Generator Loss")
-    plt.plot(Model_genLoss,color='red')
-    plt.legend()
+    plt.plot(epochs,Model_genLoss,color='red')
     plt.show()
     

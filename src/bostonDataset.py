@@ -32,6 +32,6 @@ def boston_data():
 
     #Add Constant 
     X = X.to_numpy()
-
+    Y = Y.to_numpy()
     return X, Y 
 
