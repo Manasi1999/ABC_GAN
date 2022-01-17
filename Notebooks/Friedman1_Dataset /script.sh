@@ -1,17 +1,17 @@
 # Run Baseline Models  
 
-# for runs in 1 2 3 4 5 6 7 8 9 10
-# do 
-#     papermill BaselineModels.ipynb ./BaseLine_Model_Output/BaselineModels_output_${runs}.ipynb
-
-# done 
-
-#Run GAN Model 
 for runs in 1 2 3 4 5 6 7 8 9 10
 do 
-    papermill GAN.ipynb ./GAN_Output/GAN_output_${runs}.ipynb
+    papermill BaselineModels.ipynb ./BaseLine_Model_Output/BaselineModels_output_${runs}.ipynb
 
 done 
+
+#Run GAN Model 
+# for runs in 1 2 3 4 5 6 7 8 9 10
+# do 
+#     papermill GAN.ipynb ./GAN_Output/GAN_output_${runs}.ipynb
+
+# done 
 
 # #ABC-GAN with Catboost Pre-generator 
 # for runs in 1 2 3 4 5 6 7 8 9 10

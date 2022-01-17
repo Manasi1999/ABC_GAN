@@ -27,6 +27,6 @@ def friedman1_data(n_samples,n_features):
 
     #Add Constant 
     X = X.to_numpy()
-    Xc = sm.add_constant(X)
-    return Xc, Y 
+    Y = Y.to_numpy()
+    return X, Y 
 
