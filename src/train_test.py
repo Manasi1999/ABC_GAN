@@ -45,6 +45,8 @@ def training_GAN(disc, gen,disc_opt,gen_opt,dataset, batch_size, n_epochs,criter
     generatorLoss = []
     train_loader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
     for epoch in range(n_epochs):
+        epoch_loss_disc = []
+        epoch_loss_gen = []
         for x_batch,y_batch in train_loader:
             x_batch = x_batch.to(device)
             y_batch = y_batch.to(device)
@@ -78,7 +80,7 @@ def training_GAN(disc, gen,disc_opt,gen_opt,dataset, batch_size, n_epochs,criter
 
             #Get the discriminator loss 
             disc_loss = (disc_fake_loss + disc_real_loss) / 2
-            discriminatorLoss.append(disc_loss.item())
+            epoch_loss_disc.append(disc_loss.item())
 
             # Update gradients
             disc_loss.backward(retain_graph=True)
@@ -98,12 +100,15 @@ def training_GAN(disc, gen,disc_opt,gen_opt,dataset, batch_size, n_epochs,criter
             disc_fake_pred = disc(inputs_fake)
 
             gen_loss = criterion(disc_fake_pred,real_labels)
-            generatorLoss.append(gen_loss.item())
+            epoch_loss_gen.append(gen_loss.item())
 
             #Update gradients 
             gen_loss.backward()
             #Update optimizer 
             gen_opt.step()
+        
+        discriminatorLoss.append(sum(epoch_loss_disc)/len(epoch_loss_disc))
+        generatorLoss.append(sum(epoch_loss_gen)/len(epoch_loss_gen))
     return discriminatorLoss,generatorLoss
 
 #Training GAN 2 - This function trains the nexwork(GAN) until the mse < error or 30,000 epochs have passed

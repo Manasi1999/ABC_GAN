@@ -17,11 +17,11 @@ def friedman1_data(n_samples,n_features):
     cols = ['X'+str(i) for i in range(n_features)]
     cols.append('Y')
     df = pd.DataFrame(data, columns = cols)
-    print(df.head())
 
     #Standardization of the dataset 
     scaler = preprocessing.StandardScaler()
     df = pd.DataFrame(scaler.fit_transform(df), columns=df.columns)
+    print(df.head())
     X = df.iloc[:,0:n_features]
     Y = df.iloc[:,n_features]
 
