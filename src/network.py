@@ -114,7 +114,6 @@ class GeneratorWithSkipConnection(nn.Module):
     out = self.skipNode(out)
     return out 
 
-
 #Module to constraint weights - contraint the weights of the skip connection layer to be between 0 and 1 
 class weightConstraint(object):
     def __init__(self):

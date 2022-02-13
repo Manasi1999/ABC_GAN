@@ -1,7 +1,7 @@
 import numpy as np 
 import torch 
 from torch import nn 
-from sklearn.metrics import mean_squared_error
+from sklearn.metrics import mean_squared_error,mean_absolute_error
 from sklearn.ensemble import RandomForestRegressor
 import catboost as ctb
 import scrapbook as sb 
@@ -63,8 +63,8 @@ def randomForest(X_train,y_train,X_test,y_test):
     y_pred = regr.predict(X_test)
     mse = mean_squared_error(y_pred,y_test)
     print("Mean Squared error",mse)
-
-    return mse
+    mae = mean_absolute_error(y_pred,y_test)
+    return mse,mae
 
 # This function will fit catboost on the dataset and return the MSE values 
 def catboost(X_train,y_train,X_test,y_test):

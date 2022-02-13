@@ -5,15 +5,11 @@ import statsmodels.api as sm
 import matplotlib.pyplot as plt
 import scrapbook as sb 
 
-def statsModel(X,Y):
-
-	X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2)
+def statsModel(X_train,Y_train,X_test,Y_test):
 	model = sm.OLS(Y_train,X_train)
 
 	res = model.fit()
 	print(res.summary())
-
-	print('Parameters: ', res.params)
 
 	#Store the coefficients for ABC Pre Generator 
 	coefficients  = [res.params[i] for i in range(res.params.size)]

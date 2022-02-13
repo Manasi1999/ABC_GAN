@@ -51,12 +51,28 @@ def modelAnalysis(GAN_1,ABC_GAN_1,GAN_2,ABC_GAN_2):
 def modelAnalysis2(ABC_GAN):
     #Each parameter is a array consisting of elements [mse,mae,distp1,distp2]
     params = ["MSE","MAE","Euclidean distance","Manhattan distance"]
-    fig, axs = plt.subplots(4)
-    fig.suptitle('Performance metrics')
-    for i in range(4): 
-        axs[i].hist(ABC_GAN[i],bins=100,density=True)
-        sns.distplot(ABC_GAN[i],hist=False,ax=axs[i])
-        axs[i].set_title("ABC GAN - "+params[i])
+
+    plt.title("ABC_GAN MSE")
+    plt.hist(ABC_GAN[0],bins = 100,density=True)
+    sns.distplot(ABC_GAN[0],hist=False)
+    plt.show()
+
+    plt.title("ABC_GAN MAE")
+    plt.hist(ABC_GAN[1],bins = 100,density=True)
+    sns.distplot(ABC_GAN[1],hist=False)
+    plt.show()
+
+    plt.title("ABC_GAN Euclidean Distance")
+    plt.hist(ABC_GAN[2],bins = 100,density=True)
+    sns.distplot(ABC_GAN[2],hist=False)
+    plt.show()
+
+    plt.title("ABC_GAN Manhattan Distance")
+    plt.hist(ABC_GAN[3],bins = 100,density=True)
+    sns.distplot(ABC_GAN[3],hist=False)
+    plt.show()
+
+    
 
 def plotTrainingLoss(GAN_1_discLoss,GAN_1_genLoss,ABC_GAN_1_discLoss,ABC_GAN_1_genLoss,GAN_2_discLoss,GAN_2_genLoss,ABC_GAN_2_discLoss,ABC_GAN_2_genLoss):
     #Discriminator Loss 
