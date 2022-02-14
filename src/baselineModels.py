@@ -5,6 +5,33 @@ from sklearn.metrics import mean_squared_error,mean_absolute_error
 from sklearn.ensemble import RandomForestRegressor
 import catboost as ctb
 import scrapbook as sb 
+from performanceMetrics import performance_metric
+from sklearn.model_selection import train_test_split
+import statsmodels.api as sm
+import matplotlib.pyplot as plt
+import scrapbook as sb 
+
+def statsModel(X_train,Y_train,X_test,Y_test,variance):
+	model = sm.OLS(Y_train,X_train)
+
+	res = model.fit()
+	print(res.summary())
+
+	#Store the coefficients for ABC Pre Generator 
+	coefficients  = [res.params[i] for i in range(res.params.size)]
+
+	#Prediction using stats Model 
+	ypred = res.predict(X_test)
+	
+	plt.hexbin(Y_test,ypred,gridsize=(15,15))
+	plt.title("Y_real vs Y_predicted")
+	plt.xlabel("y_real")
+	plt.ylabel("y_predicted")
+	plt.legend()
+	plt.show()
+	
+	performance_metric(Y_test,ypred + np.random.normal(0,variance, ypred.shape))
+	return coefficients,ypred
 
 class NeuralNetwork(torch.nn.Module):
     def __init__(self,n_input,n_output):
@@ -80,3 +107,17 @@ def catboost(X_train,y_train,X_test,y_test):
     print("Mean Squared error",mse)
 
     return mse
+
+def catboost2(X_train,y_train,X_test,y_test,variance):
+
+    #Training
+    model_CB = ctb.CatBoostRegressor()
+    model_CB.fit(X_train, y_train)
+    #print(model_CBC)
+
+    #Testing
+    y_pred = model_CB.predict(X_test)
+    mae = mean_absolute_error(y_pred+np.random.normal(0,variance, y_pred.shape),y_test)
+    print("Mean Absolute error",mae)
+
+    return mae

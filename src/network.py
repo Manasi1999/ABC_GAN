@@ -16,7 +16,7 @@ class Discriminator(nn.Module):
     x = self.hidden1(x)
     x = self.relu(x)
     x = self.hidden2(x)
-    x = self.relu(x)
+    x = self.relu(x) 
     x = self.output(x)
     x = self.sigmoid(x)
     return x 
