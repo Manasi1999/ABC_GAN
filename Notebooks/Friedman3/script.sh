@@ -1,9 +1,17 @@
 # Run Baseline Models  
+<<<<<<< HEAD
 # for runs in 1 2 3 4 5 6 7 8 9 10
 # do 
 #     papermill BaselineModels.ipynb ./BaseLine_Model_Output/BaselineModels_output_${runs}.ipynb
 
 # done 
+=======
+for runs in 1 2 3 4 5 6 7 8 9 10
+do 
+    papermill BaselineModels.ipynb ./BaseLine_Model_Output/BaselineModels_output_${runs}.ipynb
+
+done 
+>>>>>>> 8deb63dec52d87206dc2e3c9efbd3762590d673d
 
 #GAN 
 # for runs in 1 2 3 4 5 6 7 8 9 10
