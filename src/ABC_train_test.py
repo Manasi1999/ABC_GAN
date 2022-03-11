@@ -13,7 +13,7 @@ import network
 
 
 #Function for ABC Pregenerator
-def ABC_pre_generator(x_batch,coeff,variance,mean,device):
+def ABC_pre_generator(x_batch,coeff,variance,bias,mean,device):
   coeff_len = len(coeff)
   if mean == 0:
     weights = np.random.normal(0,variance,size=(coeff_len,1))
@@ -23,7 +23,7 @@ def ABC_pre_generator(x_batch,coeff,variance,mean,device):
     for i in range(coeff_len):
       weights.append(np.random.normal(coeff[i],variance))
     weights = torch.tensor(weights).reshape(coeff_len,1)
-  y_abc =  torch.matmul(x_batch,weights.float())
+  y_abc =  torch.matmul(x_batch,weights.float()) + bias
   gen_input = torch.cat((x_batch,y_abc),dim = 1).to(device)
   return gen_input 
 
@@ -60,7 +60,7 @@ def discriminator_warmup(disc,disc_opt,dataset,n_epochs,batch_size,criterion,dev
       epoch_loss += disc_loss.item()
 
 #Training GAN 1 - This function trains the nexwork(ABC-GAN)for n_epochs 
-def training_GAN(disc, gen,disc_opt,gen_opt,dataset, batch_size, n_epochs,criterion,coeff,mean,variance,device): 
+def training_GAN(disc, gen,disc_opt,gen_opt,dataset, batch_size, n_epochs,criterion,coeff,mean,variance,bias,device): 
   discriminatorLoss = []
   generatorLoss = []
   train_loader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
@@ -87,7 +87,7 @@ def training_GAN(disc, gen,disc_opt,gen_opt,dataset, batch_size, n_epochs,criter
       disc_real_loss = criterion(disc_real_pred,real_labels)
 
       #Get discriminator loss for fake data
-      gen_input =  ABC_pre_generator(x_batch,coeff,variance,mean,device)
+      gen_input =  ABC_pre_generator(x_batch,coeff,variance,bias,mean,device)
       generated_y = gen(gen_input)  
       x_batch_cuda = x_batch.to(device)
       inputs_fake = torch.cat((x_batch_cuda,generated_y),dim=1).to(device) 
@@ -109,7 +109,7 @@ def training_GAN(disc, gen,disc_opt,gen_opt,dataset, batch_size, n_epochs,criter
       gen_opt.zero_grad() 
 
       #Generate input to generator using ABC pre-generator 
-      gen_input =  ABC_pre_generator(x_batch,coeff,variance,mean,device)
+      gen_input =  ABC_pre_generator(x_batch,coeff,variance,bias,mean,device)
       generated_y = gen(gen_input) 
       inputs_fake = torch.cat((x_batch_cuda,generated_y),dim=1).to(device)
       disc_fake_pred = disc(inputs_fake)
@@ -279,7 +279,7 @@ def training_GAN_3(disc, gen,disc_opt,gen_opt,dataset, batch_size,t_loss,criteri
 
 #Training ABC-GAN Skip Connection 
 #Here we need to constraint the skip connection weights between 0 and 1 after updating the generator weights 
-def training_GAN_skip_connection(disc,gen,disc_opt,gen_opt,dataset, batch_size, n_epochs,criterion,coeff,mean,variance,device): 
+def training_GAN_skip_connection(disc,gen,disc_opt,gen_opt,dataset, batch_size, n_epochs,criterion,coeff,mean,variance,bias,device): 
   discriminatorLoss = []
   generatorLoss = []
   train_loader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
@@ -306,7 +306,7 @@ def training_GAN_skip_connection(disc,gen,disc_opt,gen_opt,dataset, batch_size, 
       disc_real_loss = criterion(disc_real_pred,real_labels)
 
       #Get discriminator loss for fake data
-      gen_input =  ABC_pre_generator(x_batch,coeff,variance,mean,device)
+      gen_input =  ABC_pre_generator(x_batch,coeff,variance,bias,mean,device)
       generated_y = gen(gen_input)  
       x_batch_cuda = x_batch.to(device)
       inputs_fake = torch.cat((x_batch_cuda,generated_y),dim=1).to(device) 
@@ -328,7 +328,7 @@ def training_GAN_skip_connection(disc,gen,disc_opt,gen_opt,dataset, batch_size, 
       gen_opt.zero_grad() 
 
       #Generate input to generator using ABC pre-generator 
-      gen_input =  ABC_pre_generator(x_batch,coeff,variance,mean,device)
+      gen_input =  ABC_pre_generator(x_batch,coeff,variance,bias,mean,device)
       generated_y = gen(gen_input) 
       inputs_fake = torch.cat((x_batch_cuda,generated_y),dim=1).to(device)
       disc_fake_pred = disc(inputs_fake)
@@ -345,7 +345,7 @@ def training_GAN_skip_connection(disc,gen,disc_opt,gen_opt,dataset, batch_size, 
   return discriminatorLoss,generatorLoss
 
 #Testing the Generator - After 1st training   
-def test_generator(gen,dataset,coeff,w,variance,device):
+def test_generator(gen,dataset,coeff,w,variance,bias,device):
   test_loader = DataLoader(dataset, batch_size=len(dataset), shuffle=False)
   mse=[]
   mae=[]
@@ -353,7 +353,7 @@ def test_generator(gen,dataset,coeff,w,variance,device):
   distp2 = []
   for epoch in range(1000):
     for x_batch, y_batch in test_loader: 
-      gen_input =  ABC_pre_generator(x_batch,coeff,variance,w,device)
+      gen_input =  ABC_pre_generator(x_batch,coeff,variance,bias,w,device)
       generated_y = gen(gen_input) 
       generated_y = generated_y.cpu().detach()
       generated_data = torch.reshape(generated_y,(-1,))

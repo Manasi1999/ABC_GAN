@@ -13,17 +13,17 @@ from sklearn.metrics import mean_squared_error,mean_absolute_error
 import network
 import performanceMetrics
 
-def ABC(prior_model,x_batch,batch_size,variance,device):
+def ABC(prior_model,x_batch,batch_size,variance,bias,device):
     y_abc = prior_model.predict(x_batch.numpy())
     noise = np.random.normal(0,variance, y_abc.shape)
-    y_abc = y_abc + noise
+    y_abc = y_abc + noise + bias 
     y_abc = torch.from_numpy(y_abc)
     y_abc = torch.reshape(y_abc,(batch_size,1))
     gen_input = torch.cat((x_batch,y_abc),dim = 1).float().to(device)
     return gen_input
 
 #Training ABC_GAN for n_epochs
-def training_GAN(disc,gen,disc_opt,gen_opt,dataset,batch_size,n_epochs,criterion,prior_model,variance,device): 
+def training_GAN(disc,gen,disc_opt,gen_opt,dataset,batch_size,n_epochs,criterion,prior_model,variance,bias,device): 
   discriminatorLoss = []
   generatorLoss = []
 
@@ -52,7 +52,7 @@ def training_GAN(disc,gen,disc_opt,gen_opt,dataset,batch_size,n_epochs,criterion
       disc_real_loss = criterion(disc_real_pred,real_labels)
 
       #Get discriminator loss for fake data
-      gen_input =  ABC(prior_model,x_batch,curr_batch_size,variance,device)
+      gen_input =  ABC(prior_model,x_batch,curr_batch_size,variance,bias,device)
       generated_y = gen(gen_input)  
       x_batch_cuda = x_batch.to(device)
       inputs_fake = torch.cat((x_batch_cuda,generated_y),dim=1).to(device) 
@@ -74,7 +74,7 @@ def training_GAN(disc,gen,disc_opt,gen_opt,dataset,batch_size,n_epochs,criterion
       gen_opt.zero_grad() 
 
       #Generate input to generator using ABC pre-generator 
-      gen_input =  ABC(prior_model,x_batch,curr_batch_size,variance,device)
+      gen_input =  ABC(prior_model,x_batch,curr_batch_size,variance,bias,device)
       generated_y = gen(gen_input) 
       inputs_fake = torch.cat((x_batch_cuda,generated_y),dim=1).to(device)
       disc_fake_pred = disc(inputs_fake)
@@ -93,7 +93,7 @@ def training_GAN(disc,gen,disc_opt,gen_opt,dataset,batch_size,n_epochs,criterion
   performanceMetrics.plotTrainingLoss2(discriminatorLoss,generatorLoss,np.linspace(1, n_epochs, n_epochs).astype(int))
     
 #Training ABC_GAN until the MSE < threshold or until 5000 epochs 
-def training_GAN_2(disc, gen,disc_opt,gen_opt,train_dataset,test_dataset,batch_size,error,criterion,prior_model,variance,device): 
+def training_GAN_2(disc, gen,disc_opt,gen_opt,train_dataset,test_dataset,batch_size,error,criterion,prior_model,variance,bias,device): 
   discriminatorLoss = []
   generatorLoss = []
   train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
@@ -122,7 +122,7 @@ def training_GAN_2(disc, gen,disc_opt,gen_opt,train_dataset,test_dataset,batch_s
       disc_real_loss = criterion(disc_real_pred,real_labels)
 
       #Get discriminator loss for fake data
-      gen_input =  ABC(prior_model,x_batch,curr_batch_size,variance,device)
+      gen_input =  ABC(prior_model,x_batch,curr_batch_size,variance,bias,device)
       generated_y = gen(gen_input)  
       x_batch_cuda = x_batch.to(device)
       inputs_fake = torch.cat((x_batch_cuda,generated_y),dim=1).to(device) 
@@ -144,7 +144,7 @@ def training_GAN_2(disc, gen,disc_opt,gen_opt,train_dataset,test_dataset,batch_s
       gen_opt.zero_grad() 
 
       #Generate input to generator using ABC pre-generator 
-      gen_input =  ABC(prior_model,x_batch,curr_batch_size,variance,device)
+      gen_input =  ABC(prior_model,x_batch,curr_batch_size,variance,bias,device)
       generated_y = gen(gen_input)
       inputs_fake = torch.cat((x_batch_cuda,generated_y),dim=1).to(device)
       disc_fake_pred = disc(inputs_fake)
@@ -176,7 +176,7 @@ def training_GAN_2(disc, gen,disc_opt,gen_opt,train_dataset,test_dataset,batch_s
 
 #Training ABC-GAN Skip Connection 
 #Here we need to constraint the skip connection weights between 0 and 1 after updating the generator weights 
-def training_GAN_skip_connection(disc,gen,disc_opt,gen_opt,dataset,batch_size,n_epochs,criterion,prior_model,variance,device): 
+def training_GAN_skip_connection(disc,gen,disc_opt,gen_opt,dataset,batch_size,n_epochs,criterion,prior_model,variance,bias,device): 
   discriminatorLoss = []
   generatorLoss = []
   train_loader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
@@ -206,7 +206,7 @@ def training_GAN_skip_connection(disc,gen,disc_opt,gen_opt,dataset,batch_size,n_
       disc_real_loss = criterion(disc_real_pred,real_labels)
 
       #Get discriminator loss for fake data
-      gen_input =  ABC(prior_model,x_batch,curr_batch_size,variance,device)
+      gen_input =  ABC(prior_model,x_batch,curr_batch_size,variance,bias,device)
       generated_y = gen(gen_input)  
       x_batch_cuda = x_batch.to(device)
       inputs_fake = torch.cat((x_batch_cuda,generated_y),dim=1).to(device) 
@@ -228,7 +228,7 @@ def training_GAN_skip_connection(disc,gen,disc_opt,gen_opt,dataset,batch_size,n_
       gen_opt.zero_grad() 
 
       #Generate input to generator using ABC pre-generator 
-      gen_input =  ABC(prior_model,x_batch,curr_batch_size,variance,device)
+      gen_input =  ABC(prior_model,x_batch,curr_batch_size,variance,bias,device)
       generated_y = gen(gen_input) 
       inputs_fake = torch.cat((x_batch_cuda,generated_y),dim=1).to(device)
       disc_fake_pred = disc(inputs_fake)
@@ -249,7 +249,7 @@ def training_GAN_skip_connection(disc,gen,disc_opt,gen_opt,dataset,batch_size,n_
   performanceMetrics.plotTrainingLoss2(discriminatorLoss,generatorLoss,np.linspace(1, n_epochs, n_epochs).astype(int))
 
 #Testing the Model 
-def test_generator(gen,dataset,prior_model,variance,expt_no,device):
+def test_generator(gen,dataset,prior_model,variance,bias,expt_no,device):
   n_samples = len(dataset)
   test_loader = DataLoader(dataset,batch_size=n_samples, shuffle=False)
   mse=[]
@@ -258,7 +258,7 @@ def test_generator(gen,dataset,prior_model,variance,expt_no,device):
   distp2 = []
   for epoch in range(100):
     for x_batch, y_batch in test_loader: 
-      gen_input =  ABC(prior_model,x_batch,n_samples,variance,device)
+      gen_input =  ABC(prior_model,x_batch,n_samples,variance,bias,device)
       generated_y = gen(gen_input) 
       generated_y = generated_y.cpu().detach()
       generated_data = torch.reshape(generated_y,(-1,))
