@@ -12,8 +12,8 @@
     10. statsmodel 
     11. pandas 
     12. catboost 
-2. Read the document to understand the flow of the experiment
-3. Folder structure 
+
+2. Folder structure 
     1. src : contains all the functions used in the experiment. These .py files are imported into the notebooks and the functions defined here are then called in the notebook. 
         1. conf - The conf folder contains the configuration files needed and used if the experiments are run using hydra. The latest experiment flow does not use hydra and thus this can be ignored
         2. baselineModels - contains the following models along with their training and testing regime 
@@ -27,7 +27,8 @@
         6. network.py : contains all the distriminator and generator networks used for GAN and ABC GAN 
         7. performanceMetrics.py : contains the functions to plot and compare performace metrics (MSE, MAE, Euclidean Distance,Minkowski Distance) of different models 
         8. sanityChecks : contains functions that perform sanity check by comparing discriminator probability 
-        
+    2. Notebooks1 - Contains notebooks for experiment 1 (where variance was varied)
+    3. Notebooks2 - Contains notebooks for experiment 2 (where variance and bias was varied)
 
 
 
