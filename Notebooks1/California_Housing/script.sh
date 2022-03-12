@@ -12,7 +12,7 @@
 # done
 
 papermill ABC_GAN-Stats.ipynb ./ABC_GAN_Stats/ABC-GAN_output_1_2.ipynb -p variance 0.01 
-# #ABC-GAN - Stats 
+# #ABC-GAN - Stats  
 for runs in 2 3 4 5 6 7 8 9 10
 do
     i=0
