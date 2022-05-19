@@ -35,6 +35,6 @@
 # done
 
 # #Analysis 
-# papermill Analysis.ipynb Analysis_Out.ipynb 
-# jupyter nbconvert Analysis_Out.ipynb --to pdf
+papermill Analysis.ipynb Boston.ipynb 
+jupyter nbconvert Boston.ipynb --to pdf
 

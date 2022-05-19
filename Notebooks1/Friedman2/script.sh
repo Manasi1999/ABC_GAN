@@ -1,9 +1,9 @@
 # Run Baseline Models  
-# for runs in 1 2 3 4 5 6 7 8 9 10
-# do 
-#     papermill BaselineModels.ipynb ./BaseLine_Model_Output/BaselineModels_output_${runs}.ipynb
+for runs in 1 2 3 4 5 6 7 8 9 10
+do 
+    papermill BaselineModels.ipynb ./BaseLine_Model_Output/BaselineModels_output_${runs}.ipynb
 
-# done 
+done 
 
 #GAN 
 # for runs in 1 2 3 4 5 6 7 8 9 10
@@ -35,6 +35,6 @@ do
 done
 
 #Analysis 
-papermill Analysis.ipynb Analysis_Out.ipynb 
-jupyter nbconvert Analysis_Out.ipynb --to pdf
+papermill Analysis.ipynb Friedman2.ipynb 
+jupyter nbconvert Friedman2.ipynb --to pdf
 

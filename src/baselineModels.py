@@ -11,7 +11,7 @@ import statsmodels.api as sm
 import matplotlib.pyplot as plt
 import scrapbook as sb 
 
-def statsModel(X_train,Y_train,X_test,Y_test,variance):
+def statsModel(X_train,Y_train,X_test,Y_test):
 	model = sm.OLS(Y_train,X_train)
 
 	res = model.fit()
@@ -30,7 +30,7 @@ def statsModel(X_train,Y_train,X_test,Y_test,variance):
 	plt.legend()
 	plt.show()
 	
-	performance_metric(Y_test,ypred + np.random.normal(0,variance, ypred.shape))
+	performance_metric(Y_test,ypred)
 	return coefficients,ypred
 
 class NeuralNetwork(torch.nn.Module):
@@ -103,10 +103,10 @@ def catboost(X_train,y_train,X_test,y_test):
 
     #Testing
     y_pred = model_CB.predict(X_test)
-    mse = mean_squared_error(y_pred,y_test)
-    print("Mean Squared error",mse)
+    mae = mean_absolute_error(y_pred,y_test)
+    print("Mean Absolute error",mae)
 
-    return mse
+    return mae
 
 def catboost2(X_train,y_train,X_test,y_test,variance):
 
