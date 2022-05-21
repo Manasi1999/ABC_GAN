@@ -6,10 +6,10 @@ do
 done 
 
 #GAN 
-for runs in 1 2 3 4 5 6 7 8 9 10
-do
-    papermill GAN.ipynb ./GAN_Output/GAN_output_${runs}_${i}.ipynb  
-done
+# for runs in 1 2 3 4 5 6 7 8 9 10
+# do
+#     papermill GAN.ipynb ./GAN_Output/GAN_output_${runs}_${i}.ipynb  
+# done
 
 # #ABC-GAN - Stats  
 for runs in 1 2 3 4 5 6 7 8 9 10
