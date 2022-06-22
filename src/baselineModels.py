@@ -10,6 +10,7 @@ from sklearn.model_selection import train_test_split
 import statsmodels.api as sm
 import matplotlib.pyplot as plt
 import scrapbook as sb 
+from pytorch_tabnet.tab_model import TabNetRegressor
 
 def statsModel(X_train,Y_train,X_test,Y_test):
 	model = sm.OLS(Y_train,X_train)
@@ -121,3 +122,33 @@ def catboost2(X_train,y_train,X_test,y_test,variance):
     print("Mean Absolute error",mae)
 
     return mae
+
+def tabnetreg(x_train,y_train,x_test,y_test,batch_size,n_features,n_target,n_epochs, lr):
+    clf = TabNetRegressor(optimizer_fn=torch.optim.Adam, optimizer_params=dict(lr = lr),
+          #scheduler_params={"step_size":10, ], "gamma":0.9},
+          #scheduler_fn=torch.optim.lr_scheduler.StepLR
+          )  #TabNetRegressor()
+  
+    clf.fit(x_train,y_train,eval_set=[(x_train, y_train)],
+            eval_name=['train'], 
+            eval_metric=[ 'mse', 'mae'], 
+            max_epochs = n_epochs, 
+            batch_size = batch_size,
+            patience=50
+            )
+
+    preds = clf.predict(x_test)
+
+    y_true = y_test
+
+    test_score = mean_absolute_error(y_pred=preds, y_true=y_true)
+
+    print(f"BEST VALID SCORE FOR dataset : {clf.best_cost}")
+    print(f"FINAL TEST SCORE FOR dataset: {test_score}")
+    print(clf.history)
+
+    # plot losses
+    #plt.figure(feat)
+    plt.plot(clf.history['loss'])
+
+    return  test_score
