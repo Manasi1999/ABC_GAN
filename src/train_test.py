@@ -8,6 +8,8 @@ from statistics import mean
 import pandas as pd
 import scrapbook as sb 
 from sklearn.metrics import mean_squared_error,mean_absolute_error
+from pytorch_tabnet.tab_model import TabNetClassifier
+from pytorch_tabnet.tab_model import TabNetRegressor
 
 #Distance - Minkowski Function 
 def minkowski_distance(a, b, p):
