@@ -154,3 +154,21 @@ class GeneratorTabnetskipConnection(nn.Module):
     out = torch.cat((y_gan[0] , y_abc),1)
     out = self.skipNode(out)
     return out 
+
+class DiscriminatorTabnet(nn.Module):
+  def __init__(self,n_input):
+    super().__init__()
+    # self.hidden1 = nn.Linear(n_input,25)
+    # self.hidden2 = nn.Linear(25,50)
+    self.output = pytorch_tabnet.tab_network.TabNet(n_input, 1)
+    # self.relu = nn.ReLU()
+    self.sigmoid = nn.Sigmoid()
+
+  def forward(self, x):
+    # x = self.hidden1(x)
+    # x = self.relu(x)
+    # x = self.hidden2(x)
+    # x = self.relu(x) 
+    x = self.output(x)
+    x = self.sigmoid(x[0])
+    return x 

@@ -124,18 +124,18 @@ def catboost2(X_train,y_train,X_test,y_test,variance):
     return mae
 
 def tabnetreg(x_train,y_train,x_test,y_test,batch_size,n_features,n_target,n_epochs, lr):
-    clf = TabNetRegressor(optimizer_fn=torch.optim.Adam, optimizer_params=dict(lr = lr),
-          #scheduler_params={"step_size":10, ], "gamma":0.9},
-          #scheduler_fn=torch.optim.lr_scheduler.StepLR
-          )  #TabNetRegressor()
+    clf = TabNetRegressor(optimizer_fn=torch.optim.Adam, 
+                        optimizer_params=dict(lr = 0.001),
+                        mask_type= 'sparsemax',
+                        verbose = 1)  
   
-    clf.fit(x_train,y_train,eval_set=[(x_train, y_train)],
-            eval_name=['train'], 
-            eval_metric=[ 'mse', 'mae'], 
-            max_epochs = n_epochs, 
-            batch_size = batch_size,
-            patience=50
-            )
+    clf.fit(X_train = x_train,y_train = y_train, 
+        eval_set=[(x_train, y_train), (X_test, y_test)],
+        eval_name=['train', 'valid'], 
+        eval_metric=[ 'mae'], 
+        max_epochs = n_epochs, 
+        batch_size = batch_size,
+        patience=50)
 
     preds = clf.predict(x_test)
 
