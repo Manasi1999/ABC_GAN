@@ -2,6 +2,8 @@
 from torch import nn
 import torch 
 import math 
+import pytorch_tabnet
+import pytorch_tabnet.tab_network
 
 class Discriminator(nn.Module):
   def __init__(self,n_input):
@@ -125,25 +127,48 @@ class weightConstraint(object):
             module.weight.data=w
 
 
-
+# generator of GAN as tabnet
 class GeneratorTabnet(nn.Module):
   def __init__(self,n_input):
     super().__init__()
-    self.hidden1 = nn.Linear(n_input,50)
-    self.hidden2 = nn.Linear(50,50)
-    self.output = nn.Linear(50,1)
-    self.relu = nn.ReLU()
+    self.output = pytorch_tabnet.tab_network.TabNet(n_input, 1)
 
   def forward(self, x):
-    x = self.hidden1(x)
-    x = self.relu(x)
-    x = self.hidden2(x)
-    x = self.relu(x)
-    x = self.hidden2(x)
-    x = self.relu(x)
-    x = self.hidden2(x)
-    x = self.relu(x)
-    x = self.hidden2(x)
-    x = self.relu(x)
     x = self.output(x)
+    return x[0]
+    
+
+
+#generator of skipGAN as tabnet
+class GeneratorTabnetskipConnection(nn.Module):
+  def __init__(self,n_input):
+    super().__init__()
+    self.output = pytorch_tabnet.tab_network.TabNet(n_input, 1)
+    self.skipNode = skipConnection()
+
+  def forward(self, x):
+    y_abc = x[:,-1] 
+    samples = y_abc.size(dim=0)
+    y_abc = torch.reshape(y_abc,(samples,1))
+    y_gan = self.output(x)
+    out = torch.cat((y_gan[0] , y_abc),1)
+    out = self.skipNode(out)
+    return out 
+
+class DiscriminatorTabnet(nn.Module):
+  def __init__(self,n_input):
+    super().__init__()
+    # self.hidden1 = nn.Linear(n_input,25)
+    # self.hidden2 = nn.Linear(25,50)
+    self.output = pytorch_tabnet.tab_network.TabNet(n_input, 1)
+    # self.relu = nn.ReLU()
+    self.sigmoid = nn.Sigmoid()
+
+  def forward(self, x):
+    # x = self.hidden1(x)
+    # x = self.relu(x)
+    # x = self.hidden2(x)
+    # x = self.relu(x) 
+    x = self.output(x)
+    x = self.sigmoid(x[0])
     return x 
