@@ -5,7 +5,7 @@
 import torch
 from torch.utils.data import DataLoader 
 import numpy as np
-from statistics import mean
+from statistics import mean, variance , stdev
 import scrapbook as sb
 from sklearn.metrics import mean_squared_error,mean_absolute_error
 import math
@@ -18,15 +18,19 @@ def linear_model(X) :
 
 def quadratic_model(X) : 
     Y = 10 * np.sin(math.pi * X[:,0]* X[:,1]) + 20 * np.square(X[:,2]+0.5) + 10 * X[:,3] + 5* X[:,4]
+    mu = mean(Y) 
+    sd = stdev(Y)
+    Y = np.subtract(Y,mu)
+    Y = np.divide(Y,sd)
     return Y
 
 def pre_generator(X,prior_model,variance,batch_size,device):
     Y = prior_model(X)
-    if type(variance) == int or type(variance) == float :
-        Y = Y + np.random.normal(0,variance,Y.shape)
-    else:
-        variance = np.square(X[:,1]) + 2 * abs(X[:,2])
-        Y = Y + np.random.normal(0,variance)
+    # if type(variance) == int or type(variance) == float :
+    #     Y = Y + np.random.normal(0,variance,Y.shape)
+    # else:
+    #     variance = np.square(X[:,1]) + 2 * abs(X[:,2])
+    #     Y = Y + np.random.normal(0,variance)
     Y = torch.reshape(Y,(batch_size,1))
     gen_input = torch.cat((X,Y),dim = 1).float().to(device)
     return gen_input
