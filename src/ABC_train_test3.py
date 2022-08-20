@@ -26,11 +26,11 @@ def quadratic_model(X) :
 
 def pre_generator(X,prior_model,variance,batch_size,device):
     Y = prior_model(X)
-    # if type(variance) == int or type(variance) == float :
-    #     Y = Y + np.random.normal(0,variance,Y.shape)
-    # else:
-    #     variance = np.square(X[:,1]) + 2 * abs(X[:,2])
-    #     Y = Y + np.random.normal(0,variance)
+    if type(variance) == int or type(variance) == float :
+        Y = Y + np.random.normal(0,variance,Y.shape)
+    else:
+        variance = np.square(X[:,1]) + 2 * abs(X[:,2])
+        Y = Y + np.random.normal(0,variance)
     Y = torch.reshape(Y,(batch_size,1))
     gen_input = torch.cat((X,Y),dim = 1).float().to(device)
     return gen_input
