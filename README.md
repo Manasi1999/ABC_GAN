@@ -1,4 +1,6 @@
-## Codebase for the paper "Correcting Model Misspecification via Generative Adversarial Networks": [ArXiv](https://arxiv.org/abs/2304.03805)
+## Codebase for the paper:
+## "Correcting Model Misspecification via Generative Adversarial Networks": 
+[ArXiv](https://arxiv.org/abs/2304.03805)
 
 ## Getting Started 
 1. Download the following dependencies
