@@ -31,6 +31,7 @@ def pre_generator(X,prior_model,variance,batch_size,device):
     else:
         variance = np.square(X[:,1]) + 2 * abs(X[:,2])
         Y = Y + np.random.normal(0,variance)
+    Y = torch.from_numpy(Y)
     Y = torch.reshape(Y,(batch_size,1))
     gen_input = torch.cat((X,Y),dim = 1).float().to(device)
     return gen_input
