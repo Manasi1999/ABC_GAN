@@ -25,7 +25,7 @@ def quadratic_model(X) :
     return Y
 
 def pre_generator(X,prior_model,variance,batch_size,device):
-    Y = prior_model.predict(X)
+    Y = prior_model.predict(X.numpy())
     if type(variance) == int or type(variance) == float :
         Y = Y + np.random.normal(0,variance,Y.shape)
     else:
