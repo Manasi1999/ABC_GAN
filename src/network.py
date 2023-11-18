@@ -73,8 +73,9 @@ class skipConnection(nn.Module):
             return 0
         output = torch.Tensor(x,1)
         device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-        for i in range(x): 
-          output[i] = input[i][0]*self.weight + input[i][1]*(1-self.weight)
+        for i in range(x):
+          w = torch.nn.sigmoid(self.weight)
+          output[i] = input[i][0]*w + input[i][1]*(1-w)
         # weights = torch.tensor([self.weight,1-self.weight])
         # output = input.matmul(weights.t())
         if self.bias is not None:

@@ -283,8 +283,7 @@ def training_GAN_skip_connection(disc,gen,disc_opt,gen_opt,dataset, batch_size, 
   discriminatorLoss = []
   generatorLoss = []
   train_loader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
-  constraints= network.weightConstraint()
-
+  
   for epoch in range(n_epochs):
     for x_batch,y_batch in train_loader:
       y_shape = list(y_batch.size()) 
@@ -340,7 +339,6 @@ def training_GAN_skip_connection(disc,gen,disc_opt,gen_opt,dataset, batch_size, 
       gen_loss.backward()
       #Update optimizer 
       gen_opt.step()
-      gen._modules['skipNode'].apply(constraints)
 
   return discriminatorLoss,generatorLoss
 
