@@ -193,7 +193,8 @@ class modifiedSkipConnection(nn.Module):
 
     #Initialise the weights  
     def reset_parameters(self):
-        torch.nn.init.kaiming_uniform_(self.weight, a=math.sqrt(5))  
+        # torch.nn.init.kaiming_uniform_(self.weight, a=math.sqrt(5))
+        nn.init.constant_(self.weight,0)
         
     def forward(self, input):
         x, y = input.shape
@@ -202,8 +203,8 @@ class modifiedSkipConnection(nn.Module):
             return 0
         output = torch.Tensor(x,1)
         device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+        w = torch.nn.sigmoid(self.weight)
         for i in range(x):
-          w = torch.nn.sigmoid(self.weight)
           output[i] = input[i][0]*w + input[i][1]*(1-w)
         if self.bias is not None:
             output += self.bias
