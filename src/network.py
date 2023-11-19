@@ -203,7 +203,7 @@ class modifiedSkipConnection(nn.Module):
             return 0
         output = torch.Tensor(x,1)
         device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-        w = torch.nn.sigmoid(self.weight)
+        w = torch.sigmoid(self.weight)
         for i in range(x):
           output[i] = input[i][0]*w + input[i][1]*(1-w)
         if self.bias is not None:
