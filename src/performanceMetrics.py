@@ -124,4 +124,9 @@ def plotTrainingLoss2(Model_discLoss,Model_genLoss,epochs):
     plt.title("Generator Loss")
     plt.plot(epochs,Model_genLoss,color='red')
     plt.show()
+
+def plotWeight(skipNodeWeights, epochs):
+    plt.title("Skip Node Weight Vs Epochs")
+    plt.plot(epochs,skipNodeWeights,color='blue')
+    plt.show()
     

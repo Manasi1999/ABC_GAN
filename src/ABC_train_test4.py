@@ -95,6 +95,7 @@ def training_GAN(disc,gen,disc_opt,gen_opt,dataset,batch_size,n_epochs,criterion
 def training_GAN_skip_connection(disc,gen,disc_opt,gen_opt,dataset,batch_size,n_epochs,criterion,prior_model,variance,device): 
   discriminatorLoss = []
   generatorLoss = []
+  skipNodeWeights = []
   train_loader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
 
   for epoch in range(n_epochs):
@@ -158,8 +159,12 @@ def training_GAN_skip_connection(disc,gen,disc_opt,gen_opt,dataset,batch_size,n_
 
     discriminatorLoss.append(sum(epoch_loss_disc)/len(epoch_loss_disc))
     generatorLoss.append(sum(epoch_loss_gen)/len(epoch_loss_gen))
+    for name,param in gen.named_parameters():
+      if(name == "skipNode.weight"):
+          skipNodeWeights.append(param.item())
 
   performanceMetrics.plotTrainingLoss2(discriminatorLoss,generatorLoss,np.linspace(1, n_epochs, n_epochs).astype(int))
+  performanceMetrics.plotWeight(skipNodeWeights,np.linspace(1, n_epochs, n_epochs).astype(int))
 
 #Testing the Model 
 def test_generator(gen,dataset,prior_model,variance,expt_no,device):
